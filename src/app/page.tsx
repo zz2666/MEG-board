@@ -18,8 +18,31 @@ import {
   getMetricDisplayName,
   metricOptions,
   type Company,
-  type MetricKey,
+type MetricKey,
 } from "@/lib/mock-data";
+
+type GeneratedQuickNote = {
+  headline: string;
+  summary: string;
+  financials: string[];
+  segments: string[];
+  aiDynamics: string[];
+  watchItems: string[];
+  copyText: string;
+};
+
+type LlmContext = {
+  companyId: string;
+  fiscalPeriod: string;
+};
+
+type LlmNoteState = LlmContext & {
+  note: GeneratedQuickNote;
+};
+
+type LlmErrorState = LlmContext & {
+  message: string;
+};
 
 const statusStyles = {
   已发布: "status published",
@@ -113,6 +136,9 @@ export default function Home() {
     y: number;
   } | null>(null);
   const [copied, setCopied] = useState(false);
+  const [llmNote, setLlmNote] = useState<LlmNoteState | null>(null);
+  const [llmLoading, setLlmLoading] = useState<LlmContext | null>(null);
+  const [llmError, setLlmError] = useState<LlmErrorState | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -164,12 +190,67 @@ export default function Home() {
   );
   const revenueMetric = getTopMetric(activeCompany, "总营收");
   const marginMetric = getTopMetric(activeCompany, "毛利率");
-  const generatedReport = buildGeneratedReport(activeCompany);
+  const activeLlmNote =
+    llmNote?.companyId === activeCompany.id && llmNote.fiscalPeriod === activeCompany.fiscalPeriod
+      ? llmNote.note
+      : null;
+  const activeLlmError =
+    llmError?.companyId === activeCompany.id && llmError.fiscalPeriod === activeCompany.fiscalPeriod
+      ? llmError.message
+      : null;
+  const llmLoadingForActive =
+    llmLoading?.companyId === activeCompany.id && llmLoading.fiscalPeriod === activeCompany.fiscalPeriod;
+  const generatedReport = activeLlmNote?.copyText ?? buildGeneratedReport(activeCompany);
 
   const activeSegmentData =
     activeSegment === "总览"
       ? undefined
       : activeCompany.segments.find((segment) => segment.name === activeSegment);
+
+  async function generateWithLlm() {
+    const requestContext = {
+      companyId: activeCompany.id,
+      fiscalPeriod: activeCompany.fiscalPeriod,
+    };
+
+    setLlmLoading(requestContext);
+    setLlmError(null);
+
+    try {
+      const response = await fetch("/api/generate-note", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ companyId: activeCompany.id }),
+      });
+      const payload = (await response.json()) as {
+        note?: GeneratedQuickNote;
+        error?: string;
+      };
+
+      if (!response.ok || !payload.note) {
+        throw new Error(payload.error ?? `LLM API ${response.status}`);
+      }
+
+      setLlmNote({
+        ...requestContext,
+        note: payload.note,
+      });
+    } catch (error) {
+      setLlmError({
+        ...requestContext,
+        message: error instanceof Error ? error.message : "LLM generation failed",
+      });
+    } finally {
+      setLlmLoading((current) =>
+        current?.companyId === requestContext.companyId &&
+        current.fiscalPeriod === requestContext.fiscalPeriod
+          ? null
+          : current,
+      );
+    }
+  }
 
   return (
     <main className="app-shell">
@@ -205,6 +286,9 @@ export default function Home() {
                   onClick={() => {
                     setActiveCompanyId(company.id);
                     setActiveSegment("总览");
+                    setLlmNote(null);
+                    setLlmError(null);
+                    setCopied(false);
                   }}
                 >
                   <span className="company-avatar">{company.name.slice(0, 1)}</span>
@@ -450,8 +534,17 @@ export default function Home() {
                 <Sparkles size={18} />
               </div>
               <p className="generator-help">
-                按你最开始提供的 Quick Notes 模板，生成最近一个季度的中文财报摘要，可直接复制。
+                按 Quick Notes 模板生成最近一个季度的中文财报摘要；AI 只基于官方解析字段写作。
               </p>
+              <button
+                className="secondary-button"
+                onClick={generateWithLlm}
+                disabled={Boolean(llmLoading)}
+              >
+                <Sparkles size={16} />
+                {llmLoadingForActive ? "AI 生成中" : activeLlmNote ? "重新生成 AI 财报" : "AI 生成财报"}
+              </button>
+              {activeLlmError ? <p className="generator-error">{activeLlmError}</p> : null}
               <div className="generated-report">
                 <pre>{generatedReport}</pre>
               </div>

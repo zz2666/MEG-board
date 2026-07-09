@@ -26,6 +26,7 @@ enum SourceType {
   IR_PAGE
   SEC_FILING
   HKEX_ANNOUNCEMENT
+  COMPANY_IR
   PDF
   HTML
   NEWS
@@ -195,7 +196,7 @@ model SourceDocument {
   title           String?
   url             String?
   storagePath     String?
-  contentHash     String?
+  contentHash     String?            @unique
   fetchedAt       DateTime           @default(now())
   rawText         String?
   company         Company?           @relation(fields: [companyId], references: [id], onDelete: SetNull)

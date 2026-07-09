@@ -1,0 +1,201 @@
+{
+  "generatedAt": "2026-07-09T09:39:59.467Z",
+  "provenance": {
+    "mode": "snapshot",
+    "note": "Temporary snapshot generated from official source parsers. This is a DB-free bridge until PostgreSQL is connected.",
+    "sourceUrls": [
+      "https://www.sec.gov/Archives/edgar/data/1110646/000110465926064764/tm2615053d1_ex99-1.htm"
+    ]
+  },
+  "companies": [
+    {
+      "id": "netease",
+      "name": "网易",
+      "ticker": "9999.HK / NTES",
+      "market": "HK",
+      "industry": "游戏与互联网服务",
+      "fiscalPeriod": "2026 Q1",
+      "reportDate": "2026-05-21",
+      "shareReaction": "港股财报后高开，具体行情需接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "SEC verified",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1110646/000110465926064764/tm2615053d1_ex99-1.htm",
+      "sourceLabel": "SEC filing snapshot",
+      "verifiedAt": "2026-07-09T09:39:59.473Z",
+      "quickNote": "整体业绩超预期，游戏主业环比反弹、毛利率提升至高位，归母净利润创单季高位；后续增长仍需观察新游兑现节奏。",
+      "highlights": [
+        "总营收 RMB30.591281bn，YoY 6.1%，QoQ 11.1%，主要由游戏业务驱动。",
+        "游戏及相关增值服务收入 RMB25.712975bn，YoY 6.9%，QoQ 17.1%。",
+        "毛利率 69.4%，归母净利润 RMB10.674106bn。"
+      ],
+      "risks": [
+        "创新及其他业务收入 RMB1.54905bn，YoY -4.6%，QoQ -24.3%，电商和广告业务承压。",
+        "新游催化主要集中在后续季度，市场仍需观察增长持续性。",
+        "AI 相关产品化进展有披露，但集团收入贡献占比仍小。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 305.913,
+          "displayValue": "306 亿",
+          "unit": "RMB",
+          "yoy": 6.1,
+          "qoq": 11.1,
+          "source": "Net revenues table row: 28.828545, 27.546973, 30.591281 RMB bn",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 212.171,
+          "displayValue": "212 亿",
+          "unit": "RMB",
+          "yoy": 14.8,
+          "qoq": 19.9,
+          "source": "Gross profit table row: 18.479406, 17.692375, 21.217072 RMB bn",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 69.4,
+          "displayValue": "69.4%",
+          "unit": "%",
+          "yoy": 5.3,
+          "qoq": 5.1,
+          "source": "Derived from gross profit divided by net revenues.",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "营业利润",
+          "shortLabel": "Operating Profit",
+          "value": 126.56800000000001,
+          "displayValue": "127 亿",
+          "unit": "RMB",
+          "yoy": 21.2,
+          "qoq": 52.1,
+          "source": "Operating profit table row: 10.441159, 8.319158, 12.656833 RMB bn",
+          "rank": "官方披露"
+        },
+        {
+          "label": "营业利润率",
+          "shortLabel": "Operating Margin",
+          "value": 41.4,
+          "displayValue": "41.4%",
+          "unit": "%",
+          "yoy": 5.2,
+          "qoq": 11.2,
+          "source": "Derived from operating profit divided by net revenues.",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 106.74099999999999,
+          "displayValue": "107 亿",
+          "unit": "RMB",
+          "yoy": 3.6,
+          "qoq": 71,
+          "source": "Net income attributable to shareholders table row: 10.301157, 6.241956, 10.674106 RMB bn",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "25Q1",
+          "revenue": 288.3,
+          "grossProfit": 184.8,
+          "netProfit": 103,
+          "grossMargin": 64.1,
+          "operatingMargin": 36.2,
+          "expenseRatio": 27.9
+        },
+        {
+          "period": "25Q4",
+          "revenue": 275.5,
+          "grossProfit": 176.9,
+          "netProfit": 62.4,
+          "grossMargin": 64.2,
+          "operatingMargin": 30.2,
+          "expenseRatio": 34
+        },
+        {
+          "period": "26Q1",
+          "revenue": 305.9,
+          "grossProfit": 212.2,
+          "netProfit": 106.7,
+          "grossMargin": 69.4,
+          "operatingMargin": 41.4,
+          "expenseRatio": 28
+        }
+      ],
+      "segments": [
+        {
+          "name": "游戏及相关增值服务",
+          "revenue": 257.1,
+          "displayRevenue": "257 亿",
+          "share": 84.1,
+          "yoy": 6.9,
+          "qoq": 17.1,
+          "driver": "Fantasy Westward Journey franchise and Where Winds Meet 等自研游戏收入提升。",
+          "color": "#1d4ed8",
+          "trend": [
+            257.1
+          ]
+        },
+        {
+          "name": "有道",
+          "revenue": 13.5,
+          "displayRevenue": "13 亿",
+          "share": 4.4,
+          "yoy": 3.8,
+          "qoq": -13.8,
+          "driver": "学习服务和智能硬件收入环比下降。",
+          "color": "#0f766e",
+          "trend": [
+            13.5
+          ]
+        },
+        {
+          "name": "网易云音乐",
+          "revenue": 19.8,
+          "displayRevenue": "20 亿",
+          "share": 6.5,
+          "yoy": 6.6,
+          "qoq": 0.7,
+          "driver": "收入同比温和增长，环比基本持平。",
+          "color": "#be123c",
+          "trend": [
+            19.8
+          ]
+        },
+        {
+          "name": "创新及其他业务",
+          "revenue": 15.5,
+          "displayRevenue": "15 亿",
+          "share": 5.1,
+          "yoy": -4.6,
+          "qoq": -24.3,
+          "driver": "电商和广告业务收入下滑。",
+          "color": "#ca8a04",
+          "trend": [
+            15.5
+          ]
+        }
+      ],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-05-21",
+          "status": "早期产品化",
+          "summary": "财报和公司动态显示 AI 主要落在教育、办公和企业服务场景，现阶段更偏产品迭代和商业化试点。",
+          "source": "NetEase Announces First Quarter 2026 Unaudited Financial Results",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1110646/000110465926064764/tm2615053d1_ex99-1.htm"
+        }
+      ]
+    }
+  ]
+}

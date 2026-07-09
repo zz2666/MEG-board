@@ -6,12 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "tsx -r tsconfig-paths/register scripts/seed-companies.ts",
+    "import:earnings": "tsx -r tsconfig-paths/register scripts/import-earnings.ts",
+    "snapshot:earnings": "npm run import:earnings -- --company netease --period 2026Q1 --snapshot"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "dotenv": "^17.4.2",
     "lucide-react": "^1.23.0",
     "next": "16.2.10",
+    "pg": "^8.22.0",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
@@ -24,6 +32,8 @@
     "eslint-config-next": "16.2.10",
     "prisma": "^7.8.0",
     "tailwindcss": "^4",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.23.0",
     "typescript": "^5"
   }
 }
