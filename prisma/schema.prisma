@@ -1,0 +1,232 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Market {
+  HK
+  US
+  CN
+}
+
+enum ReportStatus {
+  DISCOVERED
+  FETCHING
+  PARSING
+  LLM_DRAFTED
+  NEEDS_REVIEW
+  PUBLISHED
+  FAILED
+}
+
+enum SourceType {
+  IR_PAGE
+  SEC_FILING
+  HKEX_ANNOUNCEMENT
+  PDF
+  HTML
+  NEWS
+  MANUAL_UPLOAD
+}
+
+enum JobType {
+  DISCOVER_REPORT
+  FETCH_SOURCE
+  PARSE_FINANCIALS
+  GENERATE_QUICK_NOTE
+  FETCH_AI_NEWS
+  HUMAN_REVIEW
+}
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  SKIPPED
+}
+
+enum AiCommercialStatus {
+  REVENUE_CONTRIBUTING
+  EARLY_PRODUCTIZATION
+  STRATEGIC_INVESTMENT
+  NO_CLEAR_DISCLOSURE
+}
+
+model Company {
+  id             String            @id @default(cuid())
+  name           String
+  ticker         String
+  market         Market
+  industry       String?
+  irUrl          String?
+  secCik         String?
+  hkexCode       String?
+  logoUrl        String?
+  isTracked      Boolean           @default(true)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  reports        EarningsReport[]
+  aiDevelopments AIDevelopment[]
+  sourceDocs     SourceDocument[]
+
+  @@unique([ticker, market])
+  @@index([market, isTracked])
+}
+
+model EarningsReport {
+  id              String             @id @default(cuid())
+  companyId       String
+  fiscalYear      Int
+  fiscalQuarter   String
+  periodLabel     String
+  reportDate      DateTime?
+  releaseDate     DateTime?
+  status          ReportStatus       @default(DISCOVERED)
+  marketReaction  String?
+  sourceUrl       String?
+  isHumanReviewed Boolean            @default(false)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  company         Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  metrics         FinancialMetric[]
+  segments        BusinessSegment[]
+  quickNotes      QuickNote[]
+  sourceDocs      SourceDocument[]
+  jobs            ProcessingJob[]
+
+  @@unique([companyId, fiscalYear, fiscalQuarter])
+  @@index([companyId, releaseDate])
+  @@index([status])
+}
+
+model FinancialMetric {
+  id           String         @id @default(cuid())
+  reportId     String
+  name         String
+  normalized   String
+  value        Decimal        @db.Decimal(20, 4)
+  unit         String
+  yoy          Decimal?       @db.Decimal(10, 4)
+  qoq          Decimal?       @db.Decimal(10, 4)
+  sourceDocId  String?
+  sourceAnchor String?
+  confidence   Decimal?       @db.Decimal(5, 4)
+  isManual     Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  report       EarningsReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  sourceDoc    SourceDocument? @relation(fields: [sourceDocId], references: [id])
+
+  @@index([reportId, normalized])
+}
+
+model BusinessSegment {
+  id           String         @id @default(cuid())
+  reportId     String
+  name         String
+  revenue      Decimal?       @db.Decimal(20, 4)
+  revenueUnit  String?
+  share        Decimal?       @db.Decimal(10, 4)
+  yoy          Decimal?       @db.Decimal(10, 4)
+  qoq          Decimal?       @db.Decimal(10, 4)
+  grossMargin  Decimal?       @db.Decimal(10, 4)
+  driver       String?
+  sourceDocId  String?
+  confidence   Decimal?       @db.Decimal(5, 4)
+  report       EarningsReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  sourceDoc    SourceDocument? @relation(fields: [sourceDocId], references: [id])
+
+  @@index([reportId, name])
+}
+
+model QuickNote {
+  id              String         @id @default(cuid())
+  reportId        String
+  version         Int            @default(1)
+  headline        String
+  highlights      Json
+  weaknesses      Json
+  segmentComments Json
+  marginComments  String?
+  aiSummary       String?
+  watchItems      Json
+  marketReaction  String?
+  sourceMap       Json?
+  model           String?
+  promptVersion   String?
+  isHumanEdited   Boolean        @default(false)
+  editor          String?
+  publishedAt     DateTime?
+  createdAt       DateTime       @default(now())
+  report          EarningsReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId, version])
+}
+
+model AIDevelopment {
+  id                 String             @id @default(cuid())
+  companyId          String
+  title              String
+  category           String
+  publishedAt        DateTime?
+  commercialStatus   AiCommercialStatus
+  summary            String
+  sourceUrl          String?
+  sourceDocId        String?
+  model              String?
+  promptVersion      String?
+  confidence         Decimal?           @db.Decimal(5, 4)
+  createdAt          DateTime           @default(now())
+  company            Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  sourceDoc          SourceDocument?     @relation(fields: [sourceDocId], references: [id])
+
+  @@index([companyId, publishedAt])
+  @@index([commercialStatus])
+}
+
+model SourceDocument {
+  id              String             @id @default(cuid())
+  companyId       String?
+  reportId        String?
+  type            SourceType
+  title           String?
+  url             String?
+  storagePath     String?
+  contentHash     String?
+  fetchedAt       DateTime           @default(now())
+  rawText         String?
+  company         Company?           @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  report          EarningsReport?    @relation(fields: [reportId], references: [id], onDelete: SetNull)
+  metrics         FinancialMetric[]
+  segments        BusinessSegment[]
+  aiDevelopments  AIDevelopment[]
+  jobs            ProcessingJob[]
+
+  @@index([companyId, fetchedAt])
+  @@index([reportId])
+  @@index([contentHash])
+}
+
+model ProcessingJob {
+  id          String          @id @default(cuid())
+  companyId   String?
+  reportId    String?
+  sourceDocId String?
+  type        JobType
+  status      JobStatus       @default(QUEUED)
+  attempts    Int             @default(0)
+  payload     Json?
+  error       String?
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  createdAt   DateTime        @default(now())
+  report      EarningsReport? @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  sourceDoc   SourceDocument? @relation(fields: [sourceDocId], references: [id], onDelete: SetNull)
+
+  @@index([type, status])
+  @@index([reportId])
+  @@index([companyId])
+}
