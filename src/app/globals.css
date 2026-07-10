@@ -375,9 +375,30 @@ input:focus-visible,
   color: var(--green);
 }
 
+.quality-badge.third-party {
+  background: rgba(21, 94, 239, 0.11);
+  color: var(--blue);
+}
+
 .quality-badge.demo {
   background: rgba(181, 71, 8, 0.12);
   color: var(--amber);
+}
+
+.segment-empty {
+  display: grid;
+  gap: 8px;
+  min-height: 180px;
+  place-content: center;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.46);
+  color: var(--muted-strong);
+  text-align: center;
+}
+
+.segment-empty strong {
+  color: var(--ink);
 }
 
 .icon-button {

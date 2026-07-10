@@ -93,6 +93,31 @@ npm run snapshot:earnings
 
 这会抓取网易和百度官方 SEC 文件并写入 `data/earnings-snapshot.json`。未实现 parser 的公司不会进入 verified 看板，避免展示未校验数字。
 
+## AkShare Third-Party Bootstrap
+
+AkShare 可作为历史结构化指标的第三方加速源，用来补全 tracking list 的公司级总营收、毛利润、毛利率、归母净利润、YoY/QoQ 和历史趋势。它不替代官方 SEC/HKEX/CNINFO/IR parser：第三方数据在看板中标记为 `AkShare third-party`，不会开放 LLM 财报生成；官方 parser 跑通后会覆盖同公司 snapshot，标记为 `SEC verified`。
+
+首次使用先创建项目内 Python venv 并安装依赖：
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements-akshare.txt
+```
+
+只验证 AkShare 全量覆盖，不写文件：
+
+```bash
+npm run import:akshare -- --all --dry-run
+```
+
+生成合并 snapshot：
+
+```bash
+npm run snapshot:akshare
+```
+
+当前验证结果：17 家 tracking 公司都能拉到公司级核心指标；网易、百度由现有 SEC parser 覆盖为官方 verified，其余公司先用 AkShare/EastMoney third-party 指标展示。AkShare 不提供本项目需要的业务分部拆解和公告原文 source anchor，所以分部面板会等待官方 parser。
+
 ## LLM Quick Notes
 
 AI 财报生成已经接入 `/api/generate-note`，前端右侧「一键生成财报」按钮会调用该接口。当前只对 `dataQuality = "SEC verified"` 的官方校验数据开放，避免模型基于 demo 或未校验数据生成投研笔记。

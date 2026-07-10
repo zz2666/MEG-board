@@ -1,14 +1,2414 @@
 {
-  "generatedAt": "2026-07-10T02:52:43.091Z",
+  "generatedAt": "2026-07-10T03:50:13.163Z",
   "provenance": {
     "mode": "snapshot",
-    "note": "Temporary snapshot generated from official source parsers. This is a DB-free bridge until PostgreSQL is connected.",
+    "note": "Snapshot combines official verified parsers when available with AkShare/EastMoney third-party historical indicators for broader coverage. Third-party rows are not official verified.",
     "sourceUrls": [
+      "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9988",
+      "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9618",
+      "http://www.cninfo.com.cn/new/disclosure/detail?stockCode=300364&announcementId=1225157283&orgId=9900023871&announcementTime=2026-04-23",
+      "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1024",
+      "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=GOOGL&type=web&color=w#/cwfx/zyzb",
+      "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9626",
+      "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=3690",
+      "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1357",
+      "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=2390",
+      "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9961",
+      "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=0700",
+      "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9898",
+      "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=META&type=web&color=w#/cwfx/zyzb",
+      "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=AAPL&type=web&color=w#/cwfx/zyzb",
+      "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=MSFT&type=web&color=w#/cwfx/zyzb",
       "https://www.sec.gov/Archives/edgar/data/1110646/000110465926064764/tm2615053d1_ex99-1.htm",
       "https://www.sec.gov/Archives/edgar/data/1329099/000119312526228123/d156481dex991.htm"
     ]
   },
   "companies": [
+    {
+      "id": "alibaba",
+      "name": "阿里巴巴",
+      "ticker": "9988.HK / BABA",
+      "market": "HK",
+      "industry": "电商、云、本地生活与数字媒体",
+      "fiscalPeriod": "2026 FY",
+      "reportDate": "2026-03-31",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9988",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:49:17.588Z",
+      "quickNote": "阿里巴巴 2026 FY 总营收 RMB1023.67bn，YoY 2.7%，归母净利润 RMB103.59bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 RMB1023.67bn，YoY 2.7%，QoQ 0.5%。",
+        "毛利率 39.8%，归母净利润 YoY -20.4%。",
+        "阿里巴巴 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 10236.699999999999,
+          "displayValue": "10237 亿",
+          "unit": "RMB",
+          "yoy": 2.7,
+          "qoq": 0.5,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 4075.34,
+          "displayValue": "4075 亿",
+          "unit": "RMB",
+          "yoy": 2.4,
+          "qoq": -0.6,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 39.8,
+          "displayValue": "39.8%",
+          "unit": "%",
+          "yoy": 0,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 1035.92,
+          "displayValue": "1036 亿",
+          "unit": "RMB",
+          "yoy": -20.4,
+          "qoq": -26.5,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "24Q2",
+          "revenue": 2432.4,
+          "grossProfit": 971.3,
+          "netProfit": 243.9,
+          "grossMargin": 39.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q3",
+          "revenue": 4797.4,
+          "grossProfit": 1896,
+          "netProfit": 684.2,
+          "grossMargin": 39.5,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q4",
+          "revenue": 7598.9,
+          "grossProfit": 3072.3,
+          "netProfit": 1175.5,
+          "grossMargin": 40.4,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25FY",
+          "revenue": 9963.5,
+          "grossProfit": 3980.6,
+          "netProfit": 1301.1,
+          "grossMargin": 40,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 2476.5,
+          "grossProfit": 1112.2,
+          "netProfit": 406.5,
+          "grossMargin": 44.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 4954.5,
+          "grossProfit": 2082.4,
+          "netProfit": 616.7,
+          "grossMargin": 42,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q4",
+          "revenue": 7802.9,
+          "grossProfit": 3235.5,
+          "netProfit": 780.5,
+          "grossMargin": 41.5,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26FY",
+          "revenue": 10236.7,
+          "grossProfit": 4075.3,
+          "netProfit": 1035.9,
+          "grossMargin": 39.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-03-31",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9988"
+        }
+      ]
+    },
+    {
+      "id": "jd",
+      "name": "京东",
+      "ticker": "9618.HK / JD",
+      "market": "HK",
+      "industry": "零售、电商、物流与平台服务",
+      "fiscalPeriod": "2026 Q1",
+      "reportDate": "2026-03-31",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9618",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:49:18.328Z",
+      "quickNote": "京东 2026 Q1 总营收 RMB315.69bn，YoY 4.9%，归母净利润 RMB5.1bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 RMB315.69bn，YoY 4.9%，QoQ 1.1%。",
+        "毛利率 16.8%，归母净利润 YoY -53.1%。",
+        "京东 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 3156.94,
+          "displayValue": "3157 亿",
+          "unit": "RMB",
+          "yoy": 4.9,
+          "qoq": 1.1,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 530.27,
+          "displayValue": "530 亿",
+          "unit": "RMB",
+          "yoy": 10.8,
+          "qoq": 2.5,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 16.8,
+          "displayValue": "16.8%",
+          "unit": "%",
+          "yoy": 0,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 51.02,
+          "displayValue": "51 亿",
+          "unit": "RMB",
+          "yoy": -53.1,
+          "qoq": -29.5,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "24FY",
+          "revenue": 11588.2,
+          "grossProfit": 1838.7,
+          "netProfit": 413.6,
+          "grossMargin": 15.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q2",
+          "revenue": 5514.5,
+          "grossProfit": 857.1,
+          "netProfit": 197.7,
+          "grossMargin": 15.5,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q3",
+          "revenue": 8118.3,
+          "grossProfit": 1307.5,
+          "netProfit": 315.1,
+          "grossMargin": 16.1,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25FY",
+          "revenue": 13090.9,
+          "grossProfit": 2100.3,
+          "netProfit": 196.3,
+          "grossMargin": 16,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q1",
+          "revenue": 3010.8,
+          "grossProfit": 478.5,
+          "netProfit": 108.9,
+          "grossMargin": 15.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 6577.4,
+          "grossProfit": 1044.9,
+          "netProfit": 170.7,
+          "grossMargin": 15.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 9568,
+          "grossProfit": 1549.6,
+          "netProfit": 223.4,
+          "grossMargin": 16.2,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26Q1",
+          "revenue": 3156.9,
+          "grossProfit": 530.3,
+          "netProfit": 51,
+          "grossMargin": 16.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-03-31",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9618"
+        }
+      ]
+    },
+    {
+      "id": "chineseall",
+      "name": "中文在线",
+      "ticker": "300364.SZ",
+      "market": "HK",
+      "industry": "数字阅读、IP 与 AIGC 内容",
+      "fiscalPeriod": "2026 Q1",
+      "reportDate": "2026-04-23",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "http://www.cninfo.com.cn/new/disclosure/detail?stockCode=300364&announcementId=1225157283&orgId=9900023871&announcementTime=2026-04-23",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:50:02.605Z",
+      "quickNote": "中文在线 2026 Q1 总营收 RMB0.31bn，YoY 33.1%，归母净利润 RMB-0.05bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 RMB0.31bn，YoY 33.1%，QoQ -51.9%。",
+        "毛利率 46.9%，归母净利润 YoY 47.9%。",
+        "中文在线 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 3.103,
+          "displayValue": "3 亿",
+          "unit": "RMB",
+          "yoy": 33.1,
+          "qoq": -51.9,
+          "source": "AkShare third-party data via AkShare/EastMoney A-share earnings report; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 1.4569999999999999,
+          "displayValue": "1 亿",
+          "unit": "RMB",
+          "yoy": 0,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney A-share earnings report; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 46.9,
+          "displayValue": "46.9%",
+          "unit": "%",
+          "yoy": 0,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney A-share earnings report; reportDate=2026-03-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": -0.458,
+          "displayValue": "0 亿",
+          "unit": "RMB",
+          "yoy": 47.9,
+          "qoq": 69.6,
+          "source": "AkShare third-party data via AkShare/EastMoney A-share earnings report; reportDate=2026-03-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "24FY",
+          "revenue": 11.6,
+          "grossProfit": 3.8,
+          "netProfit": -2.4,
+          "grossMargin": 33,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q2",
+          "revenue": 4.6,
+          "grossProfit": 1.1,
+          "netProfit": -1.5,
+          "grossMargin": 23.7,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q3",
+          "revenue": 8.1,
+          "grossProfit": 2.4,
+          "netProfit": -1.9,
+          "grossMargin": 30.2,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25FY",
+          "revenue": 16.6,
+          "grossProfit": 6,
+          "netProfit": -6.7,
+          "grossMargin": 36.2,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q1",
+          "revenue": 2.3,
+          "grossProfit": 0.7,
+          "netProfit": -0.9,
+          "grossMargin": 29.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 5.6,
+          "grossProfit": 1.8,
+          "netProfit": -2.3,
+          "grossMargin": 31.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 10.1,
+          "grossProfit": 3.5,
+          "netProfit": -5.2,
+          "grossMargin": 34.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26Q1",
+          "revenue": 3.1,
+          "grossProfit": 1.5,
+          "netProfit": -0.5,
+          "grossMargin": 46.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-04-23",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "http://www.cninfo.com.cn/new/disclosure/detail?stockCode=300364&announcementId=1225157283&orgId=9900023871&announcementTime=2026-04-23"
+        }
+      ]
+    },
+    {
+      "id": "kuaishou",
+      "name": "快手",
+      "ticker": "1024.HK",
+      "market": "HK",
+      "industry": "短视频、直播、广告与电商",
+      "fiscalPeriod": "2026 Q1",
+      "reportDate": "2026-03-31",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1024",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:50:03.277Z",
+      "quickNote": "快手 2026 Q1 总营收 RMB33.72bn，YoY 3.4%，归母净利润 RMB2.9bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 RMB33.72bn，YoY 3.4%，QoQ 0.8%。",
+        "毛利率 51.2%，归母净利润 YoY -27%。",
+        "快手 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 337.16,
+          "displayValue": "337 亿",
+          "unit": "RMB",
+          "yoy": 3.4,
+          "qoq": 0.8,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 172.48999999999998,
+          "displayValue": "172 亿",
+          "unit": "RMB",
+          "yoy": -3.1,
+          "qoq": -0.7,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 51.2,
+          "displayValue": "51.2%",
+          "unit": "%",
+          "yoy": 0,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 29.03,
+          "displayValue": "29 亿",
+          "unit": "RMB",
+          "yoy": -27,
+          "qoq": -5.8,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "24FY",
+          "revenue": 1269,
+          "grossProfit": 692.9,
+          "netProfit": 153.4,
+          "grossMargin": 54.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q2",
+          "revenue": 603.8,
+          "grossProfit": 332.6,
+          "netProfit": 81,
+          "grossMargin": 55.1,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q3",
+          "revenue": 915.1,
+          "grossProfit": 501.7,
+          "netProfit": 113.7,
+          "grossMargin": 54.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25FY",
+          "revenue": 1427.8,
+          "grossProfit": 785.5,
+          "netProfit": 186.2,
+          "grossMargin": 55,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q1",
+          "revenue": 326.1,
+          "grossProfit": 177.9,
+          "netProfit": 39.8,
+          "grossMargin": 54.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 676.5,
+          "grossProfit": 373,
+          "netProfit": 89,
+          "grossMargin": 55.1,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 1032.1,
+          "grossProfit": 567.3,
+          "netProfit": 133.9,
+          "grossMargin": 55,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26Q1",
+          "revenue": 337.2,
+          "grossProfit": 172.5,
+          "netProfit": 29,
+          "grossMargin": 51.2,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-03-31",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1024"
+        }
+      ]
+    },
+    {
+      "id": "alphabet",
+      "name": "Alphabet",
+      "ticker": "GOOGL / GOOG",
+      "market": "US",
+      "industry": "搜索、广告、云与 AI 基础设施",
+      "fiscalPeriod": "2026 Q1",
+      "reportDate": "2026-04-30",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=GOOGL&type=web&color=w#/cwfx/zyzb",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:50:04.123Z",
+      "quickNote": "Alphabet 2026 Q1 总营收 USD109.9bn，YoY 21.8%，归母净利润 USD62.58bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 USD109.9bn，YoY 21.8%。",
+        "毛利率 62.4%，归母净利润 YoY 81.2%。",
+        "Alphabet 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 109.896,
+          "displayValue": "$109.9bn",
+          "unit": "USD",
+          "yoy": 21.8,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 68.625,
+          "displayValue": "$68.6bn",
+          "unit": "USD",
+          "yoy": 27.4,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 62.4,
+          "displayValue": "62.4%",
+          "unit": "%",
+          "yoy": 4.6,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 62.578,
+          "displayValue": "$62.6bn",
+          "unit": "USD",
+          "yoy": 81.2,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "24Q2",
+          "revenue": 84.7,
+          "grossProfit": 49.2,
+          "netProfit": 23.6,
+          "grossMargin": 58.1,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q3",
+          "revenue": 88.3,
+          "grossProfit": 51.8,
+          "netProfit": 26.3,
+          "grossMargin": 58.7,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q4",
+          "revenue": 96.5,
+          "grossProfit": 55.9,
+          "netProfit": 26.5,
+          "grossMargin": 57.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q1",
+          "revenue": 90.2,
+          "grossProfit": 53.9,
+          "netProfit": 34.5,
+          "grossMargin": 59.7,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 96.4,
+          "grossProfit": 57.4,
+          "netProfit": 28.2,
+          "grossMargin": 59.5,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 102.3,
+          "grossProfit": 61,
+          "netProfit": 35,
+          "grossMargin": 59.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q4",
+          "revenue": 113.8,
+          "grossProfit": 68.1,
+          "netProfit": 34.5,
+          "grossMargin": 59.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26Q1",
+          "revenue": 109.9,
+          "grossProfit": 68.6,
+          "netProfit": 62.6,
+          "grossMargin": 62.4,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-04-30",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=GOOGL&type=web&color=w#/cwfx/zyzb"
+        }
+      ]
+    },
+    {
+      "id": "bilibili",
+      "name": "哔哩哔哩",
+      "ticker": "9626.HK / BILI",
+      "market": "HK",
+      "industry": "在线视频、社区、游戏与广告",
+      "fiscalPeriod": "2026 Q1",
+      "reportDate": "2026-03-31",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9626",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:50:04.788Z",
+      "quickNote": "哔哩哔哩 2026 Q1 总营收 RMB7.47bn，YoY 6.7%，归母净利润 RMB0.21bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 RMB7.47bn，YoY 6.7%，QoQ 1.5%。",
+        "毛利率 37.1%，归母净利润 YoY 2404.8%。",
+        "哔哩哔哩 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 74.72,
+          "displayValue": "75 亿",
+          "unit": "RMB",
+          "yoy": 6.7,
+          "qoq": 1.5,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 27.732,
+          "displayValue": "28 亿",
+          "unit": "RMB",
+          "yoy": 9.2,
+          "qoq": 2.1,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 37.1,
+          "displayValue": "37.1%",
+          "unit": "%",
+          "yoy": 0,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 2.098,
+          "displayValue": "2 亿",
+          "unit": "RMB",
+          "yoy": 2404.8,
+          "qoq": 18.3,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "24FY",
+          "revenue": 268.3,
+          "grossProfit": 87.7,
+          "netProfit": -13.5,
+          "grossMargin": 32.7,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q2",
+          "revenue": 117.9,
+          "grossProfit": 34.4,
+          "netProfit": -13.6,
+          "grossMargin": 29.2,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q3",
+          "revenue": 191,
+          "grossProfit": 59.9,
+          "netProfit": -14.4,
+          "grossMargin": 31.3,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25FY",
+          "revenue": 303.5,
+          "grossProfit": 111.1,
+          "netProfit": 11.9,
+          "grossMargin": 36.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q1",
+          "revenue": 70,
+          "grossProfit": 25.4,
+          "netProfit": -0.1,
+          "grossMargin": 36.3,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 143.4,
+          "grossProfit": 52.1,
+          "netProfit": 2.1,
+          "grossMargin": 36.4,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 220.3,
+          "grossProfit": 80.3,
+          "netProfit": 6.8,
+          "grossMargin": 36.5,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26Q1",
+          "revenue": 74.7,
+          "grossProfit": 27.7,
+          "netProfit": 2.1,
+          "grossMargin": 37.1,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-03-31",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9626"
+        }
+      ]
+    },
+    {
+      "id": "meituan",
+      "name": "美团",
+      "ticker": "3690.HK",
+      "market": "HK",
+      "industry": "本地生活、外卖、到店酒旅与新业务",
+      "fiscalPeriod": "2026 Q1",
+      "reportDate": "2026-03-31",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=3690",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:50:05.512Z",
+      "quickNote": "美团 2026 Q1 总营收 RMB91.04bn，YoY 5.6%，归母净利润 RMB-6.83bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 RMB91.04bn，YoY 5.6%，QoQ 1.3%。",
+        "毛利率 28.5%，归母净利润 YoY -167.9%。",
+        "美团 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 910.389,
+          "displayValue": "910 亿",
+          "unit": "RMB",
+          "yoy": 5.6,
+          "qoq": 1.3,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 259.70099999999996,
+          "displayValue": "260 亿",
+          "unit": "RMB",
+          "yoy": -19,
+          "qoq": -5.5,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 28.5,
+          "displayValue": "28.5%",
+          "unit": "%",
+          "yoy": 0,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": -68.274,
+          "displayValue": "-68 亿",
+          "unit": "RMB",
+          "yoy": -167.9,
+          "qoq": -72.3,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "24FY",
+          "revenue": 3375.9,
+          "grossProfit": 1297.8,
+          "netProfit": 358.1,
+          "grossMargin": 38.4,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q2",
+          "revenue": 1555.3,
+          "grossProfit": 595.9,
+          "netProfit": 167.2,
+          "grossMargin": 38.3,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q3",
+          "revenue": 2491,
+          "grossProfit": 963.4,
+          "netProfit": 295.9,
+          "grossMargin": 38.7,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25FY",
+          "revenue": 3648.5,
+          "grossProfit": 1110.1,
+          "netProfit": -233.6,
+          "grossMargin": 30.4,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q1",
+          "revenue": 862.1,
+          "grossProfit": 320.6,
+          "netProfit": 100.6,
+          "grossMargin": 37.4,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 1784,
+          "grossProfit": 628.3,
+          "netProfit": 104.2,
+          "grossMargin": 35.2,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 2738.9,
+          "grossProfit": 880.1,
+          "netProfit": -82.1,
+          "grossMargin": 32.1,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26Q1",
+          "revenue": 910.4,
+          "grossProfit": 259.7,
+          "netProfit": -68.3,
+          "grossMargin": 28.5,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-03-31",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=3690"
+        }
+      ]
+    },
+    {
+      "id": "meitu",
+      "name": "美图",
+      "ticker": "1357.HK",
+      "market": "HK",
+      "industry": "影像与设计 SaaS、AI 图像产品",
+      "fiscalPeriod": "2025 FY",
+      "reportDate": "2025-12-31",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1357",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:50:06.274Z",
+      "quickNote": "美图 2025 FY 总营收 RMB3.86bn，YoY 28.8%，归母净利润 RMB0.58bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 RMB3.86bn，YoY 28.8%，QoQ 9%。",
+        "毛利率 73.6%，归母净利润 YoY -27.6%。",
+        "美图 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 38.586999999999996,
+          "displayValue": "39 亿",
+          "unit": "RMB",
+          "yoy": 28.8,
+          "qoq": 9,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2025-12-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 28.387999999999998,
+          "displayValue": "28 亿",
+          "unit": "RMB",
+          "yoy": 24.6,
+          "qoq": 10,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2025-12-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 73.6,
+          "displayValue": "73.6%",
+          "unit": "%",
+          "yoy": 0,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2025-12-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 5.829,
+          "displayValue": "6 亿",
+          "unit": "RMB",
+          "yoy": -27.6,
+          "qoq": -35.1,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2025-12-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "22FY",
+          "revenue": 20.9,
+          "grossProfit": 11.9,
+          "netProfit": 0.9,
+          "grossMargin": 56.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "22Q2",
+          "revenue": 9.7,
+          "grossProfit": 5,
+          "netProfit": -2.7,
+          "grossMargin": 51.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "23FY",
+          "revenue": 27,
+          "grossProfit": 16.6,
+          "netProfit": 3.8,
+          "grossMargin": 61.4,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "23Q2",
+          "revenue": 12.6,
+          "grossProfit": 7.5,
+          "netProfit": 2.3,
+          "grossMargin": 59.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24FY",
+          "revenue": 30,
+          "grossProfit": 22.8,
+          "netProfit": 8.1,
+          "grossMargin": 68.7,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q2",
+          "revenue": 16.2,
+          "grossProfit": 10.5,
+          "netProfit": 3,
+          "grossMargin": 64.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25FY",
+          "revenue": 38.6,
+          "grossProfit": 28.4,
+          "netProfit": 5.8,
+          "grossMargin": 73.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 18.2,
+          "grossProfit": 13.4,
+          "netProfit": 4,
+          "grossMargin": 73.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2025-12-31",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1357"
+        }
+      ]
+    },
+    {
+      "id": "zhihu",
+      "name": "知乎",
+      "ticker": "2390.HK / ZH",
+      "market": "HK",
+      "industry": "社区、内容、会员与营销服务",
+      "fiscalPeriod": "2026 Q1",
+      "reportDate": "2026-03-31",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=2390",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:50:07.007Z",
+      "quickNote": "知乎 2026 Q1 总营收 RMB0.65bn，YoY -10.7%，归母净利润 RMB-0.01bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 RMB0.65bn，YoY -10.7%，QoQ -2.8%。",
+        "毛利率 59.6%，归母净利润 YoY 15.8%。",
+        "知乎 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 6.516,
+          "displayValue": "7 亿",
+          "unit": "RMB",
+          "yoy": -10.7,
+          "qoq": -2.8,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 3.883,
+          "displayValue": "4 亿",
+          "unit": "RMB",
+          "yoy": -13.9,
+          "qoq": -3.8,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 59.6,
+          "displayValue": "59.6%",
+          "unit": "%",
+          "yoy": 0,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": -0.085,
+          "displayValue": "0 亿",
+          "unit": "RMB",
+          "yoy": 15.8,
+          "qoq": 0.8,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "24FY",
+          "revenue": 36,
+          "grossProfit": 21.8,
+          "netProfit": -1.7,
+          "grossMargin": 60.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q2",
+          "revenue": 18.9,
+          "grossProfit": 11,
+          "netProfit": -2.5,
+          "grossMargin": 58.1,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q3",
+          "revenue": 27.4,
+          "grossProfit": 16.4,
+          "netProfit": -2.6,
+          "grossMargin": 59.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25FY",
+          "revenue": 27.5,
+          "grossProfit": 16.5,
+          "netProfit": -1.9,
+          "grossMargin": 59.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q1",
+          "revenue": 7.3,
+          "grossProfit": 4.5,
+          "netProfit": -0.1,
+          "grossMargin": 61.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 14.5,
+          "grossProfit": 9,
+          "netProfit": 0.6,
+          "grossMargin": 62.2,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 21.1,
+          "grossProfit": 13,
+          "netProfit": 0.2,
+          "grossMargin": 61.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26Q1",
+          "revenue": 6.5,
+          "grossProfit": 3.9,
+          "netProfit": -0.1,
+          "grossMargin": 59.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-03-31",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=2390"
+        }
+      ]
+    },
+    {
+      "id": "trip",
+      "name": "携程",
+      "ticker": "9961.HK / TCOM",
+      "market": "HK",
+      "industry": "在线旅游、住宿、交通票务与商旅",
+      "fiscalPeriod": "2026 Q1",
+      "reportDate": "2026-03-31",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9961",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:50:07.718Z",
+      "quickNote": "携程 2026 Q1 总营收 RMB16.21bn，YoY 17.2%，归母净利润 RMB2.5bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 RMB16.21bn，YoY 17.2%，QoQ 3.8%。",
+        "毛利率 79.5%，归母净利润 YoY -41.6%。",
+        "携程 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 162.07999999999998,
+          "displayValue": "162 亿",
+          "unit": "RMB",
+          "yoy": 17.2,
+          "qoq": 3.8,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 128.78,
+          "displayValue": "129 亿",
+          "unit": "RMB",
+          "yoy": 15.8,
+          "qoq": 3.5,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 79.5,
+          "displayValue": "79.5%",
+          "unit": "%",
+          "yoy": 0,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 24.990000000000002,
+          "displayValue": "25 亿",
+          "unit": "RMB",
+          "yoy": -41.6,
+          "qoq": -5.3,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "24FY",
+          "revenue": 533.8,
+          "grossProfit": 433,
+          "netProfit": 170.7,
+          "grossMargin": 81.1,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q2",
+          "revenue": 247.1,
+          "grossProfit": 201.3,
+          "netProfit": 81.4,
+          "grossMargin": 81.5,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q3",
+          "revenue": 406.1,
+          "grossProfit": 332,
+          "netProfit": 149.1,
+          "grossMargin": 81.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25FY",
+          "revenue": 625.1,
+          "grossProfit": 502.9,
+          "netProfit": 332.9,
+          "grossMargin": 80.4,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q1",
+          "revenue": 138.3,
+          "grossProfit": 111.3,
+          "netProfit": 42.8,
+          "grossMargin": 80.3,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 287.1,
+          "grossProfit": 231.5,
+          "netProfit": 91.2,
+          "grossMargin": 80.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 470.8,
+          "grossProfit": 381.3,
+          "netProfit": 290.1,
+          "grossMargin": 81,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26Q1",
+          "revenue": 162.1,
+          "grossProfit": 128.8,
+          "netProfit": 25,
+          "grossMargin": 79.5,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-03-31",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9961"
+        }
+      ]
+    },
+    {
+      "id": "tencent",
+      "name": "腾讯控股",
+      "ticker": "0700.HK",
+      "market": "HK",
+      "industry": "社交、游戏、广告、金融科技与云",
+      "fiscalPeriod": "2026 Q1",
+      "reportDate": "2026-03-31",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=0700",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:50:08.411Z",
+      "quickNote": "腾讯控股 2026 Q1 总营收 RMB196.46bn，YoY 9.1%，归母净利润 RMB58.09bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 RMB196.46bn，YoY 9.1%，QoQ 2.2%。",
+        "毛利率 56.6%，归母净利润 YoY 21.5%。",
+        "腾讯控股 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 1964.58,
+          "displayValue": "1965 亿",
+          "unit": "RMB",
+          "yoy": 9.1,
+          "qoq": 2.2,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 1112.65,
+          "displayValue": "1113 亿",
+          "unit": "RMB",
+          "yoy": 10.7,
+          "qoq": 2.5,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 56.6,
+          "displayValue": "56.6%",
+          "unit": "%",
+          "yoy": 0,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 580.9300000000001,
+          "displayValue": "581 亿",
+          "unit": "RMB",
+          "yoy": 21.5,
+          "qoq": 4.6,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "24FY",
+          "revenue": 6602.6,
+          "grossProfit": 3492.5,
+          "netProfit": 1940.7,
+          "grossMargin": 52.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q2",
+          "revenue": 3206.2,
+          "grossProfit": 1697.6,
+          "netProfit": 895.2,
+          "grossMargin": 52.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q3",
+          "revenue": 4878.1,
+          "grossProfit": 2585.9,
+          "netProfit": 1427.5,
+          "grossMargin": 53,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25FY",
+          "revenue": 7517.7,
+          "grossProfit": 4225.9,
+          "netProfit": 2248.4,
+          "grossMargin": 56.2,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q1",
+          "revenue": 1800.2,
+          "grossProfit": 1004.9,
+          "netProfit": 478.2,
+          "grossMargin": 55.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 3645.3,
+          "grossProfit": 2055.1,
+          "netProfit": 1034.5,
+          "grossMargin": 56.4,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 5573.9,
+          "grossProfit": 3143,
+          "netProfit": 1665.8,
+          "grossMargin": 56.4,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26Q1",
+          "revenue": 1964.6,
+          "grossProfit": 1112.7,
+          "netProfit": 580.9,
+          "grossMargin": 56.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-03-31",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=0700"
+        }
+      ]
+    },
+    {
+      "id": "weibo",
+      "name": "微博",
+      "ticker": "9898.HK / WB",
+      "market": "HK",
+      "industry": "社交媒体、广告与增值服务",
+      "fiscalPeriod": "2026 Q1",
+      "reportDate": "2026-03-31",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9898",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:50:09.124Z",
+      "quickNote": "微博 2026 Q1 总营收 RMB2.92bn，YoY 6.2%，归母净利润 RMB0.24bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 RMB2.92bn，YoY 6.2%，QoQ 0.5%。",
+        "毛利率 72.1%，归母净利润 YoY -67.5%。",
+        "微博 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 29.153,
+          "displayValue": "29 亿",
+          "unit": "RMB",
+          "yoy": 6.2,
+          "qoq": 0.5,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 21.006,
+          "displayValue": "21 亿",
+          "unit": "RMB",
+          "yoy": -5,
+          "qoq": -1.2,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 72.1,
+          "displayValue": "72.1%",
+          "unit": "%",
+          "yoy": 0,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 2.402,
+          "displayValue": "2 亿",
+          "unit": "RMB",
+          "yoy": -67.5,
+          "qoq": -16.7,
+          "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "24FY",
+          "revenue": 126.1,
+          "grossProfit": 99.6,
+          "netProfit": 21.6,
+          "grossMargin": 78.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q2",
+          "revenue": 59.4,
+          "grossProfit": 46.8,
+          "netProfit": 11.5,
+          "grossMargin": 78.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q3",
+          "revenue": 90.9,
+          "grossProfit": 72.1,
+          "netProfit": 20.5,
+          "grossMargin": 79.3,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25FY",
+          "revenue": 123.5,
+          "grossProfit": 93.9,
+          "netProfit": 31.6,
+          "grossMargin": 76,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q1",
+          "revenue": 28.5,
+          "grossProfit": 22.1,
+          "netProfit": 7.7,
+          "grossMargin": 77.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 60.3,
+          "grossProfit": 46.5,
+          "netProfit": 16.7,
+          "grossMargin": 77.2,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 91.2,
+          "grossProfit": 70,
+          "netProfit": 32.2,
+          "grossMargin": 76.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26Q1",
+          "revenue": 29.2,
+          "grossProfit": 21,
+          "netProfit": 2.4,
+          "grossMargin": 72.1,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-03-31",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9898"
+        }
+      ]
+    },
+    {
+      "id": "meta",
+      "name": "Meta",
+      "ticker": "META",
+      "market": "US",
+      "industry": "社交广告、Reality Labs 与 AI 基础设施",
+      "fiscalPeriod": "2026 Q1",
+      "reportDate": "2026-04-30",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=META&type=web&color=w#/cwfx/zyzb",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:50:09.974Z",
+      "quickNote": "Meta 2026 Q1 总营收 USD56.31bn，YoY 33.1%，归母净利润 USD26.77bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 USD56.31bn，YoY 33.1%。",
+        "毛利率 81.9%，归母净利润 YoY 60.9%。",
+        "Meta 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 56.311,
+          "displayValue": "$56.3bn",
+          "unit": "USD",
+          "yoy": 33.1,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 46.093,
+          "displayValue": "$46.1bn",
+          "unit": "USD",
+          "yoy": 32.7,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 81.9,
+          "displayValue": "81.9%",
+          "unit": "%",
+          "yoy": -0.3,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 26.773,
+          "displayValue": "$26.8bn",
+          "unit": "USD",
+          "yoy": 60.9,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "24Q2",
+          "revenue": 39.1,
+          "grossProfit": 31.8,
+          "netProfit": 13.5,
+          "grossMargin": 81.3,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q3",
+          "revenue": 40.6,
+          "grossProfit": 33.2,
+          "netProfit": 15.7,
+          "grossMargin": 81.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q4",
+          "revenue": 48.4,
+          "grossProfit": 39.5,
+          "netProfit": 20.8,
+          "grossMargin": 81.7,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q1",
+          "revenue": 42.3,
+          "grossProfit": 34.7,
+          "netProfit": 16.6,
+          "grossMargin": 82.1,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 47.5,
+          "grossProfit": 39,
+          "netProfit": 18.3,
+          "grossMargin": 82.1,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 51.2,
+          "grossProfit": 42,
+          "netProfit": 2.7,
+          "grossMargin": 82,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q4",
+          "revenue": 59.9,
+          "grossProfit": 49,
+          "netProfit": 22.8,
+          "grossMargin": 81.8,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26Q1",
+          "revenue": 56.3,
+          "grossProfit": 46.1,
+          "netProfit": 26.8,
+          "grossMargin": 81.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-04-30",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=META&type=web&color=w#/cwfx/zyzb"
+        }
+      ]
+    },
+    {
+      "id": "apple",
+      "name": "Apple",
+      "ticker": "AAPL",
+      "market": "US",
+      "industry": "消费电子、服务与端侧 AI",
+      "fiscalPeriod": "2026 Q2",
+      "reportDate": "2026-05-01",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=AAPL&type=web&color=w#/cwfx/zyzb",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:50:10.866Z",
+      "quickNote": "Apple 2026 Q2 总营收 USD111.18bn，YoY 16.6%，归母净利润 USD29.58bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 USD111.18bn，YoY 16.6%。",
+        "毛利率 49.3%，归母净利润 YoY 19.4%。",
+        "Apple 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 111.184,
+          "displayValue": "$111.2bn",
+          "unit": "USD",
+          "yoy": 16.6,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-28",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 54.781,
+          "displayValue": "$54.8bn",
+          "unit": "USD",
+          "yoy": 22.1,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-28",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 49.3,
+          "displayValue": "49.3%",
+          "unit": "%",
+          "yoy": 4.7,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-28",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 29.578,
+          "displayValue": "$29.6bn",
+          "unit": "USD",
+          "yoy": 19.4,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-28",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "24Q3",
+          "revenue": 85.8,
+          "grossProfit": 39.7,
+          "netProfit": 21.4,
+          "grossMargin": 46.3,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q4",
+          "revenue": 94.9,
+          "grossProfit": 43.9,
+          "netProfit": 14.7,
+          "grossMargin": 46.2,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q1",
+          "revenue": 124.3,
+          "grossProfit": 58.3,
+          "netProfit": 36.3,
+          "grossMargin": 46.9,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 95.4,
+          "grossProfit": 44.9,
+          "netProfit": 24.8,
+          "grossMargin": 47.1,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 94,
+          "grossProfit": 43.7,
+          "netProfit": 23.4,
+          "grossMargin": 46.5,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q4",
+          "revenue": 102.5,
+          "grossProfit": 48.3,
+          "netProfit": 27.5,
+          "grossMargin": 47.2,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26Q1",
+          "revenue": 143.8,
+          "grossProfit": 69.2,
+          "netProfit": 42.1,
+          "grossMargin": 48.2,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "26Q2",
+          "revenue": 111.2,
+          "grossProfit": 54.8,
+          "netProfit": 29.6,
+          "grossMargin": 49.3,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-05-01",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=AAPL&type=web&color=w#/cwfx/zyzb"
+        }
+      ]
+    },
+    {
+      "id": "microsoft",
+      "name": "微软",
+      "ticker": "MSFT",
+      "market": "US",
+      "industry": "云、软件、生产力工具与 AI",
+      "fiscalPeriod": "2025 Q3",
+      "reportDate": "2026-04-29",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "AkShare third-party",
+      "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=MSFT&type=web&color=w#/cwfx/zyzb",
+      "sourceLabel": "AkShare / EastMoney third-party snapshot",
+      "verifiedAt": "2026-07-10T03:50:11.721Z",
+      "quickNote": "微软 2025 Q3 总营收 USD82.89bn，YoY 18.3%，归母净利润 USD31.78bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 USD82.89bn，YoY 18.3%。",
+        "毛利率 67.6%，归母净利润 YoY 23.1%。",
+        "微软 分部收入已按官方披露抽取。"
+      ],
+      "risks": [
+        "部分业务分部未披露完整同比，需要人工 review。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 82.886,
+          "displayValue": "$82.9bn",
+          "unit": "USD",
+          "yoy": 18.3,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 56.058,
+          "displayValue": "$56.1bn",
+          "unit": "USD",
+          "yoy": 16.4,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 67.6,
+          "displayValue": "67.6%",
+          "unit": "%",
+          "yoy": -1.6,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 31.778,
+          "displayValue": "$31.8bn",
+          "unit": "USD",
+          "yoy": 23.1,
+          "qoq": 0,
+          "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "23Q4",
+          "revenue": 64.7,
+          "grossProfit": 45,
+          "netProfit": 22,
+          "grossMargin": 69.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q1",
+          "revenue": 65.6,
+          "grossProfit": 45.5,
+          "netProfit": 24.7,
+          "grossMargin": 69.4,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q2",
+          "revenue": 69.6,
+          "grossProfit": 47.8,
+          "netProfit": 24.1,
+          "grossMargin": 68.7,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q3",
+          "revenue": 70.1,
+          "grossProfit": 48.1,
+          "netProfit": 25.8,
+          "grossMargin": 68.7,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "24Q4",
+          "revenue": 76.4,
+          "grossProfit": 52.4,
+          "netProfit": 27.2,
+          "grossMargin": 68.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q1",
+          "revenue": 77.7,
+          "grossProfit": 53.6,
+          "netProfit": 27.7,
+          "grossMargin": 69,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q2",
+          "revenue": 81.3,
+          "grossProfit": 55.3,
+          "netProfit": 38.5,
+          "grossMargin": 68,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        },
+        {
+          "period": "25Q3",
+          "revenue": 82.9,
+          "grossProfit": 56.1,
+          "netProfit": 31.8,
+          "grossMargin": 67.6,
+          "operatingMargin": 0,
+          "expenseRatio": 0
+        }
+      ],
+      "segments": [],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-04-29",
+          "status": "早期产品化",
+          "summary": "AkShare only provides third-party financial indicators here; AI revenue and product updates remain pending official-source extraction.",
+          "source": "AkShare third-party financial indicators",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=MSFT&type=web&color=w#/cwfx/zyzb"
+        }
+      ]
+    },
     {
       "id": "netease",
       "name": "网易",

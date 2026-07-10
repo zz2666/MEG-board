@@ -131,6 +131,10 @@ function marketReaction(note: ParsedQuickNote) {
 export function parsedReportToDashboardCompany(
   config: CompanySourceConfig,
   parsed: ParsedEarningsReport,
+  options: {
+    dataQuality?: Company["dataQuality"];
+    sourceLabel?: string;
+  } = {},
 ): Company {
   const comparativeReports = parsed.comparativeReports ?? [];
   const reports: ReportLike[] = [
@@ -162,9 +166,9 @@ export function parsedReportToDashboardCompany(
     shareReaction: marketReaction(parsed.quickNote),
     status: "已发布",
     aiTag: "早期产品化",
-    dataQuality: "SEC verified",
+    dataQuality: options.dataQuality ?? "SEC verified",
     sourceUrl: parsed.sourceUrl,
-    sourceLabel: "SEC filing snapshot",
+    sourceLabel: options.sourceLabel ?? "SEC filing snapshot",
     verifiedAt: new Date().toISOString(),
     quickNote: parsed.quickNote.headline,
     highlights: quickNoteArray(parsed.quickNote.highlights, [`${config.name} ${parsed.periodLabel} 财报已由官方来源解析。`]),

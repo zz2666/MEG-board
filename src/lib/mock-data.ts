@@ -57,7 +57,7 @@ export type Company = {
   shareReaction: string;
   status: "已发布" | "待校验" | "抓取中";
   aiTag: AiDevelopment["status"];
-  dataQuality: "SEC verified" | "Demo";
+  dataQuality: "SEC verified" | "AkShare third-party" | "Demo";
   sourceUrl?: string;
   sourceLabel?: string;
   verifiedAt?: string;

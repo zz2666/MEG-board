@@ -11,8 +11,10 @@
     "db:push": "prisma db push",
     "db:seed": "tsx -r tsconfig-paths/register scripts/seed-companies.ts",
     "extract:source": "tsx -r tsconfig-paths/register scripts/extract-official-source.ts",
+    "import:akshare": "tsx -r tsconfig-paths/register scripts/import-akshare.ts",
     "import:earnings": "tsx -r tsconfig-paths/register scripts/import-earnings.ts",
     "parser:plan": "tsx -r tsconfig-paths/register scripts/list-parser-plan.ts",
+    "snapshot:akshare": "npm run import:akshare -- --all --snapshot",
     "snapshot:earnings": "npm run import:earnings -- --implemented --snapshot"
   },
   "dependencies": {

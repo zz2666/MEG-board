@@ -87,6 +87,12 @@ function getPeriodDescription(range: string, company: Company) {
   return `最近两年：${company.quarters.at(-8)?.period ?? latest}-${latest}`;
 }
 
+function qualityBadgeClass(dataQuality: Company["dataQuality"]) {
+  if (dataQuality === "SEC verified") return "quality-badge verified";
+  if (dataQuality === "AkShare third-party") return "quality-badge third-party";
+  return "quality-badge demo";
+}
+
 function buildGeneratedReport(company: Company) {
   const revenue = getTopMetric(company, "总营收");
   const grossMargin = getTopMetric(company, "毛利率");
@@ -176,7 +182,7 @@ export default function Home() {
 
   const filteredCompanies = useMemo(() => {
     const normalized = query.trim().toLowerCase();
-    const displayCompanies = backendCompanies.filter((company) => company.dataQuality === "SEC verified");
+    const displayCompanies = backendCompanies.filter((company) => company.dataQuality !== "Demo");
     if (!normalized) return displayCompanies;
     return displayCompanies.filter((company) =>
       [company.name, company.ticker, company.industry, company.market]
@@ -350,7 +356,7 @@ export default function Home() {
               ))}
             </div>
             <span className={statusStyles[activeCompany.status]}>{activeCompany.status}</span>
-            <span className={`quality-badge ${activeCompany.dataQuality === "SEC verified" ? "verified" : "demo"}`}>
+            <span className={qualityBadgeClass(activeCompany.dataQuality)}>
               <BadgeCheck size={14} />
               {activeCompany.dataQuality}
             </span>
@@ -494,7 +500,12 @@ export default function Home() {
                 ))}
               </div>
 
-              {activeSegmentData ? (
+              {!activeCompany.segments.length ? (
+                <div className="segment-empty">
+                  <strong>分部收入等待官方解析</strong>
+                  <span>当前第三方指标源只覆盖公司级财务数据。</span>
+                </div>
+              ) : activeSegmentData ? (
                 <div className="segment-detail">
                   <div>
                     <p className="eyebrow">{activeSegmentData.name}</p>
@@ -548,10 +559,16 @@ export default function Home() {
               <button
                 className="secondary-button"
                 onClick={generateWithLlm}
-                disabled={Boolean(llmLoading)}
+                disabled={Boolean(llmLoading) || activeCompany.dataQuality !== "SEC verified"}
               >
                 <Sparkles size={16} />
-                {llmLoadingForActive ? "AI 生成中" : activeLlmNote ? "重新生成 AI 财报" : "AI 生成财报"}
+                {activeCompany.dataQuality !== "SEC verified"
+                  ? "仅官方数据可生成"
+                  : llmLoadingForActive
+                    ? "AI 生成中"
+                    : activeLlmNote
+                      ? "重新生成 AI 财报"
+                      : "AI 生成财报"}
               </button>
               {activeLlmError ? <p className="generator-error">{activeLlmError}</p> : null}
               <div className="generated-report">
