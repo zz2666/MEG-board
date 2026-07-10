@@ -4,6 +4,12 @@ import type {
   QuarterPoint,
   Segment,
 } from "@/lib/mock-data";
+import {
+  currencyFromUnit,
+  formatMetricDisplay,
+  isMonetaryUnit,
+  toDashboardMonetaryValue,
+} from "@/lib/financial-format";
 import type { CompanySourceConfig } from "@/lib/sources/types";
 import type {
   ParsedBusinessSegment,
@@ -52,12 +58,6 @@ function formatPeriod(report: Pick<ReportLike, "fiscalYear" | "fiscalQuarter">) 
   return `${String(report.fiscalYear).slice(2)}${report.fiscalQuarter}`;
 }
 
-function formatDisplay(value: number, unit: string) {
-  if (unit === "%") return `${round(value)}%`;
-  if (unit === "RMB bn") return `${Math.round(value * 10)} 亿`;
-  return `${value}`;
-}
-
 function metricValue(report: ReportLike, normalized: string) {
   return report.metrics.find((metric) => metric.normalized === normalized)?.value ?? 0;
 }
@@ -69,9 +69,9 @@ function buildDashboardMetric(metric: ParsedFinancialMetric): DashboardMetric | 
   return {
     label: meta.label,
     shortLabel: meta.shortLabel,
-    value: metric.unit === "RMB bn" ? metric.value * 10 : metric.value,
-    displayValue: formatDisplay(metric.value, metric.unit),
-    unit: metric.unit === "%" ? "%" : "RMB",
+    value: isMonetaryUnit(metric.unit) ? toDashboardMonetaryValue(metric.value, metric.unit) : metric.value,
+    displayValue: formatMetricDisplay(metric.value, metric.unit),
+    unit: metric.unit === "%" ? "%" : currencyFromUnit(metric.unit),
     yoy: metric.yoy ?? 0,
     qoq: metric.qoq ?? 0,
     source: metric.sourceAnchor,
@@ -80,7 +80,7 @@ function buildDashboardMetric(metric: ParsedFinancialMetric): DashboardMetric | 
   };
 }
 
-function buildQuarterPoint(report: ReportLike): QuarterPoint {
+function buildQuarterPoint(report: ReportLike, currencyUnit: string): QuarterPoint {
   const revenue = metricValue(report, "revenue");
   const grossProfit = metricValue(report, "gross_profit");
   const netProfit = metricValue(report, "net_income_attributable");
@@ -88,11 +88,13 @@ function buildQuarterPoint(report: ReportLike): QuarterPoint {
   const operatingMargin = metricValue(report, "operating_margin");
   const expenseRatio = metricValue(report, "expense_ratio");
 
+  const monetaryMultiplier = currencyUnit === "RMB bn" ? 10 : 1;
+
   return {
     period: formatPeriod(report),
-    revenue: round(revenue * 10),
-    grossProfit: round(grossProfit * 10),
-    netProfit: round(netProfit * 10),
+    revenue: round(revenue * monetaryMultiplier),
+    grossProfit: round(grossProfit * monetaryMultiplier),
+    netProfit: round(netProfit * monetaryMultiplier),
     grossMargin: round(grossMargin),
     operatingMargin: round(operatingMargin),
     expenseRatio: round(expenseRatio),
@@ -102,10 +104,11 @@ function buildQuarterPoint(report: ReportLike): QuarterPoint {
 function buildSegments(segments: ParsedBusinessSegment[]): Segment[] {
   return segments.map((segment, index) => {
     const revenue = segment.revenue ?? 0;
+    const revenueUnit = segment.revenueUnit ?? "RMB bn";
     return {
       name: segment.name,
-      revenue: round(revenue * 10),
-      displayRevenue: segment.revenueUnit === "RMB bn" ? `${Math.round(revenue * 10)} 亿` : `${revenue}`,
+      revenue: round(toDashboardMonetaryValue(revenue, revenueUnit)),
+      displayRevenue: formatMetricDisplay(revenue, revenueUnit),
       share: segment.share ?? 0,
       yoy: segment.yoy ?? 0,
       qoq: segment.qoq ?? 0,
@@ -144,6 +147,9 @@ export function parsedReportToDashboardCompany(
   const metrics = parsed.metrics
     .map(buildDashboardMetric)
     .filter((metric): metric is DashboardMetric => Boolean(metric));
+  const currencyUnit =
+    parsed.metrics.find((metric) => metric.normalized === "revenue" && isMonetaryUnit(metric.unit))?.unit ??
+    "RMB bn";
 
   return {
     id: config.id,
@@ -164,7 +170,7 @@ export function parsedReportToDashboardCompany(
     highlights: quickNoteArray(parsed.quickNote.highlights, [`${config.name} ${parsed.periodLabel} 财报已由官方来源解析。`]),
     risks: quickNoteArray(parsed.quickNote.weaknesses, ["后续需补充人工 review。"]),
     metrics,
-    quarters: reports.map(buildQuarterPoint),
+    quarters: reports.map((report) => buildQuarterPoint(report, currencyUnit)),
     segments: buildSegments(parsed.segments),
     aiDevelopments: [
       {

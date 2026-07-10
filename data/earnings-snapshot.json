@@ -1,10 +1,11 @@
 {
-  "generatedAt": "2026-07-09T09:39:59.467Z",
+  "generatedAt": "2026-07-10T02:52:43.091Z",
   "provenance": {
     "mode": "snapshot",
     "note": "Temporary snapshot generated from official source parsers. This is a DB-free bridge until PostgreSQL is connected.",
     "sourceUrls": [
-      "https://www.sec.gov/Archives/edgar/data/1110646/000110465926064764/tm2615053d1_ex99-1.htm"
+      "https://www.sec.gov/Archives/edgar/data/1110646/000110465926064764/tm2615053d1_ex99-1.htm",
+      "https://www.sec.gov/Archives/edgar/data/1329099/000119312526228123/d156481dex991.htm"
     ]
   },
   "companies": [
@@ -22,7 +23,7 @@
       "dataQuality": "SEC verified",
       "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1110646/000110465926064764/tm2615053d1_ex99-1.htm",
       "sourceLabel": "SEC filing snapshot",
-      "verifiedAt": "2026-07-09T09:39:59.473Z",
+      "verifiedAt": "2026-07-10T02:52:43.099Z",
       "quickNote": "整体业绩超预期，游戏主业环比反弹、毛利率提升至高位，归母净利润创单季高位；后续增长仍需观察新游兑现节奏。",
       "highlights": [
         "总营收 RMB30.591281bn，YoY 6.1%，QoQ 11.1%，主要由游戏业务驱动。",
@@ -194,6 +195,208 @@
           "summary": "财报和公司动态显示 AI 主要落在教育、办公和企业服务场景，现阶段更偏产品迭代和商业化试点。",
           "source": "NetEase Announces First Quarter 2026 Unaudited Financial Results",
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1110646/000110465926064764/tm2615053d1_ex99-1.htm"
+        }
+      ]
+    },
+    {
+      "id": "baidu",
+      "name": "百度",
+      "ticker": "9888.HK / BIDU",
+      "market": "HK",
+      "industry": "搜索、广告、云与自动驾驶",
+      "fiscalPeriod": "2026 Q1",
+      "reportDate": "2026-05-18",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "SEC verified",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1329099/000119312526228123/d156481dex991.htm",
+      "sourceLabel": "SEC filing snapshot",
+      "verifiedAt": "2026-07-10T02:52:43.100Z",
+      "quickNote": "百度 2026 Q1 总营收 RMB32.08bn，YoY -1.2%，归母净利润 RMB3.45bn；后续重点观察核心业务增长和 AI 商业化兑现。",
+      "highlights": [
+        "总营收 RMB32.08bn，YoY -1.2%，QoQ -2%。",
+        "毛利率 38.9%，归母净利润 YoY -55.4%。",
+        "百度主体业务 收入 RMB26bn，占比 81.1%。"
+      ],
+      "risks": [
+        "在线营销服务 YoY -22%，是本期需要跟踪的业务分部。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
+        "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 320.75,
+          "displayValue": "321 亿",
+          "unit": "RMB",
+          "yoy": -1.2,
+          "qoq": -2,
+          "source": "Revenue table row: 32.452, 32.74, 32.075 RMB bn",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利润",
+          "shortLabel": "Gross Profit",
+          "value": 124.86000000000001,
+          "displayValue": "125 亿",
+          "unit": "RMB",
+          "yoy": -16.6,
+          "qoq": -13.7,
+          "source": "Derived from revenue less cost of revenue.",
+          "rank": "官方披露"
+        },
+        {
+          "label": "毛利率",
+          "shortLabel": "Gross Margin",
+          "value": 38.9,
+          "displayValue": "38.9%",
+          "unit": "%",
+          "yoy": -7.2,
+          "qoq": -5.2,
+          "source": "Derived from gross profit divided by revenue.",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "营业利润",
+          "shortLabel": "Operating Profit",
+          "value": 31.93,
+          "displayValue": "32 亿",
+          "unit": "RMB",
+          "yoy": -29.2,
+          "qoq": 115.3,
+          "source": "Operating income table row: 4.508, 1.483, 3.193 RMB bn",
+          "rank": "官方披露"
+        },
+        {
+          "label": "营业利润率",
+          "shortLabel": "Operating Margin",
+          "value": 10,
+          "displayValue": "10.0%",
+          "unit": "%",
+          "yoy": -3.9,
+          "qoq": 5.4,
+          "source": "Derived from operating income divided by revenue.",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 34.449999999999996,
+          "displayValue": "34 亿",
+          "unit": "RMB",
+          "yoy": -55.4,
+          "qoq": 93.3,
+          "source": "Net income attributable to Baidu table row: 7.717, 1.782, 3.445 RMB bn",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "25Q1",
+          "revenue": 324.5,
+          "grossProfit": 149.7,
+          "netProfit": 77.2,
+          "grossMargin": 46.1,
+          "operatingMargin": 13.9,
+          "expenseRatio": 32.2
+        },
+        {
+          "period": "25Q4",
+          "revenue": 327.4,
+          "grossProfit": 144.6,
+          "netProfit": 17.8,
+          "grossMargin": 44.2,
+          "operatingMargin": 4.5,
+          "expenseRatio": 39.6
+        },
+        {
+          "period": "26Q1",
+          "revenue": 320.8,
+          "grossProfit": 124.9,
+          "netProfit": 34.4,
+          "grossMargin": 38.9,
+          "operatingMargin": 10,
+          "expenseRatio": 29
+        }
+      ],
+      "segments": [
+        {
+          "name": "百度主体业务",
+          "revenue": 260,
+          "displayRevenue": "260 亿",
+          "share": 81.1,
+          "yoy": 2.1,
+          "qoq": -0.4,
+          "driver": "Baidu General Business 收入恢复正增长，AI Cloud 是主要增量来源。",
+          "color": "#1d4ed8",
+          "trend": [
+            260
+          ]
+        },
+        {
+          "name": "爱奇艺",
+          "revenue": 62.3,
+          "displayRevenue": "62 亿",
+          "share": 19.4,
+          "yoy": -13.4,
+          "qoq": -8.4,
+          "driver": "iQIYI 收入同比下降，内容业务仍承压。",
+          "color": "#0f766e",
+          "trend": [
+            62.3
+          ]
+        },
+        {
+          "name": "AI Cloud Infra",
+          "revenue": 88,
+          "displayRevenue": "88 亿",
+          "share": 27.4,
+          "yoy": 79,
+          "qoq": 52,
+          "driver": "企业 AI 基建需求推动 AI Cloud Infra 高增长。",
+          "color": "#be123c",
+          "trend": [
+            88
+          ]
+        },
+        {
+          "name": "在线营销服务",
+          "revenue": 126,
+          "displayRevenue": "126 亿",
+          "share": 39.3,
+          "yoy": -22,
+          "qoq": -17,
+          "driver": "在线营销服务收入同比和环比下滑，传统广告仍是主要压力点。",
+          "color": "#ca8a04",
+          "trend": [
+            126
+          ]
+        },
+        {
+          "name": "AI Applications",
+          "revenue": 25,
+          "displayRevenue": "25 亿",
+          "share": 7.8,
+          "yoy": 0,
+          "qoq": 0,
+          "driver": "AI Applications 收入公告披露为同比基本持平。",
+          "color": "#7c3aed",
+          "trend": [
+            25
+          ]
+        }
+      ],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-05-18",
+          "status": "早期产品化",
+          "summary": "公告明确披露 Baidu Core AI-powered Business、AI Cloud Infra 和 AI Applications 收入，AI 已成为百度主体业务的核心增长来源之一。",
+          "source": "Baidu Announces First Quarter 2026 Results",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1329099/000119312526228123/d156481dex991.htm"
         }
       ]
     }

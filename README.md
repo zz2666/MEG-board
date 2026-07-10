@@ -61,13 +61,37 @@ npm run snapshot:earnings
 
 当前默认不主动连接 `localhost:5432`，避免没有本地数据库时页面卡住。后续接公司数据库时，把 `.env` 的 `DATABASE_URL` 换成公司库连接串即可切回 SQL-first。
 
-当前 parser 使用 SEC HTML 表格精确值，单位统一存为 `RMB bn`。YoY 优先使用公告披露百分比；QoQ 在公告未直接给出时用表格精确值反算。脚本会把原始 source text、content hash、metrics、segments、quick note 和 processing job 写入 SQL。
+当前 parser 使用官方 HTML/PDF/XBRL 来源，已支持 `RMB bn`、`USD bn`、`HKD bn` 和 `%`。YoY 优先使用公告披露百分比；QoQ 在公告未直接给出且表格没有上一季度时保留为空，不让模型补数。脚本会把原始 source text、content hash、metrics、segments、quick note 和 processing job 写入 SQL。
 
 当前数据源支持边界：
 
-- 网易：SEC source 抓取 + 2026 Q1 deterministic parser + SQL 入库。
-- 百度、阿里：SEC submissions 发现和 source document 抓取框架已接入；需要继续补公司 parser profile 才会进入看板。
-- 腾讯：已进入 tracking config，但主要来源是 HKEX/公司 IR PDF，不走 SEC；需要单独实现 HKEX/IR PDF parser 后才能结构化数字。
+- 网易：SEC source 抓取 + 2026 Q1 deterministic parser + SQL/snapshot 入库。
+- 百度：SEC Exhibit 99.1 抓取 + 2026 Q1 deterministic parser + SQL/snapshot 入库，含 Baidu Core AI-powered Business、AI Cloud Infra、在线营销、爱奇艺等分部。
+- 阿里、京东、B 站、知乎、携程、微博：SEC 6-K Exhibit HTML source discovery 已接入；通用 `sec-6k-standard` parser scaffold 已有，但需要继续给每家公司确认 row label / 分部映射后再开放结构化入库。
+- Alphabet、Meta、Apple、微软：SEC 10-Q discovery 已接入，`sec-companyfacts-us-tech` / CompanyFacts scaffold 已有；需要逐家公司确认 XBRL concept 和分部表后再开放结构化入库。
+- 腾讯、快手、美团、美图：HKEX/公司 IR PDF 分类已接入，`pdf-text-standard` scaffold 和 PDF 文本抽取已可用；需要传官方 PDF URL 并为每家公司确认表格规则。
+- 中文在线：CNINFO/A 股公告分类已接入，先走官方 PDF 文本抽取；需要确认公告 URL 和 A 股财报表格规则。
+
+查看所有公司 parser 分类和状态：
+
+```bash
+npm run parser:plan
+```
+
+抽取官方来源文本但不入库：
+
+```bash
+npm run extract:source -- --company jd
+npm run extract:source -- --company tencent --source-url https://static.www.tencent.com/uploads/2026-q1-results.pdf
+```
+
+只生成当前已实现 deterministic parser 的 snapshot：
+
+```bash
+npm run snapshot:earnings
+```
+
+这会抓取网易和百度官方 SEC 文件并写入 `data/earnings-snapshot.json`。未实现 parser 的公司不会进入 verified 看板，避免展示未校验数字。
 
 ## LLM Quick Notes
 
@@ -128,8 +152,10 @@ Prisma schema 位于 `prisma/schema.prisma`，核心模型包括：
 
 ## Next Implementation Steps
 
-1. 给百度、阿里补 deterministic parser profile。
-2. 实现腾讯 HKEX/IR PDF 抓取和表格解析。
-3. 接公司 PostgreSQL 或云数据库，把 snapshot 切到 SQL-first。
-4. 增加人工校验后台和 crawler / LLM 任务队列。
-5. 接行情源，用财报后首个交易窗口替换静态市场反应。
+1. 给京东 / 阿里补 `sec-6k-standard` deterministic row label profile。
+2. 给 B 站 / 知乎 / 携程 / 微博补 6-K Exhibit 精确选择和分部映射。
+3. 给 Alphabet / Meta / Apple / 微软补 CompanyFacts concept profile。
+4. 给腾讯 / 快手 / 美团 / 美图 / 中文在线补 PDF 表格解析规则。
+5. 接公司 PostgreSQL 或云数据库，把 snapshot 切到 SQL-first。
+6. 增加人工校验后台和 crawler / LLM 任务队列。
+7. 接行情源，用财报后首个交易窗口替换静态市场反应。

@@ -17,6 +17,33 @@ type SecSubmissions = {
   };
 };
 
+export type SecCompanyFacts = {
+  cik: number;
+  entityName: string;
+  facts?: Record<
+    string,
+    Record<
+      string,
+      {
+        label?: string;
+        description?: string;
+        units?: Record<
+          string,
+          Array<{
+            end?: string;
+            filed?: string;
+            form?: string;
+            fp?: string;
+            fy?: number;
+            frame?: string;
+            val?: number;
+          }>
+        >;
+      }
+    >
+  >;
+};
+
 export function normalizeCik(cik: string) {
   return cik.replace(/\D/g, "").padStart(10, "0");
 }
@@ -86,10 +113,19 @@ export async function fetchSecText(url: string) {
   return response.text();
 }
 
+export async function fetchSecJson<T>(url: string) {
+  const response = await secFetch(url);
+  return (await response.json()) as T;
+}
+
 export async function fetchSecSubmissions(cik: string) {
   const normalized = normalizeCik(cik);
-  const response = await secFetch(`https://data.sec.gov/submissions/CIK${normalized}.json`);
-  return (await response.json()) as SecSubmissions;
+  return fetchSecJson<SecSubmissions>(`https://data.sec.gov/submissions/CIK${normalized}.json`);
+}
+
+export async function fetchSecCompanyFacts(cik: string) {
+  const normalized = normalizeCik(cik);
+  return fetchSecJson<SecCompanyFacts>(`https://data.sec.gov/api/xbrl/companyfacts/CIK${normalized}.json`);
 }
 
 export function buildSecDocumentUrl(cik: string, accessionNumber: string, primaryDocument: string) {
@@ -104,6 +140,56 @@ export function buildSecFilingUrl(cik: string, accessionNumber: string) {
   )}/`;
 }
 
+function urlDirname(url: string) {
+  return url.slice(0, url.lastIndexOf("/") + 1);
+}
+
+function normalizeSecHref(baseUrl: string, href: string) {
+  if (href.startsWith("http")) return href;
+  if (href.startsWith("/")) return `https://www.sec.gov${href}`;
+  return `${urlDirname(baseUrl)}${href}`;
+}
+
+export async function resolveSecExhibitDocumentUrl(params: {
+  cik: string;
+  accessionNumber: string;
+  primaryDocumentUrl: string;
+  keywords?: string[];
+  excludeKeywords?: string[];
+}) {
+  const indexUrl = `${buildSecFilingUrl(params.cik, params.accessionNumber)}${params.accessionNumber}-index.html`;
+
+  try {
+    const indexHtml = await fetchSecText(indexUrl);
+    const links = [...indexHtml.matchAll(/<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi)]
+      .map((match) => ({
+        href: normalizeSecHref(indexUrl, match[1]),
+        text: htmlToText(match[2]),
+      }))
+      .filter((link) => /\.(htm|html)$/i.test(link.href));
+    const keywords = params.keywords?.map((keyword) => keyword.toLowerCase()) ?? [];
+    const excludeKeywords = params.excludeKeywords?.map((keyword) => keyword.toLowerCase()) ?? [];
+    const preferred = links.find((link) => {
+      const lower = `${link.href} ${link.text}`.toLowerCase();
+      return lower.includes("ex99") || lower.includes("ex-99") || lower.includes("press release");
+    });
+    const candidates = preferred ? [preferred, ...links.filter((link) => link.href !== preferred.href)] : links;
+
+    for (const candidate of candidates) {
+      if (candidate.href === params.primaryDocumentUrl) continue;
+      const text = htmlToText(await fetchSecText(candidate.href)).toLowerCase();
+      const excluded = excludeKeywords.some((keyword) => text.includes(keyword));
+      if (!excluded && (!keywords.length || keywords.some((keyword) => text.includes(keyword)))) {
+        return candidate.href;
+      }
+    }
+  } catch {
+    return params.primaryDocumentUrl;
+  }
+
+  return params.primaryDocumentUrl;
+}
+
 export async function discoverLatestSecEarningsFiling(
   config: CompanySourceConfig,
 ): Promise<SecDiscoveredFiling | null> {
@@ -114,15 +200,19 @@ export async function discoverLatestSecEarningsFiling(
   if (!recent?.accessionNumber?.length) return null;
 
   const keywords = config.filingKeywords?.map((keyword) => keyword.toLowerCase()) ?? [];
+  const excludeKeywords = config.excludeFilingKeywords?.map((keyword) => keyword.toLowerCase()) ?? [];
+  const forms = (config.filingForms?.length ? config.filingForms : ["6-K"]).map((form) => form.toUpperCase());
   let checkedCandidates = 0;
 
   for (let index = 0; index < recent.accessionNumber.length; index += 1) {
     const form = recent.form?.[index] ?? "";
     const primaryDocument = recent.primaryDocument?.[index] ?? "";
     const primaryDocDescription = recent.primaryDocDescription?.[index] ?? "";
-    const looksLike6k = form.toUpperCase() === "6-K" || primaryDocDescription.toUpperCase().includes("6-K");
+    const upperForm = form.toUpperCase();
+    const looksLikeTargetForm =
+      forms.includes(upperForm) || forms.some((targetForm) => primaryDocDescription.toUpperCase().includes(targetForm));
 
-    if (!looksLike6k || primaryDocument.includes("xsl")) continue;
+    if (!looksLikeTargetForm || primaryDocument.includes("xsl")) continue;
 
     checkedCandidates += 1;
     if (checkedCandidates > 20) break;
@@ -142,8 +232,20 @@ export async function discoverLatestSecEarningsFiling(
     if (!keywords.length) return candidate;
 
     try {
+      const resolvedDocumentUrl =
+        upperForm === "6-K"
+          ? await resolveSecExhibitDocumentUrl({
+              cik: config.secCik,
+              accessionNumber,
+              primaryDocumentUrl: candidate.documentUrl,
+              keywords,
+              excludeKeywords,
+            })
+          : candidate.documentUrl;
+      candidate.documentUrl = resolvedDocumentUrl;
       const documentText = htmlToText(await fetchSecText(candidate.documentUrl)).toLowerCase();
-      if (keywords.some((keyword) => documentText.includes(keyword))) {
+      const excluded = excludeKeywords.some((keyword) => documentText.includes(keyword));
+      if (!excluded && keywords.some((keyword) => documentText.includes(keyword))) {
         return candidate;
       }
     } catch {

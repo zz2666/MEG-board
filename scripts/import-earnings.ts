@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { PDFParse } from "pdf-parse";
 import { prisma } from "@/lib/db";
 import { parsedReportToDashboardCompany } from "@/lib/parsed-to-dashboard";
 import { writeEarningsSnapshot } from "@/lib/snapshot";
@@ -11,7 +12,9 @@ import type { CompanySourceConfig, ParsedEarningsReport } from "@/lib/sources/ty
 type Args = {
   company?: string;
   period?: string;
+  sourceUrl?: string;
   all?: boolean;
+  implemented?: boolean;
   dryRun?: boolean;
   snapshot?: boolean;
 };
@@ -44,10 +47,12 @@ function parseArgs(argv: string[]): Args {
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === "--all") args.all = true;
+    if (arg === "--implemented") args.implemented = true;
     if (arg === "--dry-run") args.dryRun = true;
     if (arg === "--snapshot") args.snapshot = true;
     if (arg === "--company") args.company = argv[index + 1];
     if (arg === "--period") args.period = argv[index + 1];
+    if (arg === "--source-url") args.sourceUrl = argv[index + 1];
   }
 
   return args;
@@ -60,7 +65,9 @@ function usage() {
     "  npm run import:earnings -- --company netease --period 2026Q1 --dry-run",
     "  npm run import:earnings -- --company netease --period 2026Q1 --snapshot",
     "  npm run import:earnings -- --company baidu",
+    "  npm run import:earnings -- --company tencent --source-url https://official.example/results.pdf --dry-run",
     "  npm run import:earnings -- --all",
+    "  npm run import:earnings -- --implemented --snapshot",
   ].join("\n");
 }
 
@@ -77,12 +84,70 @@ function getReportTarget(config: CompanySourceConfig, period?: string) {
   return knownReports.sort((first, second) => second.releaseDate.localeCompare(first.releaseDate))[0] ?? null;
 }
 
-async function fetchCompanyEarnings(config: CompanySourceConfig, period?: string): Promise<FetchResult> {
+function isImplementedParser(profile: CompanySourceConfig["parserProfile"]) {
+  return profile === "netease-q1-2026" || profile === "baidu-q1-2026";
+}
+
+async function fetchPdfText(url: string) {
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent": process.env.SEC_USER_AGENT ?? "earnings-dashboard/0.1 contact: zhouziyi@example.com",
+      Accept: "application/pdf,text/html,application/xhtml+xml",
+    },
+  });
+  if (!response.ok) throw new Error(`source fetch failed ${response.status}: ${url}`);
+  const contentType = response.headers.get("content-type") ?? "";
+  const bytes = Buffer.from(await response.arrayBuffer());
+
+  if (!contentType.includes("pdf") && !url.toLowerCase().endsWith(".pdf")) {
+    return htmlToText(bytes.toString("utf8"));
+  }
+
+  const parser = new PDFParse({ data: bytes });
+  try {
+    const text = await parser.getText();
+    return text.text.replace(/\s+/g, " ").trim();
+  } finally {
+    await parser.destroy();
+  }
+}
+
+async function fetchDirectSourceOnly(
+  config: CompanySourceConfig,
+  sourceUrl: string,
+  reason: string,
+): Promise<FetchResult> {
+  console.log(`fetching ${config.name}: ${sourceUrl}`);
+  const text = await fetchPdfText(sourceUrl);
+  return {
+    kind: "source-only",
+    config,
+    sourceTitle: `${config.name} official source`,
+    sourceUrl,
+    html: text,
+    text,
+    reason,
+  };
+}
+
+async function fetchCompanyEarnings(
+  config: CompanySourceConfig,
+  period?: string,
+  sourceUrlOverride?: string,
+): Promise<FetchResult> {
   if (config.sourceProvider !== "sec") {
+    if (sourceUrlOverride) {
+      return fetchDirectSourceOnly(
+        config,
+        sourceUrlOverride,
+        `${config.sourceProvider} source fetched and text extracted; deterministic PDF parser profile is scaffolded but not yet implemented.`,
+      );
+    }
+
     return {
       kind: "skipped",
       config,
-      reason: `${config.sourceProvider} provider is scaffolded, but HKEX/IR PDF parsing is not implemented yet.`,
+      reason: `${config.sourceProvider} provider is scaffolded. Pass --source-url with the official PDF/HTML announcement to extract source text; deterministic parser is not implemented yet.`,
     };
   }
 
@@ -106,7 +171,7 @@ async function fetchCompanyEarnings(config: CompanySourceConfig, period?: string
   console.log(`fetching ${config.name}: ${sourceUrl}`);
   const html = await fetchSecText(sourceUrl);
 
-  if (!config.parserProfile) {
+  if (!config.parserProfile || !isImplementedParser(config.parserProfile)) {
     const text = htmlToText(html);
     return {
       kind: "source-only",
@@ -115,7 +180,9 @@ async function fetchCompanyEarnings(config: CompanySourceConfig, period?: string
       sourceUrl,
       html,
       text,
-      reason: "Official source was fetched, but no deterministic parser profile is configured for this company yet.",
+      reason: config.parserProfile
+        ? `Official source was fetched, but parser profile ${config.parserProfile} is scaffolded and not implemented yet.`
+        : "Official source was fetched, but no deterministic parser profile is configured for this company yet.",
     };
   }
 
@@ -198,17 +265,22 @@ async function persistResult(result: FetchResult) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
 
-  if (!args.all && !args.company) {
+  if (!args.all && !args.implemented && !args.company) {
     console.log(usage());
     process.exitCode = 1;
     return;
   }
 
-  const configs = args.all
-    ? trackedCompanyConfigs
-    : [getCompanyConfig(args.company ?? "")].filter(
-        (config): config is CompanySourceConfig => Boolean(config),
-      );
+  let configs: CompanySourceConfig[];
+  if (args.implemented) {
+    configs = trackedCompanyConfigs.filter((config) => isImplementedParser(config.parserProfile));
+  } else if (args.all) {
+    configs = trackedCompanyConfigs;
+  } else {
+    configs = [getCompanyConfig(args.company ?? "")].filter(
+      (config): config is CompanySourceConfig => Boolean(config),
+    );
+  }
 
   if (!configs.length) {
     throw new Error(`Unknown company: ${args.company}`);
@@ -217,7 +289,7 @@ async function main() {
   const results: FetchResult[] = [];
 
   for (const config of configs) {
-    const result = await fetchCompanyEarnings(config, args.period);
+    const result = await fetchCompanyEarnings(config, args.period, args.sourceUrl);
     results.push(result);
 
     if (args.dryRun) {

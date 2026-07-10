@@ -4,6 +4,7 @@ import type {
   ParsedEarningsReport,
   ParsedFinancialMetric,
   ParsedQuickNote,
+  MetricUnit,
 } from "./types";
 import { htmlToText, sha256 } from "./sec";
 
@@ -79,7 +80,7 @@ function metric(
   name: string,
   normalized: string,
   value: number,
-  unit: "RMB bn" | "%",
+  unit: MetricUnit,
   sourceAnchor: string,
   options: Partial<Pick<ParsedFinancialMetric, "yoy" | "qoq" | "confidence">> = {},
 ): ParsedFinancialMetric {
@@ -119,7 +120,7 @@ function comparativeMetric(
   name: string,
   normalized: string,
   value: number,
-  unit: "RMB bn" | "%",
+  unit: MetricUnit,
   sourceAnchor: string,
 ): ParsedFinancialMetric {
   return {

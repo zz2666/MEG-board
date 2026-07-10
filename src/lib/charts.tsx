@@ -1,9 +1,11 @@
 import type { MetricKey, QuarterPoint, Segment } from "./mock-data";
+import { type DisplayCurrency, formatDashboardMoneyValue } from "./financial-format";
 
 type LineChartProps = {
   points: QuarterPoint[];
   metric: MetricKey;
   accent?: string;
+  currency?: DisplayCurrency;
   onHoverPoint?: (point: { period: string; value: number; x: number; y: number } | null) => void;
 };
 
@@ -19,18 +21,19 @@ function getValue(point: QuarterPoint, metric: MetricKey) {
   return point[metric];
 }
 
-function formatValue(value: number, metric: MetricKey) {
+function formatValue(value: number, metric: MetricKey, currency: DisplayCurrency = "RMB") {
   if (metric.includes("Margin") || metric === "expenseRatio") {
     return `${value.toFixed(1)}%`;
   }
 
-  return `${value.toFixed(value < 0 ? 1 : 0)} 亿`;
+  return formatDashboardMoneyValue(value, currency);
 }
 
 export function TrendChart({
   points,
   metric,
   accent = "#1d4ed8",
+  currency = "RMB",
   onHoverPoint,
 }: LineChartProps) {
   const values = points.map((point) => getValue(point, metric));
@@ -101,10 +104,10 @@ export function TrendChart({
           </g>
         ))}
         <text x={chartPadding} y={18} className="chart-value">
-          {formatValue(max, metric)}
+          {formatValue(max, metric, currency)}
         </text>
         <text x={chartPadding} y={chartHeight - chartPadding + 3} className="chart-value">
-          {formatValue(min, metric)}
+          {formatValue(min, metric, currency)}
         </text>
       </svg>
     </div>

@@ -10,8 +10,10 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "tsx -r tsconfig-paths/register scripts/seed-companies.ts",
+    "extract:source": "tsx -r tsconfig-paths/register scripts/extract-official-source.ts",
     "import:earnings": "tsx -r tsconfig-paths/register scripts/import-earnings.ts",
-    "snapshot:earnings": "npm run import:earnings -- --company netease --period 2026Q1 --snapshot"
+    "parser:plan": "tsx -r tsconfig-paths/register scripts/list-parser-plan.ts",
+    "snapshot:earnings": "npm run import:earnings -- --implemented --snapshot"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
@@ -19,6 +21,7 @@
     "dotenv": "^17.4.2",
     "lucide-react": "^1.23.0",
     "next": "16.2.10",
+    "pdf-parse": "^2.4.5",
     "pg": "^8.22.0",
     "react": "19.2.4",
     "react-dom": "19.2.4"

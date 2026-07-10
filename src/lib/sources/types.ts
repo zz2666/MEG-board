@@ -1,6 +1,14 @@
-export type SourceProvider = "sec" | "hkex-ir" | "company-ir";
+export type SourceProvider = "sec" | "hkex-ir" | "company-ir" | "cninfo";
 
-export type ParserProfile = "netease-q1-2026";
+export type ParserProfile =
+  | "netease-q1-2026"
+  | "baidu-q1-2026"
+  | "sec-6k-standard"
+  | "sec-companyfacts-us-tech"
+  | "pdf-text-standard";
+
+export type MonetaryUnit = "RMB bn" | "USD bn" | "HKD bn";
+export type MetricUnit = MonetaryUnit | "%";
 
 export type CompanySourceConfig = {
   id: string;
@@ -15,7 +23,9 @@ export type CompanySourceConfig = {
   logoUrl?: string;
   sourceProvider: SourceProvider;
   parserProfile?: ParserProfile;
+  filingForms?: string[];
   filingKeywords?: string[];
+  excludeFilingKeywords?: string[];
   knownReports?: Record<
     string,
     {
@@ -33,7 +43,7 @@ export type ParsedFinancialMetric = {
   name: string;
   normalized: string;
   value: number;
-  unit: "RMB bn" | "%";
+  unit: MetricUnit;
   yoy?: number | null;
   qoq?: number | null;
   sourceAnchor: string;
@@ -44,7 +54,7 @@ export type ParsedFinancialMetric = {
 export type ParsedBusinessSegment = {
   name: string;
   revenue?: number | null;
-  revenueUnit?: "RMB bn";
+  revenueUnit?: MonetaryUnit;
   share?: number | null;
   yoy?: number | null;
   qoq?: number | null;

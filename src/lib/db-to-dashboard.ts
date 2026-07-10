@@ -1,4 +1,10 @@
 import type { BusinessSegment, Company as PrismaCompany, EarningsReport, FinancialMetric, QuickNote } from "@prisma/client";
+import {
+  currencyFromUnit,
+  formatMetricDisplay,
+  isMonetaryUnit,
+  toDashboardMonetaryValue,
+} from "@/lib/financial-format";
 import type { AiDevelopment, Company, FinancialMetric as DashboardMetric, QuarterPoint, Segment } from "@/lib/mock-data";
 import { companies as fallbackCompanies } from "@/lib/mock-data";
 import { trackedCompanyConfigs } from "@/lib/sources/company-config";
@@ -58,12 +64,6 @@ function formatPeriod(report: EarningsReport) {
   return `${String(report.fiscalYear).slice(2)}${report.fiscalQuarter}`;
 }
 
-function formatDisplay(value: number, unit: string) {
-  if (unit === "%") return `${value.toFixed(1)}%`;
-  if (unit === "RMB bn") return `${Math.round(value * 10)} 亿`;
-  return `${value}`;
-}
-
 function getMetric(report: ReportWithData, normalized: string) {
   return report.metrics.find((metric) => metric.normalized === normalized);
 }
@@ -75,9 +75,9 @@ function buildDashboardMetric(metric: FinancialMetric): DashboardMetric | null {
   return {
     label: meta.label,
     shortLabel: meta.shortLabel,
-    value: metric.unit === "RMB bn" ? value * 10 : value,
-    displayValue: formatDisplay(value, metric.unit),
-    unit: metric.unit === "%" ? "%" : "RMB",
+    value: isMonetaryUnit(metric.unit) ? toDashboardMonetaryValue(value, metric.unit) : value,
+    displayValue: formatMetricDisplay(value, metric.unit),
+    unit: metric.unit === "%" ? "%" : currencyFromUnit(metric.unit),
     yoy: numberValue(metric.yoy),
     qoq: numberValue(metric.qoq),
     source: metric.sourceAnchor ?? "Structured from official source document.",
@@ -85,7 +85,7 @@ function buildDashboardMetric(metric: FinancialMetric): DashboardMetric | null {
   };
 }
 
-function buildQuarterPoint(report: ReportWithData): QuarterPoint {
+function buildQuarterPoint(report: ReportWithData, currencyUnit: string): QuarterPoint {
   const revenue = numberValue(getMetric(report, "revenue")?.value);
   const grossProfit = numberValue(getMetric(report, "gross_profit")?.value);
   const netProfit = numberValue(getMetric(report, "net_income_attributable")?.value);
@@ -95,11 +95,13 @@ function buildQuarterPoint(report: ReportWithData): QuarterPoint {
   const operatingMargin = numberValue(getMetric(report, "operating_margin")?.value);
   const expenseRatio = numberValue(getMetric(report, "expense_ratio")?.value);
 
+  const monetaryMultiplier = currencyUnit === "RMB bn" ? 10 : 1;
+
   return {
     period: formatPeriod(report),
-    revenue: revenue * 10,
-    grossProfit: grossProfit * 10,
-    netProfit: netProfit * 10,
+    revenue: revenue * monetaryMultiplier,
+    grossProfit: grossProfit * monetaryMultiplier,
+    netProfit: netProfit * monetaryMultiplier,
     grossMargin,
     operatingMargin,
     expenseRatio,
@@ -109,10 +111,11 @@ function buildQuarterPoint(report: ReportWithData): QuarterPoint {
 function buildSegments(report: ReportWithData): Segment[] {
   return report.segments.map((segment, index) => {
     const revenue = numberValue(segment.revenue);
+    const revenueUnit = isMonetaryUnit(segment.revenueUnit) ? segment.revenueUnit : "RMB bn";
     return {
       name: segment.name,
-      revenue: revenue * 10,
-      displayRevenue: segment.revenueUnit === "RMB bn" ? `${Math.round(revenue * 10)} 亿` : `${revenue}`,
+      revenue: toDashboardMonetaryValue(revenue, revenueUnit),
+      displayRevenue: formatMetricDisplay(revenue, revenueUnit),
       share: numberValue(segment.share),
       yoy: numberValue(segment.yoy),
       qoq: numberValue(segment.qoq),
@@ -175,7 +178,14 @@ export function mapDbCompanyToDashboard(company: CompanyWithReports): Company | 
     .filter((metric) => metric.label !== "费用率");
   const quarters = sortedReports
     .filter((report) => getMetric(report, "revenue"))
-    .map(buildQuarterPoint);
+    .map((report) =>
+      buildQuarterPoint(
+        report,
+        getMetric(report, "revenue")?.unit ??
+          latest.metrics.find((metric) => metric.normalized === "revenue")?.unit ??
+          "RMB bn",
+      ),
+    );
   const segments = buildSegments(latest);
   const revenueMetric = metrics.find((metric) => metric.label === "总营收");
   return {

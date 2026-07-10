@@ -13,12 +13,13 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { MiniSparkline, SegmentStackChart, TrendChart } from "@/lib/charts";
+import { type DisplayCurrency, formatDashboardMoneyValue } from "@/lib/financial-format";
 import {
   companies,
   getMetricDisplayName,
   metricOptions,
   type Company,
-type MetricKey,
+  type MetricKey,
 } from "@/lib/mock-data";
 
 type GeneratedQuickNote = {
@@ -65,12 +66,17 @@ function getTopMetric(company: Company, label: string) {
   return company.metrics.find((metric) => metric.label === label) ?? company.metrics[0];
 }
 
-function formatMetricValue(value: number, metric: MetricKey) {
+function getCompanyCurrency(company: Company): DisplayCurrency {
+  const unit = company.metrics.find((metric) => metric.unit !== "%")?.unit;
+  return unit === "USD" || unit === "HKD" ? unit : "RMB";
+}
+
+function formatMetricValue(value: number, metric: MetricKey, currency: DisplayCurrency = "RMB") {
   if (metric.includes("Margin") || metric === "expenseRatio") {
     return `${value.toFixed(1)}%`;
   }
 
-  return `${value.toFixed(value < 0 ? 1 : 0)} 亿`;
+  return formatDashboardMoneyValue(value, currency);
 }
 
 function getPeriodDescription(range: string, company: Company) {
@@ -188,6 +194,7 @@ export default function Home() {
   const visibleQuarters = activeCompany.quarters.slice(
     timeRange === "1Q" ? -1 : timeRange === "2Q" ? -2 : timeRange === "4Q" ? -4 : -8,
   );
+  const activeCurrency = getCompanyCurrency(activeCompany);
   const revenueMetric = getTopMetric(activeCompany, "总营收");
   const marginMetric = getTopMetric(activeCompany, "毛利率");
   const activeLlmNote =
@@ -452,7 +459,8 @@ export default function Home() {
                   >
                     <strong>{hoveredPoint.period}</strong>
                     <span>
-                      {getMetricDisplayName(activeMetric)} {formatMetricValue(hoveredPoint.value, activeMetric)}
+                      {getMetricDisplayName(activeMetric)}{" "}
+                      {formatMetricValue(hoveredPoint.value, activeMetric, activeCurrency)}
                     </span>
                     <small>当前选择：{getPeriodDescription(timeRange, activeCompany)}</small>
                   </div>
@@ -460,6 +468,7 @@ export default function Home() {
                 <TrendChart
                   points={visibleQuarters}
                   metric={activeMetric}
+                  currency={activeCurrency}
                   onHoverPoint={setHoveredPoint}
                 />
               </div>
