@@ -19,8 +19,8 @@ export type QuarterPoint = {
   grossProfit: number;
   netProfit: number;
   grossMargin: number;
-  operatingMargin: number;
-  expenseRatio: number;
+  operatingMargin: number | null;
+  expenseRatio: number | null;
 };
 
 export type Segment = {

@@ -21,7 +21,8 @@ function getValue(point: QuarterPoint, metric: MetricKey) {
   return point[metric];
 }
 
-function formatValue(value: number, metric: MetricKey, currency: DisplayCurrency = "RMB") {
+function formatValue(value: number | null, metric: MetricKey, currency: DisplayCurrency = "RMB") {
+  if (value === null) return "暂无数据";
   if (metric.includes("Margin") || metric === "expenseRatio") {
     return `${value.toFixed(1)}%`;
   }
@@ -36,17 +37,31 @@ export function TrendChart({
   currency = "RMB",
   onHoverPoint,
 }: LineChartProps) {
-  const values = points.map((point) => getValue(point, metric));
+  const drawablePoints = points.flatMap((point) => {
+    const value = getValue(point, metric);
+    return value === null || !Number.isFinite(value) ? [] : [{ ...point, value }];
+  });
+
+  if (!drawablePoints.length) {
+    return (
+      <div className="chart-shell chart-empty-shell">
+        <span>暂无可绘制数据</span>
+      </div>
+    );
+  }
+
+  const values = drawablePoints.map((point) => point.value);
   const min = Math.min(...values);
   const max = Math.max(...values);
   const span = max - min || 1;
   const innerWidth = chartWidth - chartPadding * 2;
   const innerHeight = chartHeight - chartPadding * 2;
 
-  const coords = values.map((value, index) => {
-    const x = chartPadding + (index / Math.max(values.length - 1, 1)) * innerWidth;
+  const coords = drawablePoints.map((point, index) => {
+    const x = chartPadding + (index / Math.max(drawablePoints.length - 1, 1)) * innerWidth;
+    const value = point.value;
     const y = chartPadding + (1 - (value - min) / span) * innerHeight;
-    return { x, y, value, period: points[index].period };
+    return { x, y, value, period: point.period };
   });
 
   const path = coords

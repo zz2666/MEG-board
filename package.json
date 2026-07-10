@@ -14,6 +14,7 @@
     "import:akshare": "tsx -r tsconfig-paths/register scripts/import-akshare.ts",
     "import:earnings": "tsx -r tsconfig-paths/register scripts/import-earnings.ts",
     "parser:plan": "tsx -r tsconfig-paths/register scripts/list-parser-plan.ts",
+    "snapshot:repair": "tsx -r tsconfig-paths/register scripts/repair-snapshot.ts",
     "snapshot:akshare": "npm run import:akshare -- --all --snapshot",
     "snapshot:earnings": "npm run import:earnings -- --implemented --snapshot"
   },

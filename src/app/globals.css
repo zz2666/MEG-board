@@ -51,7 +51,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -62,6 +63,7 @@ button {
 
 button:focus-visible,
 input:focus-visible,
+select:focus-visible,
 .trend-hotspot:focus-visible {
   outline: 3px solid rgba(21, 94, 239, 0.34);
   outline-offset: 3px;
@@ -156,6 +158,27 @@ input:focus-visible,
   font-size: 15px;
 }
 
+.company-select {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.company-select select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 0 11px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow: var(--shadow-soft);
+}
+
 .section-label {
   margin-bottom: 10px;
   color: var(--muted);
@@ -167,6 +190,24 @@ input:focus-visible,
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-height: min(52dvh, 620px);
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-gutter: stable;
+}
+
+.company-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.company-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.34);
+  border-radius: 999px;
+}
+
+.company-list::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.36);
+  border-radius: 999px;
 }
 
 .company-tab {
@@ -590,6 +631,13 @@ input:focus-visible,
   line-height: 1;
 }
 
+.kpi-period {
+  margin-top: -4px;
+  color: var(--muted-strong);
+  font-size: 11px;
+  font-weight: 800;
+}
+
 .kpi-change-row {
   display: flex;
   flex-wrap: wrap;
@@ -778,6 +826,30 @@ input:focus-visible,
 
 .chart-shell.compact {
   margin-top: 10px;
+}
+
+.chart-empty,
+.chart-empty-shell {
+  display: grid;
+  min-height: 260px;
+  place-content: center;
+  gap: 8px;
+  border: 1px dashed var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.54);
+  color: var(--muted-strong);
+  text-align: center;
+}
+
+.chart-empty strong {
+  color: var(--ink);
+}
+
+.chart-empty span,
+.chart-empty-shell span {
+  max-width: 360px;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .chart-grid {
@@ -1000,6 +1072,17 @@ input:focus-visible,
   gap: 10px;
 }
 
+.ai-loading,
+.ai-source-note {
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.42);
+  padding: 10px;
+  color: var(--muted-strong);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .ai-item {
   border: 1px solid rgba(255, 255, 255, 0.72);
   border-radius: 16px;
@@ -1035,6 +1118,18 @@ input:focus-visible,
   color: var(--blue);
   font-size: 11px;
   font-weight: 800;
+}
+
+.ai-item footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.ai-item footer a:hover {
+  text-decoration: underline;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1077,6 +1172,9 @@ input:focus-visible,
   .company-list {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
   }
 
   .topbar {

@@ -59,10 +59,10 @@ function formatPeriod(report: Pick<ReportLike, "fiscalYear" | "fiscalQuarter">) 
 }
 
 function metricValue(report: ReportLike, normalized: string) {
-  return report.metrics.find((metric) => metric.normalized === normalized)?.value ?? 0;
+  return report.metrics.find((metric) => metric.normalized === normalized)?.value ?? null;
 }
 
-function buildDashboardMetric(metric: ParsedFinancialMetric): DashboardMetric | null {
+function buildDashboardMetric(metric: ParsedFinancialMetric, sourceUrl?: string): DashboardMetric | null {
   const meta = metricMeta[metric.normalized];
   if (!meta) return null;
 
@@ -75,16 +75,16 @@ function buildDashboardMetric(metric: ParsedFinancialMetric): DashboardMetric | 
     yoy: metric.yoy ?? 0,
     qoq: metric.qoq ?? 0,
     source: metric.sourceAnchor,
-    sourceUrl: undefined,
+    sourceUrl,
     rank: meta.rank,
   };
 }
 
 function buildQuarterPoint(report: ReportLike, currencyUnit: string): QuarterPoint {
-  const revenue = metricValue(report, "revenue");
-  const grossProfit = metricValue(report, "gross_profit");
-  const netProfit = metricValue(report, "net_income_attributable");
-  const grossMargin = metricValue(report, "gross_margin") || (revenue ? (grossProfit / revenue) * 100 : 0);
+  const revenue = metricValue(report, "revenue") ?? 0;
+  const grossProfit = metricValue(report, "gross_profit") ?? 0;
+  const netProfit = metricValue(report, "net_income_attributable") ?? 0;
+  const grossMargin = metricValue(report, "gross_margin") ?? (revenue ? (grossProfit / revenue) * 100 : 0);
   const operatingMargin = metricValue(report, "operating_margin");
   const expenseRatio = metricValue(report, "expense_ratio");
 
@@ -96,8 +96,8 @@ function buildQuarterPoint(report: ReportLike, currencyUnit: string): QuarterPoi
     grossProfit: round(grossProfit * monetaryMultiplier),
     netProfit: round(netProfit * monetaryMultiplier),
     grossMargin: round(grossMargin),
-    operatingMargin: round(operatingMargin),
-    expenseRatio: round(expenseRatio),
+    operatingMargin: operatingMargin === null ? null : round(operatingMargin),
+    expenseRatio: expenseRatio === null ? null : round(expenseRatio),
   };
 }
 
@@ -149,7 +149,7 @@ export function parsedReportToDashboardCompany(
     },
   ].sort((first, second) => `${first.fiscalYear}${first.fiscalQuarter}`.localeCompare(`${second.fiscalYear}${second.fiscalQuarter}`));
   const metrics = parsed.metrics
-    .map(buildDashboardMetric)
+    .map((metric) => buildDashboardMetric(metric, parsed.sourceUrl))
     .filter((metric): metric is DashboardMetric => Boolean(metric));
   const currencyUnit =
     parsed.metrics.find((metric) => metric.normalized === "revenue" && isMonetaryUnit(metric.unit))?.unit ??

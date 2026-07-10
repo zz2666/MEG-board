@@ -68,7 +68,7 @@ function getMetric(report: ReportWithData, normalized: string) {
   return report.metrics.find((metric) => metric.normalized === normalized);
 }
 
-function buildDashboardMetric(metric: FinancialMetric): DashboardMetric | null {
+function buildDashboardMetric(metric: FinancialMetric, sourceUrl?: string | null): DashboardMetric | null {
   const meta = metricMeta[metric.normalized];
   if (!meta) return null;
   const value = numberValue(metric.value);
@@ -81,6 +81,7 @@ function buildDashboardMetric(metric: FinancialMetric): DashboardMetric | null {
     yoy: numberValue(metric.yoy),
     qoq: numberValue(metric.qoq),
     source: metric.sourceAnchor ?? "Structured from official source document.",
+    sourceUrl: sourceUrl ?? undefined,
     rank: meta.rank,
   };
 }
@@ -103,8 +104,8 @@ function buildQuarterPoint(report: ReportWithData, currencyUnit: string): Quarte
     grossProfit: grossProfit * monetaryMultiplier,
     netProfit: netProfit * monetaryMultiplier,
     grossMargin,
-    operatingMargin,
-    expenseRatio,
+    operatingMargin: getMetric(report, "operating_margin") ? operatingMargin : null,
+    expenseRatio: getMetric(report, "expense_ratio") ? expenseRatio : null,
   };
 }
 
@@ -173,7 +174,7 @@ export function mapDbCompanyToDashboard(company: CompanyWithReports): Company | 
   );
   const quickNote = latest.quickNotes[0];
   const metrics = latest.metrics
-    .map(buildDashboardMetric)
+    .map((metric) => buildDashboardMetric(metric, latest.sourceUrl))
     .filter((metric): metric is DashboardMetric => Boolean(metric))
     .filter((metric) => metric.label !== "费用率");
   const quarters = sortedReports

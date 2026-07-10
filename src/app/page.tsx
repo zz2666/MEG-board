@@ -7,6 +7,7 @@ import {
   BadgeCheck,
   ChevronRight,
   Copy,
+  ExternalLink,
   LineChart,
   Search,
   Sparkles,
@@ -45,6 +46,14 @@ type LlmErrorState = LlmContext & {
   message: string;
 };
 
+type AiNewsState = {
+  companyId: string;
+  fiscalPeriod: string;
+  items: Company["aiDevelopments"];
+  error?: string;
+  sourceWindow?: string;
+};
+
 const statusStyles = {
   已发布: "status published",
   待校验: "status pending",
@@ -62,6 +71,10 @@ function getChangeClass(value: number) {
   return "change";
 }
 
+function normalizePeriodLabel(period: string) {
+  return period.replace(/^20(\d{2})\s+/, "$1").replace(/\s+/g, "");
+}
+
 function getTopMetric(company: Company, label: string) {
   return company.metrics.find((metric) => metric.label === label) ?? company.metrics[0];
 }
@@ -77,6 +90,29 @@ function formatMetricValue(value: number, metric: MetricKey, currency: DisplayCu
   }
 
   return formatDashboardMoneyValue(value, currency);
+}
+
+function metricLabelForKey(metric: MetricKey) {
+  if (metric === "revenue") return "总营收";
+  if (metric === "grossProfit") return "毛利润";
+  if (metric === "netProfit") return "归母净利润";
+  if (metric === "grossMargin") return "毛利率";
+  if (metric === "operatingMargin") return "营业利润率";
+  return "费用率";
+}
+
+function hasMetricSeries(company: Company, metric: MetricKey) {
+  const matchingCard = company.metrics.find((item) => item.label === metricLabelForKey(metric));
+  if (matchingCard) return true;
+
+  if (metric === "operatingMargin" || metric === "expenseRatio") {
+    return (
+      company.dataQuality === "SEC verified" &&
+      company.quarters.some((point) => typeof point[metric] === "number" && point[metric] !== 0)
+    );
+  }
+
+  return company.quarters.some((point) => Number.isFinite(point[metric]));
 }
 
 function getPeriodDescription(range: string, company: Company) {
@@ -98,14 +134,16 @@ function buildGeneratedReport(company: Company) {
   const grossMargin = getTopMetric(company, "毛利率");
   const netIncome =
     company.metrics.find((metric) => metric.label.includes("净")) ?? company.metrics.at(-1);
-  const segmentNotes = company.segments
-    .map(
-      (segment) =>
-        `${segment.name}：营收 ${segment.displayRevenue}，占比 ${segment.share}%，YoY ${formatSigned(
-          segment.yoy,
-        )}，QoQ ${formatSigned(segment.qoq)}。${segment.driver}`,
-    )
-    .join("\n");
+  const segmentNotes = company.segments.length
+    ? company.segments
+        .map(
+          (segment) =>
+            `${segment.name}：营收 ${segment.displayRevenue}，占比 ${segment.share}%，YoY ${formatSigned(
+              segment.yoy,
+            )}，QoQ ${formatSigned(segment.qoq)}。${segment.driver}`,
+        )
+        .join("\n")
+    : "当前数据源尚未提供可结构化的业务分部收入；需接入对应公司官方公告 parser。";
   const aiNotes = company.aiDevelopments
     .map((item) => `${item.date}｜${item.title}：${item.summary}`)
     .join("\n");
@@ -151,6 +189,7 @@ export default function Home() {
   const [llmNote, setLlmNote] = useState<LlmNoteState | null>(null);
   const [llmLoading, setLlmLoading] = useState<LlmContext | null>(null);
   const [llmError, setLlmError] = useState<LlmErrorState | null>(null);
+  const [aiNewsState, setAiNewsState] = useState<AiNewsState | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -196,6 +235,14 @@ export default function Home() {
     backendCompanies.find((company) => company.id === activeCompanyId) ??
     filteredCompanies[0] ??
     backendCompanies[0];
+  const selectableCompanies = backendCompanies.filter((company) => company.dataQuality !== "Demo");
+  const availableMetricOptions = useMemo(
+    () => metricOptions.filter((option) => hasMetricSeries(activeCompany, option.key)),
+    [activeCompany],
+  );
+  const effectiveActiveMetric = availableMetricOptions.some((option) => option.key === activeMetric)
+    ? activeMetric
+    : availableMetricOptions[0]?.key ?? "revenue";
 
   const visibleQuarters = activeCompany.quarters.slice(
     timeRange === "1Q" ? -1 : timeRange === "2Q" ? -2 : timeRange === "4Q" ? -4 : -8,
@@ -213,12 +260,75 @@ export default function Home() {
       : null;
   const llmLoadingForActive =
     llmLoading?.companyId === activeCompany.id && llmLoading.fiscalPeriod === activeCompany.fiscalPeriod;
+  const aiNewsForActive =
+    aiNewsState?.companyId === activeCompany.id && aiNewsState.fiscalPeriod === activeCompany.fiscalPeriod
+      ? aiNewsState
+      : null;
+  const aiNewsLoadingForActive = !aiNewsForActive;
+  const displayedAiDevelopments = aiNewsForActive?.items.length
+    ? aiNewsForActive.items
+    : activeCompany.aiDevelopments;
   const generatedReport = activeLlmNote?.copyText ?? buildGeneratedReport(activeCompany);
 
   const activeSegmentData =
     activeSegment === "总览"
       ? undefined
       : activeCompany.segments.find((segment) => segment.name === activeSegment);
+
+  useEffect(() => {
+    let cancelled = false;
+    const requestContext = {
+      companyId: activeCompany.id,
+      fiscalPeriod: activeCompany.fiscalPeriod,
+    };
+
+    async function loadAiNews() {
+      try {
+        const params = new URLSearchParams({
+          companyId: activeCompany.id,
+          companyName: activeCompany.name,
+          ticker: activeCompany.ticker,
+        });
+        if (activeCompany.sourceUrl) {
+          params.set("sourceUrl", activeCompany.sourceUrl);
+        }
+        const response = await fetch(`/api/ai-news?${params.toString()}`, { cache: "no-store" });
+        const payload = (await response.json()) as {
+          items?: Company["aiDevelopments"];
+          sourceWindow?: string;
+          error?: string;
+        };
+
+        if (cancelled) return;
+        if (!response.ok) throw new Error(payload.error ?? `AI news API ${response.status}`);
+
+        setAiNewsState({
+          ...requestContext,
+          items: payload.items ?? [],
+          sourceWindow: payload.sourceWindow,
+        });
+      } catch (error) {
+        if (cancelled) return;
+        setAiNewsState({
+          ...requestContext,
+          items: [],
+          error: error instanceof Error ? error.message : "AI news load failed",
+        });
+      }
+    }
+
+    loadAiNews();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    activeCompany.id,
+    activeCompany.name,
+    activeCompany.ticker,
+    activeCompany.fiscalPeriod,
+    activeCompany.sourceUrl,
+  ]);
 
   async function generateWithLlm() {
     const requestContext = {
@@ -287,8 +397,28 @@ export default function Home() {
           />
         </label>
 
+        <label className="company-select">
+          <span>快速选择</span>
+          <select
+            value={activeCompany.id}
+            onChange={(event) => {
+              setActiveCompanyId(event.target.value);
+              setActiveSegment("总览");
+              setLlmNote(null);
+              setLlmError(null);
+              setCopied(false);
+            }}
+          >
+            {selectableCompanies.map((company) => (
+              <option key={company.id} value={company.id}>
+                {company.name} · {company.ticker}
+              </option>
+            ))}
+          </select>
+        </label>
+
         <div className="sidebar-section">
-          <div className="section-label">Tracking Pool</div>
+          <div className="section-label">Tracking Pool · {filteredCompanies.length}</div>
           <div className="company-list">
             {filteredCompanies.map((company) => {
               const isActive = company.id === activeCompany.id;
@@ -398,8 +528,14 @@ export default function Home() {
 
           <div className="market-card">
             <p className="eyebrow">Market Reaction</p>
-            <strong>{activeCompany.shareReaction}</strong>
-            <span>财报后首个交易窗口</span>
+            <strong>
+              {activeCompany.shareReaction.includes("待接入") ? "未接入行情源" : activeCompany.shareReaction}
+            </strong>
+            <span>
+              {activeCompany.shareReaction.includes("待接入")
+                ? "需要接入实时/历史行情 API，并用财报发布时间后的首个交易窗口校验。"
+                : "财报后首个交易窗口"}
+            </span>
             <div className="reaction-strip">
               <span>Revenue {formatSigned(revenueMetric.yoy)} YoY</span>
               <span>Margin {formatSigned(marginMetric.yoy, "pct")}</span>
@@ -412,9 +548,10 @@ export default function Home() {
             <article key={metric.label} className="kpi-card">
               <div className="kpi-top">
                 <span>{metric.label}</span>
-                <small>{metric.shortLabel}</small>
+                <small>{normalizePeriodLabel(activeCompany.fiscalPeriod)}</small>
               </div>
               <strong>{metric.displayValue}</strong>
+              <span className="kpi-period">{activeCompany.fiscalPeriod} · {metric.shortLabel}</span>
               <div className="kpi-change-row">
                 <span className={getChangeClass(metric.yoy)}>
                   YoY {formatSigned(metric.yoy, metric.unit === "%" ? "pct" : "%")}
@@ -424,7 +561,14 @@ export default function Home() {
                 </span>
               </div>
               <div className="source-popover">
-                <span>{metric.rank}</span>
+                {metric.sourceUrl ? (
+                  <a href={metric.sourceUrl} target="_blank" rel="noreferrer">
+                    {metric.rank}
+                    <ExternalLink size={11} />
+                  </a>
+                ) : (
+                  <span>{metric.rank}</span>
+                )}
                 <small>{metric.source}</small>
               </div>
             </article>
@@ -437,47 +581,54 @@ export default function Home() {
               <div className="panel-header">
                 <div>
                   <p className="eyebrow">Financial Trend</p>
-                  <h3>{getMetricDisplayName(activeMetric)}趋势</h3>
+                  <h3>{getMetricDisplayName(effectiveActiveMetric)}趋势</h3>
                   <span className="chart-period-label">
                     {getPeriodDescription(timeRange, activeCompany)}
                   </span>
                 </div>
               </div>
               <div className="metric-switcher">
-                {metricOptions.map((option) => (
+                {availableMetricOptions.map((option) => (
                   <button
                     key={option.key}
-                    className={activeMetric === option.key ? "active" : ""}
+                    className={effectiveActiveMetric === option.key ? "active" : ""}
                     onClick={() => setActiveMetric(option.key)}
                   >
                     {option.label}
                   </button>
                 ))}
               </div>
-              <div className="interactive-chart">
-                {hoveredPoint ? (
-                  <div
-                    className="chart-tooltip"
-                    style={{
-                      left: `clamp(88px, ${(hoveredPoint.x / 720) * 100}%, calc(100% - 88px))`,
-                      top: `clamp(18px, ${(hoveredPoint.y / 260) * 100}%, calc(100% - 74px))`,
-                    }}
-                  >
-                    <strong>{hoveredPoint.period}</strong>
-                    <span>
-                      {getMetricDisplayName(activeMetric)}{" "}
-                      {formatMetricValue(hoveredPoint.value, activeMetric, activeCurrency)}
-                    </span>
-                    <small>当前选择：{getPeriodDescription(timeRange, activeCompany)}</small>
-                  </div>
-                ) : null}
-                <TrendChart
-                  points={visibleQuarters}
-                  metric={activeMetric}
-                  currency={activeCurrency}
-                  onHoverPoint={setHoveredPoint}
-                />
-              </div>
+              {hasMetricSeries(activeCompany, effectiveActiveMetric) ? (
+                <div className="interactive-chart">
+                  {hoveredPoint ? (
+                    <div
+                      className="chart-tooltip"
+                      style={{
+                        left: `clamp(88px, ${(hoveredPoint.x / 720) * 100}%, calc(100% - 88px))`,
+                        top: `clamp(18px, ${(hoveredPoint.y / 260) * 100}%, calc(100% - 74px))`,
+                      }}
+                    >
+                      <strong>{hoveredPoint.period}</strong>
+                      <span>
+                        {getMetricDisplayName(effectiveActiveMetric)}{" "}
+                        {formatMetricValue(hoveredPoint.value, effectiveActiveMetric, activeCurrency)}
+                      </span>
+                      <small>当前选择：{getPeriodDescription(timeRange, activeCompany)}</small>
+                    </div>
+                  ) : null}
+                  <TrendChart
+                    points={visibleQuarters}
+                    metric={effectiveActiveMetric}
+                    currency={activeCurrency}
+                    onHoverPoint={setHoveredPoint}
+                  />
+                </div>
+              ) : (
+                <div className="chart-empty">
+                  <strong>{getMetricDisplayName(effectiveActiveMetric)}暂无结构化数据</strong>
+                  <span>当前来源未披露该指标，系统不会用 0 代替缺失值。</span>
+                </div>
+              )}
             </section>
 
             <section className="panel">
@@ -502,8 +653,12 @@ export default function Home() {
 
               {!activeCompany.segments.length ? (
                 <div className="segment-empty">
-                  <strong>分部收入等待官方解析</strong>
-                  <span>当前第三方指标源只覆盖公司级财务数据。</span>
+                  <strong>业务分部等待官方公告 parser</strong>
+                  <span>
+                    {activeCompany.dataQuality === "AkShare third-party"
+                      ? "当前 AkShare/EastMoney 只覆盖公司级指标；需要接入该公司 SEC/HKEX/CNINFO 官方公告后才能展示分部收入。"
+                      : "该官方 parser 尚未抽取分部表；已解析到分部的公司会在这里展示收入、占比和增速。"}
+                  </span>
                 </div>
               ) : activeSegmentData ? (
                 <div className="segment-detail">
@@ -596,17 +751,35 @@ export default function Home() {
                 <span className="ai-status">{activeCompany.aiTag}</span>
               </div>
               <div className="ai-feed">
-                {activeCompany.aiDevelopments.map((item) => (
-                  <article key={item.title} className="ai-item">
+                {aiNewsLoadingForActive ? (
+                  <div className="ai-loading">正在检索近三个月 AI 动态</div>
+                ) : null}
+                {aiNewsForActive?.error ? (
+                  <div className="ai-loading">AI 动态检索失败，展示本地记录。</div>
+                ) : null}
+                {displayedAiDevelopments.map((item) => (
+                  <article key={`${item.title}-${item.sourceUrl ?? item.source}`} className="ai-item">
                     <div className="ai-item-top">
                       <span>{item.category}</span>
                       <small>{item.date}</small>
                     </div>
                     <h4>{item.title}</h4>
                     <p>{item.summary}</p>
-                    <footer>{item.source}</footer>
+                    <footer>
+                      {item.sourceUrl ? (
+                        <a href={item.sourceUrl} target="_blank" rel="noreferrer">
+                          {item.source}
+                          <ExternalLink size={12} />
+                        </a>
+                      ) : (
+                        item.source
+                      )}
+                    </footer>
                   </article>
                 ))}
+                {aiNewsForActive?.sourceWindow ? (
+                  <div className="ai-source-note">{aiNewsForActive.sourceWindow}</div>
+                ) : null}
               </div>
             </section>
 
