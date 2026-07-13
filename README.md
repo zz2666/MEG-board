@@ -1,10 +1,25 @@
 # 财报 Quick Notes 看板
 
-一个面向 tracking 股票池的财报看板 MVP。当前版本已经跑通公司搜索与下拉选择、财报摘要、核心指标、历史趋势、业务分部展示、来源追溯、AI Quick Notes 生成、AI 相关新闻抓取、PostgreSQL schema、SEC 官方财报抓取，以及 AkShare/EastMoney 第三方指标 bootstrap。
+面向互联网、AI 和内容平台股票池的财报分析 dashboard。项目目标是把公司财报、历史核心指标、业务分部、市场反应、AI 相关动态和中文 Quick Notes 放在一个可追溯的数据看板里，方便快速浏览和整理投研/跟踪笔记。
 
-核心原则是：财务数字先结构化、再展示和总结；官方 parser 覆盖到的公司标记为 `SEC verified`，第三方指标标记为 `AkShare third-party`；缺失的营业利润率、费用率、业务分部和行情反应显示为未接入/无数据，不用 0 冒充真实披露。
+当前项目是 MVP，但已经能本地完整运行：前端 dashboard、公司筛选、核心财务指标、历史趋势、业务分部展示、行情反应、AI 动态检索、官方财报 parser、AkShare/EastMoney 第三方指标 bootstrap、PostgreSQL schema、snapshot fallback 和 LLM Quick Notes 生成链路都已经接通。
 
-## Run
+核心原则：
+
+- 财务数字必须来自结构化字段、官方 parser、第三方数据源或人工校验数据，不让 LLM 自由编数字。
+- 官方 parser 覆盖到的公司标记为 `SEC verified`；第三方指标标记为 `AkShare third-party`；演示兜底数据标记为 `Demo`。
+- 缺失的业务分部、费用率、营业利润率、公告日或行情反应必须显示为未接入/无数据，不用 `0` 冒充披露值。
+- LLM 只负责总结、组织语言和生成 copy，不负责凭空补全财务、行情或业务判断。
+
+## 快速启动
+
+安装 Node 依赖：
+
+```bash
+npm install
+```
+
+启动开发服务器：
 
 ```bash
 npm run dev
@@ -23,137 +38,422 @@ npm run lint
 npm run build
 ```
 
-## Tech Stack
+本地页面默认优先读取 `data/earnings-snapshot.json`，所以即使没有 PostgreSQL 和 OpenAI key，也能打开 dashboard 查看已有 snapshot 数据。
 
-前端和交互：
+## 财务看板怎么用
 
-- Next.js 16 App Router、React 19、TypeScript。
-- Tailwind CSS 4 负责样式，`src/app/globals.css` 承载当前 dashboard 的布局和组件样式。
-- `lucide-react` 提供按钮和状态图标。
-- 前端主页面在 `src/app/page.tsx`，包含公司下拉选择、左侧 tracking list、财务 KPI、趋势图、业务分部、AI 动态和 Quick Notes 生成入口。
+首页就是当前 MVP 的完整工作台。
 
-后端 API：
+### 1. 选择和搜索公司
 
-- Next.js Route Handlers 提供接口。
-- `/api/companies` 负责把 PostgreSQL、snapshot、live SEC fallback 或 seed 数据转换成前端可用结构。
-- `/api/generate-note` 调用 OpenAI-compatible Responses API 生成结构化中文 Quick Notes。
-- `/api/ai-news` 抓取 AI HOT、Google News RSS 和 GDELT，给单家公司返回近三个月 AI 相关新闻。
+左侧 sidebar 是 tracking list。可以用搜索框按公司名、ticker、行业或市场筛选公司。点击公司后，主区域会切换到该公司的最新财报视图。
 
-数据和存储：
+公司卡片会显示：
 
-- Prisma 7 + PostgreSQL schema，核心模型包括 `Company`、`EarningsReport`、`FinancialMetric`、`BusinessSegment`、`QuickNote`、`AIDevelopment`、`SourceDocument`、`ProcessingJob`。
-- 本地无数据库时使用 `data/earnings-snapshot.json`，方便页面和 demo 稳定运行。
-- `SourceDocument` 保存原始公告/PDF/HTML、source URL、content hash 和 source anchor，保证财务数字可追溯。
+- 公司名称和 ticker。
+- 市场和行业。
+- 最新财报期。
+- 数据质量：`SEC verified`、`AkShare third-party` 或 `Demo`。
+- 披露状态：已发布、待校验、抓取中。
 
-爬虫和解析：
+### 2. 看最新财报结论
 
-- SEC submissions / Archives / CompanyFacts 接官方公告和 XBRL。
-- HKEX / 公司 IR / CNINFO 路径已经在 company config 里建好分类，PDF 文本抽取 scaffold 已接入。
-- `pdf-parse` 用于官方 PDF 文本抽取。
-- AkShare Python provider 作为第三方历史指标 bootstrap，底层数据源是 AkShare/EastMoney。
-- deterministic parser 目前已落地网易 2026 Q1 和百度 2026 Q1。
+顶部 hero 区域展示：
 
-AI 和外部服务：
+- 公司 ticker、市场、行业、报告日期。
+- 官方来源或第三方数据来源链接。
+- 一句话 Quick Note。
+- 核心亮点和主要风险。
+- Market Reaction 行情反应卡片。
 
-- OpenAI-compatible Responses API 用于生成财报 Quick Notes。
-- AI HOT public API、Google News RSS、GDELT 用于 AI 相关新闻检索。
-- 财务数字不交给模型自由抽取或补全；LLM 只做基于结构化字段的总结、组织和措辞。
+Market Reaction 当前按“财报公告日前/当日收盘价 -> 财报后首个交易日开盘/收盘”计算。只有拿到可靠公告日并且 AkShare/EastMoney 历史日线返回成功的公司才展示具体涨跌。没有可靠公告日的公司会显示“未接入行情源”。
 
-工程工具：
+### 3. 看核心 KPI
 
-- ESLint 9、TypeScript、tsx、tsconfig-paths。
-- `scripts/import-earnings.ts`、`scripts/import-akshare.ts`、`scripts/repair-snapshot.ts`、`scripts/list-parser-plan.ts` 负责导入、修复和 parser 覆盖检查。
+KPI 区域展示最新季度/年度的核心指标：
 
-## Database
+- 总营收。
+- 毛利润。
+- 毛利率。
+- 营业利润、营业利润率，只有官方 parser 抽到时显示。
+- 归母净利润。
+- YoY / QoQ。
+- source anchor 和来源链接。
 
-本地开发默认连接：
+鼠标移动到指标来源区域可以查看该指标来自哪个公告或数据源。
 
-```text
-postgresql://postgres:postgres@localhost:5432/earnings_dashboard?schema=public
-```
+### 4. 看历史趋势
 
-如果本机有 Docker：
+Financial Trend 面板可以切换指标：
 
-```bash
-docker compose up -d postgres
-npm run db:generate
-npm run db:push
-npm run db:seed
-```
+- 总营收。
+- 毛利润。
+- 归母净利润。
+- 毛利率。
+- 营业利润率。
+- 费用率。
 
-如果使用公司内部数据库或云数据库，把 `.env` 里的 `DATABASE_URL` 换成目标 PostgreSQL 连接串后执行同样命令。
+时间窗口支持最近 1Q、2Q、4Q、8Q。没有结构化数据的指标不会强行画图。
 
-当前默认不主动连接 `localhost:5432`，避免没有本地数据库时页面卡住。后续接公司数据库时，把 `.env` 的 `DATABASE_URL` 换成公司库连接串即可切回 SQL-first。
+### 5. 看业务分部
 
-## Data Loading Order
+Business Segments 面板展示公司业务分部的收入、占比、同比、环比、毛利率和驱动说明。
 
-`/api/companies` 的读取顺序是：
+当前只有官方 parser 已抽取到分部的公司会展示完整分部。AkShare/EastMoney 第三方指标只覆盖公司级核心指标，所以多数 `AkShare third-party` 公司会显示“业务分部等待官方公告 parser”。
+
+### 6. 生成中文财报摘要
+
+右侧 AI Report Writer 可以生成中文 Quick Notes。
+
+限制：
+
+- 只对 `SEC verified` 的官方校验数据开放。
+- `AkShare third-party` 和 `Demo` 数据不能生成，避免把第三方或演示数据包装成官方结论。
+- 生成内容只基于结构化字段、来源信息和已有 AI 动态，不允许模型新增财务数字。
+
+需要 `.env` 中配置 OpenAI-compatible API。
+
+### 7. 看 AI 相关动态
+
+右侧 AI Tracker 会按当前公司检索近三个月 AI 相关新闻和公司动态。后端会查询：
+
+- AI HOT public API。
+- Google News RSS。
+- GDELT。
+
+如果抓不到足够高置信条目，会展示本地记录或待补充入口，不编造新闻。
+
+## 技术栈
+
+### 前端
+
+- `Next.js 16.2.10` App Router。
+- `React 19.2.4`。
+- `TypeScript` strict mode。
+- `Tailwind CSS 4`，当前主要样式集中在 `src/app/globals.css`。
+- `lucide-react` 用于图标。
+- 自定义 SVG chart components：`src/lib/charts.tsx`。
+
+主要页面：
+
+- `src/app/page.tsx`：dashboard 主界面。
+- `src/app/layout.tsx`：应用 layout 和 metadata。
+- `src/app/globals.css`：全局样式、布局、卡片、图表和响应式规则。
+
+### 后端 API
+
+使用 Next.js Route Handlers：
+
+- `src/app/api/companies/route.ts`：返回 dashboard 公司数据。
+- `src/app/api/generate-note/route.ts`：调用 LLM 生成财报 Quick Notes。
+- `src/app/api/ai-news/route.ts`：抓取 AI 相关新闻。
+
+### 数据库和存储
+
+- `PostgreSQL 16`。
+- `Prisma 7.8`。
+- `@prisma/client` + `@prisma/adapter-pg`。
+- 本地 snapshot fallback：`data/earnings-snapshot.json`。
+- Prisma schema：`prisma/schema.prisma`。
+
+核心模型：
+
+- `Company`：股票池公司。
+- `EarningsReport`：财报记录。
+- `FinancialMetric`：结构化财务指标。
+- `BusinessSegment`：业务分部。
+- `QuickNote`：财报摘要和观察点。
+- `AIDevelopment`：AI 相关动态。
+- `SourceDocument`：官方公告、PDF、HTML、新闻原文和 source hash。
+- `ProcessingJob`：抓取、解析、LLM、校验等任务记录。
+
+### 数据源和解析
+
+官方/半官方来源：
+
+- SEC submissions / Archives / CompanyFacts。
+- HKEX / 公司 IR / CNINFO 的 source provider scaffold。
+- `pdf-parse` 用于 PDF 文本抽取。
+
+第三方 bootstrap：
+
+- Python `.venv`。
+- `AkShare 1.18.64`。
+- AkShare/EastMoney 财务指标和历史日线。
+
+解析层：
+
+- `src/lib/sources/parser.ts`：统一 parser 入口。
+- `src/lib/sources/netease-profile.ts`：网易 2026 Q1 deterministic parser。
+- `src/lib/sources/baidu-profile.ts`：百度 2026 Q1 deterministic parser。
+- `src/lib/sources/sec-6k-standard-profile.ts`：SEC 6-K 通用 parser scaffold。
+- `src/lib/sources/sec-companyfacts-profile.ts`：美股 10-Q / CompanyFacts parser scaffold。
+- `src/lib/sources/pdf-text-profile.ts`：PDF 文本 parser scaffold。
+- `src/lib/sources/akshare.ts`：AkShare payload 到 dashboard 数据结构的转换。
+
+### AI 和外部服务
+
+- OpenAI-compatible Responses API。
+- AI HOT public API。
+- Google News RSS。
+- GDELT document API。
+
+LLM 相关代码：
+
+- `src/lib/llm.ts`：Prompt、schema、API 调用和结果解析。
+- `src/app/api/generate-note/route.ts`：LLM 生成入口。
+
+### 工程工具
+
+- `ESLint 9`。
+- `tsx`。
+- `tsconfig-paths`。
+- `Docker Compose`，用于本地 PostgreSQL。
+- `dotenv`。
+
+## 已实现功能
+
+### Dashboard 交互
+
+- 公司 tracking list。
+- 公司搜索和选择。
+- 最新财报 hero。
+- 数据质量 badge。
+- 核心 KPI 卡片。
+- 指标来源展示和外链。
+- 近 1Q / 2Q / 4Q / 8Q 趋势图。
+- 趋势图 hover tooltip。
+- 业务分部 tab 和总览。
+- Market Reaction 卡片。
+- AI Report Writer。
+- AI Tracker。
+- 复制 Quick Notes 文案。
+
+### 数据读取
+
+`/api/companies` 当前读取顺序：
 
 1. 如果配置了非本地模板的 `DATABASE_URL`，优先读取 PostgreSQL 中已发布的结构化财报。
 2. 如果存在 `data/earnings-snapshot.json`，读取本地 snapshot。
 3. 如果没有 snapshot，尝试 live SEC fallback 拉取网易官方 6-K。
-4. 如果 live SEC 失败，使用本地 seed 数据兜底，并在 provenance 里标注 fallback。
+4. 如果 live SEC 失败，使用本地 seed 数据兜底。
 
-这个顺序保证本地 demo 不依赖数据库，同时公司库接上后可以自然切到 SQL-first。
+这个顺序保证本地 demo 不依赖数据库，同时接上真实数据库后可以自然切到 SQL-first。
 
-## Official Data Import
+### 官方 parser
 
-网易 2026 Q1 已支持完整结构化导入，来源是 SEC 6-K Exhibit 99.1：
+当前已实现 deterministic parser：
 
-```bash
-npm run import:earnings -- --company netease --period 2026Q1
+- 网易 2026 Q1：SEC 6-K Exhibit 99.1。
+- 百度 2026 Q1：SEC 6-K Exhibit 99.1。
+
+支持内容：
+
+- 总营收。
+- 毛利润。
+- 毛利率。
+- 营业利润和营业利润率，视公告表格而定。
+- 归母净利润。
+- YoY / QoQ。
+- 业务分部收入、占比、同比、环比。
+- source anchor。
+- Quick Note seed。
+- SQL 持久化和 snapshot 输出。
+
+### AkShare/EastMoney 第三方指标
+
+AkShare bootstrap 已经覆盖当前 tracking list 的 17 家公司，能拉到公司级核心财务指标：
+
+- 总营收。
+- 毛利润。
+- 毛利率。
+- 归母净利润。
+- YoY / QoQ。
+- 多期历史趋势。
+
+这些公司在看板中标记为 `AkShare third-party`。它们能用于看板浏览，但不开放 LLM 财报生成。
+
+### 行情反应
+
+已接入 AkShare/EastMoney 历史日线，用于计算财报后首个交易日反应。
+
+当前 snapshot 已算出 6 家：
+
+- `chineseall`：中文在线。
+- `alphabet`：Alphabet。
+- `meta`：Meta。
+- `apple`：Apple。
+- `netease`：网易。
+- `baidu`：百度。
+
+计算口径：
+
+```text
+公告日前/当日收盘价 -> 公告后首个交易日开盘价/收盘价
 ```
 
-没有数据库时可以只验证抓取和解析：
+只在存在可靠公告日并且历史行情请求成功时写入结果。其余公司继续显示未接入状态，避免用季度截止日误算市场反应。
+
+### AI 相关新闻
+
+`/api/ai-news` 已实现：
+
+- 公司别名生成。
+- AI HOT 查询。
+- Google News RSS 查询。
+- GDELT 查询。
+- 近三个月窗口。
+- 去重、相关性过滤和排序。
+- 最多展示三条。
+- 保留原始 source URL。
+- 失败时 fallback 到本地记录或待补充项。
+
+### LLM Quick Notes
+
+已实现：
+
+- 只允许 `SEC verified` 公司调用。
+- 输入使用结构化指标、业务分部、AI 动态和 source 信息。
+- JSON schema 输出。
+- 输出字段包括 `headline`、`summary`、`financials`、`segments`、`aiDynamics`、`watchItems`、`copyText`。
+- 前端支持重新生成和复制。
+
+## 待实现功能
+
+### 官方 parser 覆盖
+
+需要继续补齐公司级 deterministic parser：
+
+- 阿里、京东、B 站、知乎、携程、微博：SEC 6-K Exhibit HTML row label 和分部映射。
+- Alphabet、Meta、Apple、微软：SEC CompanyFacts / 10-Q XBRL concept profile 和分部表。
+- 腾讯、快手、美团、美图：HKEX / 公司 IR PDF 表格解析规则。
+- 中文在线：CNINFO / A 股 PDF 表格解析规则。
+
+### 公告日和行情反应
+
+还需要：
+
+- 给未覆盖公司补 `knownReports.releaseDate` 或实现公告发现逻辑。
+- 区分盘前、盘后、港股/美股/ A 股交易日历。
+- 增加指数相对表现，例如相对恒生科技、纳斯达克、创业板。
+- 增加成交量、换手率和异常波动。
+- 后续如需商用，应替换为正式授权行情 API。
+
+### 数据平台
+
+待实现：
+
+- 把 snapshot 流程迁移到 SQL-first 的定时任务。
+- 增加人工校验后台。
+- 增加 parser 置信度和人工 override。
+- 增加 ProcessingJob 队列和失败重试。
+- Redis/BullMQ 目前只在 PRD 里规划，代码中尚未落地。
+
+### 产品功能
+
+待实现：
+
+- 公司详情页 `/company/[ticker]`。
+- 单季度财报详情页 `/company/[ticker]/earnings/[period]`。
+- 数据管理页 `/admin/data`。
+- 股票池维护页 `/admin/companies`。
+- 多报告期切换。
+- 下载/导出 Markdown、PDF 或 CSV。
+- 用户权限和登录。
+- Earning call transcript 接入。
+- 估值和一致预期对比。
+
+## 环境变量
+
+复制 `.env.example` 到 `.env`，按需填写。
 
 ```bash
-npm run import:earnings -- --company netease --period 2026Q1 --dry-run
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/earnings_dashboard?schema=public"
+OPENAI_API_KEY=""
+OPENAI_BASE_URL="https://oneapi-comate.baidu-int.com/v1"
+OPENAI_MODEL="gpt-5.5-coding-plan"
+OPENAI_DISABLE_RESPONSE_STORAGE="true"
+OPENAI_REASONING_EFFORT="xhigh"
+REDIS_URL="redis://localhost:6379"
 ```
 
-临时不接数据库时，生成一个本地 snapshot：
+说明：
+
+- `DATABASE_URL`：PostgreSQL 连接串。当前 `/api/companies` 默认不会主动使用本地模板库，避免本机没有数据库时页面卡住。
+- `OPENAI_API_KEY`：生成 Quick Notes 必需。
+- `OPENAI_BASE_URL`：OpenAI-compatible API 地址。
+- `OPENAI_MODEL`：生成财报摘要使用的模型。
+- `REDIS_URL`：预留给后续任务队列，当前未实际使用。
+
+## 本地数据库
+
+启动 PostgreSQL：
 
 ```bash
-npm run snapshot:earnings
+docker compose up -d postgres
 ```
 
-这会抓取当前已实现 deterministic parser 的官方 SEC 文件，并写入 `data/earnings-snapshot.json`。未实现 parser 的公司不会进入 verified 看板，避免展示未校验数字。
+生成 Prisma Client：
 
-当前 parser 使用官方 HTML/PDF/XBRL 来源，已支持 `RMB bn`、`USD bn`、`HKD bn` 和 `%`。YoY 优先使用公告披露百分比；QoQ 在公告未直接给出且表格没有上一季度时保留为空，不让模型补数。脚本会把原始 source text、content hash、metrics、segments、quick note 和 processing job 写入 SQL。
+```bash
+npm run db:generate
+```
 
-当前数据源支持边界：
+推送 schema：
 
-- 网易：SEC source 抓取 + 2026 Q1 deterministic parser + SQL/snapshot 入库。
-- 百度：SEC Exhibit 99.1 抓取 + 2026 Q1 deterministic parser + SQL/snapshot 入库，含 Baidu Core AI-powered Business、AI Cloud Infra、在线营销、爱奇艺等分部。
-- 阿里、京东、B 站、知乎、携程、微博：SEC 6-K Exhibit HTML source discovery 已接入；通用 `sec-6k-standard` parser scaffold 已有，但需要继续给每家公司确认 row label / 分部映射后再开放结构化入库。
-- Alphabet、Meta、Apple、微软：SEC 10-Q discovery 已接入，`sec-companyfacts-us-tech` / CompanyFacts scaffold 已有；需要逐家公司确认 XBRL concept 和分部表后再开放结构化入库。
-- 腾讯、快手、美团、美图：HKEX/公司 IR PDF 分类已接入，`pdf-text-standard` scaffold 和 PDF 文本抽取已可用；需要传官方 PDF URL 并为每家公司确认表格规则。
-- 中文在线：CNINFO/A 股公告分类已接入，先走官方 PDF 文本抽取；需要确认公告 URL 和 A 股财报表格规则。
+```bash
+npm run db:push
+```
 
-查看所有公司 parser 分类和状态：
+写入 tracking companies：
+
+```bash
+npm run db:seed
+```
+
+如果要连接云数据库或公司数据库，把 `.env` 中的 `DATABASE_URL` 换成目标连接串，再执行同样命令。
+
+## 数据导入和维护脚本
+
+查看 parser 覆盖状态：
 
 ```bash
 npm run parser:plan
 ```
 
-抽取官方来源文本但不入库：
+抓官方财报并入库：
+
+```bash
+npm run import:earnings -- --company netease --period 2026Q1
+```
+
+只 dry-run，不入库：
+
+```bash
+npm run import:earnings -- --company netease --period 2026Q1 --dry-run
+```
+
+生成官方 parser snapshot：
+
+```bash
+npm run snapshot:earnings
+```
+
+抽取官方来源文本但不解析：
 
 ```bash
 npm run extract:source -- --company jd
-npm run extract:source -- --company tencent --source-url https://static.www.tencent.com/uploads/2026-q1-results.pdf
+npm run extract:source -- --company tencent --source-url https://example.com/results.pdf
 ```
 
-## AkShare Third-Party Bootstrap
-
-AkShare 可作为历史结构化指标的第三方加速源，用来补全 tracking list 的公司级总营收、毛利润、毛利率、归母净利润、YoY/QoQ 和历史趋势。它不替代官方 SEC/HKEX/CNINFO/IR parser：第三方数据在看板中标记为 `AkShare third-party`，不会开放 LLM 财报生成；官方 parser 跑通后会覆盖同公司 snapshot，标记为 `SEC verified`。
-
-首次使用先创建项目内 Python venv 并安装依赖：
+安装 AkShare Python 依赖：
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements-akshare.txt
 ```
 
-只验证 AkShare 全量覆盖，不写文件：
+验证 AkShare 覆盖，不写文件：
 
 ```bash
 npm run import:akshare -- --all --dry-run
@@ -165,120 +465,70 @@ npm run import:akshare -- --all --dry-run
 npm run snapshot:akshare
 ```
 
-当前验证结果：17 家 tracking 公司都能拉到公司级核心指标；网易、百度由现有 SEC parser 覆盖为官方 verified，其余公司先用 AkShare/EastMoney third-party 指标展示。AkShare 不提供本项目需要的业务分部拆解、经营费用明细和公告原文 source anchor，所以分部面板、营业利润率、费用率会等待官方 parser 或更细的数据源。
-
-如果历史 snapshot 中把缺失的营业利润率/费用率写成了 0，可以运行：
+修复历史 snapshot 中的缺失值占位：
 
 ```bash
 npm run snapshot:repair
 ```
 
-修复脚本会把缺失值改成 `null`，并把行情反应文案改成“未接入行情源”。
+## 目录结构
 
-## AI Usage
-
-AI 在项目里分成两类能力：财报总结和 AI 动态检索。
-
-财报 Quick Notes：
-
-- 前端右侧「一键生成财报」按钮调用 `/api/generate-note`。
-- 后端只允许 `dataQuality = "SEC verified"` 的官方校验数据进入 LLM，第三方 AkShare 数据和 demo seed 不开放生成。
-- `src/lib/llm.ts` 会把公司基本信息、报告期、指标、分部、已有 AI 动态和 source 信息组织成 JSON 输入。
-- 系统提示明确要求模型只能基于结构化字段写作，不能新增、猜测、改写财务数字，未披露必须写“未披露”或“仍需观察”。
-- 输出走 Responses API JSON schema，后端解析为 `headline`、`summary`、`financials`、`segments`、`aiDynamics`、`watchItems`、`copyText`，再给前端展示。
-
-`.env` 需要配置：
-
-```bash
-OPENAI_API_KEY="your_api_key"
-OPENAI_BASE_URL="https://oneapi-comate.baidu-int.com/v1"
-OPENAI_MODEL="gpt-5.5-coding-plan"
-OPENAI_DISABLE_RESPONSE_STORAGE="true"
-OPENAI_REASONING_EFFORT="xhigh"
+```text
+src/app/page.tsx                       Dashboard 主页面
+src/app/api/companies/route.ts          公司数据 API
+src/app/api/generate-note/route.ts      LLM Quick Notes API
+src/app/api/ai-news/route.ts            AI 新闻 API
+src/lib/charts.tsx                      图表组件
+src/lib/mock-data.ts                    前端数据类型和 demo fallback
+src/lib/parsed-to-dashboard.ts          parser 结果转 dashboard 数据
+src/lib/db-to-dashboard.ts              SQL 结果转 dashboard 数据
+src/lib/snapshot.ts                     snapshot 读写
+src/lib/llm.ts                          LLM 调用和 schema
+src/lib/sources/*                       数据源、parser、profile 和持久化逻辑
+scripts/import-earnings.ts              官方财报导入
+scripts/import-akshare.ts               AkShare 第三方指标导入
+scripts/akshare-provider.py             AkShare Python provider
+scripts/list-parser-plan.ts             parser 覆盖检查
+scripts/repair-snapshot.ts              snapshot 修复脚本
+prisma/schema.prisma                    数据库模型
+data/earnings-snapshot.json             本地 snapshot
+docs/PRD.md                             产品需求说明
 ```
 
-AI 相关新闻：
+## 数据质量说明
 
-- 前端切换公司后调用 `/api/ai-news?companyId=...&companyName=...&ticker=...`。
-- 后端为每家公司维护别名，例如百度对应 `Baidu`、`百度`、`ERNIE`、`文心`、`Apollo`，阿里对应 `Alibaba`、`Qwen`、`通义千问`。
-- 优先查 AI HOT public API；不足三条时查 Google News RSS；仍不足时查 GDELT。
-- 新闻窗口是近三个月，AI HOT 侧偏近期精选，Google News/GDELT 侧使用 `when:90d` 或 90 天时间参数。
-- 候选新闻必须在标题、摘要或来源里命中公司别名，之后按来源优先级和日期排序、去重，最多展示三条。
-- 每条新闻保留 `sourceUrl`，前端可点开跳转原链接。抓不到足够新闻时展示可点击的官方财报入口或 Google News 搜索入口，不编造动态。
+`SEC verified`：
 
-AI 不负责的事情：
+- 官方 SEC 来源。
+- 已经过 deterministic parser。
+- source URL 和 source anchor 可追溯。
+- 可以使用 LLM Quick Notes。
 
-- 不直接从公告里自由抽财务数字。
-- 不补全缺失的营业利润率、费用率、分部收入或行情反应。
-- 不把第三方指标包装成官方 verified。
-- 不输出投资建议、目标价或未核验结论。
+`AkShare third-party`：
 
-## Crawler And Parser Logic
+- AkShare/EastMoney 第三方指标。
+- 适合做 tracking list 和趋势预览。
+- 不替代官方 parser。
+- 不开放 LLM 财报生成。
 
-财务官方源抓取：
+`Demo`：
 
-1. 每家公司在 `src/lib/sources/company-config.ts` 里配置市场、ticker、SEC CIK、HKEX code、IR 地址、source provider、parser profile、关键词和排除词。
-2. `scripts/import-earnings.ts` 根据 company config 决定来源路径。
-3. SEC 公司先走 `data.sec.gov/submissions/CIK*.json` 找最近 filings，按 6-K / 10-Q、关键词和排除词筛选。
-4. 6-K 会进一步打开 filing index，优先找 Exhibit 99.1、press release 或包含财报关键词的 HTML。
-5. HKEX、公司 IR、CNINFO 目前支持传入官方 PDF/HTML URL 后抽取文本，deterministic 表格规则仍需逐家公司补齐。
-6. 抓到 source 后计算 SHA-256 content hash，保存 raw text/source URL/source title，避免后续无法追溯。
-7. 如果 parser profile 已实现，`parseEarningsReport` 进入公司专属 deterministic parser，把指标、同比/环比、业务分部、source anchor 和 quick note 转成统一 `ParsedEarningsReport`。
-8. 如果 parser profile 还没实现，只保存 source-only 或跳过结构化入库，不把未校验数字展示成 verified。
+- 本地 seed/fallback 演示数据。
+- 只用于页面兜底。
 
-第三方指标 bootstrap：
+## 当前已知限制
 
-1. `scripts/import-akshare.ts` 调用 `.venv/bin/python scripts/akshare-provider.py`。
-2. Python provider 按公司市场走对应 AkShare/EastMoney 接口，拉最近多期财务指标。
-3. TypeScript 层把 payload 转为统一 `ParsedEarningsReport`，补出公司级收入、毛利润、毛利率、归母净利润和历史趋势。
-4. 生成 snapshot 时，官方 verified 公司覆盖同公司 AkShare 结果。
-5. AkShare 不给业务分部和足够细的费用明细，所以这部分保持为空/未披露。
+- 大部分公司还没有完整官方 parser，业务分部和细粒度费用指标仍需要补规则。
+- AkShare/EastMoney 是第三方公开数据源，可能因上游字段、网络或限流变化导致抓取失败。
+- 行情反应依赖可靠公告日，不能用财报报告期截止日替代。
+- 当前 dashboard 是单页 MVP，后续详情页和管理页还没拆。
+- Redis/BullMQ、权限、定时任务、人工校验后台尚未实现。
+- LLM 生成依赖外部 OpenAI-compatible 服务和 API key。
 
-AI 新闻抓取：
+## 设计和实现原则
 
-1. `/api/ai-news` 根据 companyId、companyName、ticker 生成最多四个别名。
-2. 并发查询 AI HOT，使用浏览器 UA 和 `aihot-skill/0.2.0` 标识。
-3. 如果少于三条，再查询 Google News RSS 的 `"alias" AI when:90d`。
-4. 如果仍少于三条，再查询 GDELT 近 90 天文章，关键词包含 artificial intelligence、generative AI、large language model、大模型、人工智能等。
-5. 所有候选结果按 alias 命中、URL 去重、来源优先级和日期排序，最多返回三条。
-6. 返回值带 `sourceWindow`、`warnings` 和每条新闻的 `sourceUrl`，前端直接用外链打开原始来源。
-
-行情反应：
-
-- 当前没有接实时/历史行情源，所以看板明确展示“行情源未接入”。
-- 需要接入交易所或行情 API 后，按财报发布时间后的首个交易窗口计算涨跌幅、成交量和指数相对表现，再替换当前文案。
-
-## Data Model
-
-Prisma schema 位于 `prisma/schema.prisma`，核心模型包括：
-
-- `Company`
-- `EarningsReport`
-- `FinancialMetric`
-- `BusinessSegment`
-- `QuickNote`
-- `AIDevelopment`
-- `SourceDocument`
-- `ProcessingJob`
-
-## Product Notes
-
-完整 PRD 位于 `docs/PRD.md`。
-
-关键原则：
-
-- SQL 保存结构化历史财务数据。
-- 原始公告/PDF/HTML 保存为 source documents。
-- 财务数字必须可追溯来源。
-- LLM 负责总结和结构化，不自由生成财务数字。
-- AI 动态由 crawler 抓来源，LLM 只在后续需要时做去重、分类和摘要。
-
-## Next Implementation Steps
-
-1. 给京东 / 阿里补 `sec-6k-standard` deterministic row label profile。
-2. 给 B 站 / 知乎 / 携程 / 微博补 6-K Exhibit 精确选择和分部映射。
-3. 给 Alphabet / Meta / Apple / 微软补 CompanyFacts concept profile。
-4. 给腾讯 / 快手 / 美团 / 美图 / 中文在线补 PDF 表格解析规则。
-5. 接公司 PostgreSQL 或云数据库，把 snapshot 切到 SQL-first。
-6. 增加人工校验后台和 crawler / LLM 任务队列。
-7. 接行情源，用财报后首个交易窗口替换静态市场反应。
+- 先结构化，再总结。
+- 先官方来源，再第三方补齐。
+- 有来源才展示数字。
+- 缺失就明确显示缺失。
+- 让 parser 和数据质量决定功能开关，而不是让 UI 或 LLM 掩盖数据边界。
