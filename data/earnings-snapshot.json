@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-13T03:14:33.141Z",
+  "generatedAt": "2026-07-13T08:51:40.739Z",
   "provenance": {
     "mode": "snapshot",
-    "note": "Snapshot combines official verified parsers when available with AkShare/EastMoney third-party historical indicators for broader coverage. Third-party rows are not official verified.",
+    "note": "Snapshot updated by manual earnings refresh.",
     "sourceUrls": [
       "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9988",
       "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9618",
@@ -20,10 +20,170 @@
       "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=AAPL&type=web&color=w#/cwfx/zyzb",
       "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=MSFT&type=web&color=w#/cwfx/zyzb",
       "https://www.sec.gov/Archives/edgar/data/1110646/000110465926064764/tm2615053d1_ex99-1.htm",
-      "https://www.sec.gov/Archives/edgar/data/1329099/000119312526228123/d156481dex991.htm"
+      "https://www.sec.gov/Archives/edgar/data/1329099/000119312526228123/d156481dex991.htm",
+      "https://www.sec.gov/Archives/edgar/data/1561861/000119312526197494/d101275d20f.htm",
+      "https://www.sec.gov/Archives/edgar/data/1561861/000119312526197494/d101275d20f.htm"
     ]
   },
   "companies": [
+    {
+      "id": "aeromexico",
+      "name": "Aeromexico",
+      "ticker": "AERO",
+      "market": "US",
+      "industry": "航空客运、货运与忠诚度业务",
+      "fiscalPeriod": "2025 FY",
+      "reportDate": "2026-04-30",
+      "shareReaction": "行情反应待接入实时行情源校验。",
+      "status": "已发布",
+      "aiTag": "早期产品化",
+      "dataQuality": "SEC verified",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1561861/000119312526197494/d101275d20f.htm",
+      "sourceLabel": "SEC filing snapshot",
+      "verifiedAt": "2026-07-13T08:51:40.734Z",
+      "quickNote": "Aeromexico 2025 FY revenue was USD 5.36bn, with operating margin 17.3% and income for the year of USD 0.35bn.",
+      "highlights": [
+        "Total revenue reached USD 5.36bn, YoY -4.6%.",
+        "Passenger revenue remained the largest stream at USD 4.86bn.",
+        "Operating margin was 17.3%, based on operating profit divided by revenue."
+      ],
+      "risks": [
+        "2025 annual revenue declined versus 2024; next update should watch quarterly demand recovery.",
+        "Fuel price and FX exposure remain key airline-specific sensitivities.",
+        "The current parser covers Form 20-F annual data; interim 6-K earnings releases still need validation after the next release appears."
+      ],
+      "metrics": [
+        {
+          "label": "总营收",
+          "shortLabel": "Revenue",
+          "value": 5.3606,
+          "displayValue": "$5.36bn",
+          "unit": "USD",
+          "yoy": -4.6,
+          "qoq": 0,
+          "source": "AERO 2025 Form 20-F inline XBRL: total revenue from ifrs-full:Revenue. Values are reported in thousands of US dollars and normalized to USD bn.",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1561861/000119312526197494/d101275d20f.htm",
+          "rank": "官方披露"
+        },
+        {
+          "label": "营业利润",
+          "shortLabel": "Operating Profit",
+          "value": 0.9281,
+          "displayValue": "$0.93bn",
+          "unit": "USD",
+          "yoy": -13,
+          "qoq": 0,
+          "source": "AERO 2025 Form 20-F inline XBRL: profit from operating activities from ifrs-full:ProfitLossFromOperatingActivities. Values are reported in thousands of US dollars and normalized to USD bn.",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1561861/000119312526197494/d101275d20f.htm",
+          "rank": "官方披露"
+        },
+        {
+          "label": "营业利润率",
+          "shortLabel": "Operating Margin",
+          "value": 17.3,
+          "displayValue": "17.3%",
+          "unit": "%",
+          "yoy": -8.8,
+          "qoq": 0,
+          "source": "Derived from profit from operating activities divided by total revenue.",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1561861/000119312526197494/d101275d20f.htm",
+          "rank": "衍生指标"
+        },
+        {
+          "label": "归母净利润",
+          "shortLabel": "Net Income",
+          "value": 0.3519,
+          "displayValue": "$0.35bn",
+          "unit": "USD",
+          "yoy": -43,
+          "qoq": 0,
+          "source": "AERO 2025 Form 20-F inline XBRL: income for the year from ifrs-full:ProfitLoss. Values are reported in thousands of US dollars and normalized to USD bn.",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1561861/000119312526197494/d101275d20f.htm",
+          "rank": "官方披露"
+        }
+      ],
+      "quarters": [
+        {
+          "period": "23FY",
+          "revenue": 4.9,
+          "grossProfit": 0,
+          "netProfit": 0.3,
+          "grossMargin": 0,
+          "operatingMargin": 14.6,
+          "expenseRatio": null
+        },
+        {
+          "period": "24FY",
+          "revenue": 5.6,
+          "grossProfit": 0,
+          "netProfit": 0.6,
+          "grossMargin": 0,
+          "operatingMargin": 19,
+          "expenseRatio": null
+        },
+        {
+          "period": "25FY",
+          "revenue": 5.4,
+          "grossProfit": 0,
+          "netProfit": 0.4,
+          "grossMargin": 0,
+          "operatingMargin": 17.3,
+          "expenseRatio": null
+        }
+      ],
+      "segments": [
+        {
+          "name": "Passenger",
+          "revenue": 4.9,
+          "displayRevenue": "$4.86bn",
+          "share": 90.7,
+          "yoy": -5.6,
+          "qoq": 0,
+          "driver": "Passenger revenue includes airfare and ancillary passenger services.",
+          "color": "#1d4ed8",
+          "trend": [
+            48.6
+          ]
+        },
+        {
+          "name": "Air cargo",
+          "revenue": 0.3,
+          "displayRevenue": "$0.31bn",
+          "share": 5.8,
+          "yoy": 5.5,
+          "qoq": 0,
+          "driver": "Air cargo revenue covers domestic and international cargo transport.",
+          "color": "#0f766e",
+          "trend": [
+            3.1
+          ]
+        },
+        {
+          "name": "Other",
+          "revenue": 0.2,
+          "displayRevenue": "$0.19bn",
+          "share": 3.5,
+          "yoy": 8.6,
+          "qoq": 0,
+          "driver": "Other revenue captures remaining operating revenue disclosed outside passenger and cargo.",
+          "color": "#be123c",
+          "trend": [
+            1.9
+          ]
+        }
+      ],
+      "aiDevelopments": [
+        {
+          "title": "财报披露中的 AI 相关信息",
+          "category": "财报披露",
+          "date": "2026-04-30",
+          "status": "早期产品化",
+          "summary": "No material AI revenue disclosure was parsed from the airline Form 20-F.",
+          "source": "Grupo Aeromexico 2025 Form 20-F",
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1561861/000119312526197494/d101275d20f.htm"
+        }
+      ]
+    },
     {
       "id": "alibaba",
       "name": "阿里巴巴",

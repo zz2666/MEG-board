@@ -85,7 +85,7 @@ function getReportTarget(config: CompanySourceConfig, period?: string) {
 }
 
 function isImplementedParser(profile: CompanySourceConfig["parserProfile"]) {
-  return profile === "netease-q1-2026" || profile === "baidu-q1-2026";
+  return profile === "netease-q1-2026" || profile === "baidu-q1-2026" || profile === "aeromexico-20f-2025";
 }
 
 async function fetchPdfText(url: string) {

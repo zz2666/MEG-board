@@ -54,6 +54,13 @@ type AiNewsState = {
   sourceWindow?: string;
 };
 
+type RefreshState = {
+  companyId: string;
+  loading: boolean;
+  message?: string;
+  error?: string;
+};
+
 const statusStyles = {
   已发布: "status published",
   待校验: "status pending",
@@ -77,6 +84,14 @@ function normalizePeriodLabel(period: string) {
 
 function getTopMetric(company: Company, label: string) {
   return company.metrics.find((metric) => metric.label === label) ?? company.metrics[0];
+}
+
+function getOptionalMetric(company: Company, label: string) {
+  return company.metrics.find((metric) => metric.label === label) ?? null;
+}
+
+function getMarginMetric(company: Company) {
+  return getOptionalMetric(company, "毛利率") ?? getOptionalMetric(company, "营业利润率") ?? company.metrics[0];
 }
 
 function isMarketReactionUnavailable(value: string) {
@@ -116,7 +131,7 @@ function hasMetricSeries(company: Company, metric: MetricKey) {
     );
   }
 
-  return company.quarters.some((point) => Number.isFinite(point[metric]));
+  return company.quarters.some((point) => Number.isFinite(point[metric]) && point[metric] !== 0);
 }
 
 function getPeriodDescription(range: string, company: Company) {
@@ -135,9 +150,21 @@ function qualityBadgeClass(dataQuality: Company["dataQuality"]) {
 
 function buildGeneratedReport(company: Company) {
   const revenue = getTopMetric(company, "总营收");
-  const grossMargin = getTopMetric(company, "毛利率");
+  const grossMargin = getOptionalMetric(company, "毛利率");
+  const operatingMargin = getOptionalMetric(company, "营业利润率");
   const netIncome =
     company.metrics.find((metric) => metric.label.includes("净")) ?? company.metrics.at(-1);
+  const marginLine = grossMargin
+    ? `毛利率 ${grossMargin.displayValue}，YoY ${formatSigned(grossMargin.yoy, "pct")}，QoQ ${formatSigned(
+        grossMargin.qoq,
+        "pct",
+      )}。`
+    : operatingMargin
+      ? `营业利润率 ${operatingMargin.displayValue}，YoY ${formatSigned(
+          operatingMargin.yoy,
+          "pct",
+        )}，QoQ ${formatSigned(operatingMargin.qoq, "pct")}。`
+      : "毛利率/营业利润率暂无结构化数据。";
   const segmentNotes = company.segments.length
     ? company.segments
         .map(
@@ -158,10 +185,7 @@ function buildGeneratedReport(company: Company) {
 
 核心财务数据：
 总营收 ${revenue.displayValue}，YoY ${formatSigned(revenue.yoy)}，QoQ ${formatSigned(revenue.qoq)}。
-毛利率 ${grossMargin.displayValue}，YoY ${formatSigned(grossMargin.yoy, "pct")}，QoQ ${formatSigned(
-    grossMargin.qoq,
-    "pct",
-  )}。
+${marginLine}
 ${netIncome ? `${netIncome.label} ${netIncome.displayValue}，YoY ${formatSigned(netIncome.yoy)}，QoQ ${formatSigned(netIncome.qoq)}。` : ""}
 
 业务分部：
@@ -194,6 +218,7 @@ export default function Home() {
   const [llmLoading, setLlmLoading] = useState<LlmContext | null>(null);
   const [llmError, setLlmError] = useState<LlmErrorState | null>(null);
   const [aiNewsState, setAiNewsState] = useState<AiNewsState | null>(null);
+  const [refreshState, setRefreshState] = useState<RefreshState | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -253,7 +278,7 @@ export default function Home() {
   );
   const activeCurrency = getCompanyCurrency(activeCompany);
   const revenueMetric = getTopMetric(activeCompany, "总营收");
-  const marginMetric = getTopMetric(activeCompany, "毛利率");
+  const marginMetric = getMarginMetric(activeCompany);
   const activeLlmNote =
     llmNote?.companyId === activeCompany.id && llmNote.fiscalPeriod === activeCompany.fiscalPeriod
       ? llmNote.note
@@ -273,6 +298,7 @@ export default function Home() {
     ? aiNewsForActive.items
     : activeCompany.aiDevelopments;
   const generatedReport = activeLlmNote?.copyText ?? buildGeneratedReport(activeCompany);
+  const refreshForActive = refreshState?.companyId === activeCompany.id ? refreshState : null;
 
   const activeSegmentData =
     activeSegment === "总览"
@@ -376,6 +402,47 @@ export default function Home() {
           ? null
           : current,
       );
+    }
+  }
+
+  async function refreshEarnings() {
+    const companyId = activeCompany.id;
+    setRefreshState({ companyId, loading: true });
+
+    try {
+      const response = await fetch(`/api/companies/${companyId}/refresh-earnings`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ persist: true }),
+      });
+      const payload = (await response.json()) as {
+        company?: Company;
+        message?: string;
+        error?: string;
+      };
+      if (!response.ok) throw new Error(payload.error ?? `Refresh API ${response.status}`);
+
+      if (payload.company) {
+        setBackendCompanies((current) => {
+          const next = current.filter((company) => company.id !== payload.company?.id);
+          return [payload.company, ...next] as Company[];
+        });
+        setDataLoadedAt(new Date().toISOString());
+      }
+
+      setRefreshState({
+        companyId,
+        loading: false,
+        message: payload.message ?? "财报源已检查。",
+      });
+    } catch (error) {
+      setRefreshState({
+        companyId,
+        loading: false,
+        error: error instanceof Error ? error.message : "Refresh failed",
+      });
     }
   }
 
@@ -494,11 +561,23 @@ export default function Home() {
               <BadgeCheck size={14} />
               {activeCompany.dataQuality}
             </span>
-            <button className="icon-button" aria-label="刷新财报任务">
+            <button
+              className="refresh-button"
+              aria-label="刷新财报任务"
+              onClick={refreshEarnings}
+              disabled={refreshForActive?.loading}
+              title="检查并解析最新官方财报"
+            >
               <Activity size={18} />
+              <span>{refreshForActive?.loading ? "解析中" : "解析最新财报"}</span>
             </button>
           </div>
         </header>
+        {refreshForActive?.message || refreshForActive?.error ? (
+          <div className={refreshForActive.error ? "refresh-message error" : "refresh-message"}>
+            {refreshForActive.error ?? refreshForActive.message}
+          </div>
+        ) : null}
 
         <section className="hero-panel">
           <div className="hero-main">

@@ -16,7 +16,8 @@
     "parser:plan": "tsx -r tsconfig-paths/register scripts/list-parser-plan.ts",
     "snapshot:repair": "tsx -r tsconfig-paths/register scripts/repair-snapshot.ts",
     "snapshot:akshare": "npm run import:akshare -- --all --snapshot",
-    "snapshot:earnings": "npm run import:earnings -- --implemented --snapshot"
+    "snapshot:earnings": "npm run import:earnings -- --implemented --snapshot",
+    "refresh:earnings": "tsx -r tsconfig-paths/register scripts/refresh-earnings.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",

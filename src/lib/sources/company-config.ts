@@ -2,6 +2,46 @@ import type { CompanySourceConfig } from "./types";
 
 export const trackedCompanyConfigs: CompanySourceConfig[] = [
   {
+    id: "aeromexico",
+    name: "Aeromexico",
+    ticker: "AERO",
+    displayTicker: "AERO",
+    market: "US",
+    industry: "航空客运、货运与忠诚度业务",
+    irUrl: "https://www.aeromexico.com/",
+    secCik: "0001561861",
+    sourceProvider: "sec",
+    parserProfile: "aeromexico-20f-2025",
+    filingForms: ["20-F", "6-K"],
+    filingKeywords: [
+      "consolidated statements of profit or loss",
+      "total revenue",
+      "passenger revenue",
+      "profit from operating activities",
+      "income for the year",
+      "financial results",
+    ],
+    excludeFilingKeywords: [
+      "annual ordinary shareholders",
+      "beneficial ownership",
+      "schedule 13g",
+      "form 3",
+      "form 4",
+      "shareholders' meeting",
+    ],
+    knownReports: {
+      "2025FY": {
+        fiscalYear: 2025,
+        fiscalQuarter: "FY",
+        periodLabel: "2025 FY",
+        releaseDate: "2026-04-30T20:31:26.000Z",
+        title: "Grupo Aeromexico 2025 Form 20-F",
+        sourceUrl:
+          "https://www.sec.gov/Archives/edgar/data/1561861/000119312526197494/d101275d20f.htm",
+      },
+    },
+  },
+  {
     id: "alibaba",
     name: "阿里巴巴",
     ticker: "9988.HK",

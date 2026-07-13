@@ -3,6 +3,7 @@ export type SourceProvider = "sec" | "hkex-ir" | "company-ir" | "cninfo";
 export type ParserProfile =
   | "netease-q1-2026"
   | "baidu-q1-2026"
+  | "aeromexico-20f-2025"
   | "sec-6k-standard"
   | "sec-companyfacts-us-tech"
   | "pdf-text-standard";

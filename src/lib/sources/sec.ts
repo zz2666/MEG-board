@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import type { CompanySourceConfig, SecDiscoveredFiling } from "./types";
+import { windowlessSetTimeout } from "./runtime";
 
 export const SEC_USER_AGENT =
   process.env.SEC_USER_AGENT ?? "earnings-dashboard/0.1 contact: zhouziyi@example.com";
@@ -84,8 +85,11 @@ async function secFetch(url: string, attempts = 3) {
   let lastError: unknown;
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = windowlessSetTimeout(() => controller.abort(), Number(process.env.SEC_FETCH_TIMEOUT_MS ?? 15_000));
     try {
       const response = await fetch(url, {
+        signal: controller.signal,
         headers: {
           "User-Agent": SEC_USER_AGENT,
           Accept: "text/html,application/xhtml+xml,application/json",
@@ -102,6 +106,8 @@ async function secFetch(url: string, attempts = 3) {
       if (attempt < attempts) {
         await sleep(750 * attempt);
       }
+    } finally {
+      clearTimeout(timeout);
     }
   }
 
@@ -192,6 +198,10 @@ export async function resolveSecExhibitDocumentUrl(params: {
 
 export async function discoverLatestSecEarningsFiling(
   config: CompanySourceConfig,
+  options: {
+    afterFilingDate?: string;
+    maxCandidates?: number;
+  } = {},
 ): Promise<SecDiscoveredFiling | null> {
   if (!config.secCik) return null;
 
@@ -205,6 +215,9 @@ export async function discoverLatestSecEarningsFiling(
   let checkedCandidates = 0;
 
   for (let index = 0; index < recent.accessionNumber.length; index += 1) {
+    const filingDate = recent.filingDate?.[index] ?? "";
+    if (options.afterFilingDate && filingDate < options.afterFilingDate) break;
+
     const form = recent.form?.[index] ?? "";
     const primaryDocument = recent.primaryDocument?.[index] ?? "";
     const primaryDocDescription = recent.primaryDocDescription?.[index] ?? "";
@@ -215,12 +228,12 @@ export async function discoverLatestSecEarningsFiling(
     if (!looksLikeTargetForm || primaryDocument.includes("xsl")) continue;
 
     checkedCandidates += 1;
-    if (checkedCandidates > 20) break;
+    if (checkedCandidates > (options.maxCandidates ?? 20)) break;
 
     const accessionNumber = recent.accessionNumber[index];
     const candidate = {
       accessionNumber,
-      filingDate: recent.filingDate?.[index] ?? "",
+      filingDate,
       reportDate: recent.reportDate?.[index],
       form,
       primaryDocument,

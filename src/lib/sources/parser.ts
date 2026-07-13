@@ -1,3 +1,4 @@
+import { parseAeromexico2025Form20F } from "./aeromexico-profile";
 import { parseBaiduQ12026SecReport } from "./baidu-profile";
 import { parseNetEaseQ12026SecReport } from "./netease-profile";
 import type { CompanySourceConfig, ParsedEarningsReport } from "./types";
@@ -21,6 +22,16 @@ export function parseEarningsReport(params: {
 
   if (params.config.parserProfile === "baidu-q1-2026") {
     return parseBaiduQ12026SecReport({
+      companyId: params.config.id,
+      html: params.html,
+      sourceUrl: params.sourceUrl,
+      sourceTitle: params.sourceTitle,
+      releaseDate: params.releaseDate,
+    });
+  }
+
+  if (params.config.parserProfile === "aeromexico-20f-2025") {
+    return parseAeromexico2025Form20F({
       companyId: params.config.id,
       html: params.html,
       sourceUrl: params.sourceUrl,

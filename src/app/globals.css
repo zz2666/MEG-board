@@ -455,6 +455,50 @@ select:focus-visible,
   backdrop-filter: blur(14px);
 }
 
+.icon-button:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.refresh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid rgba(21, 94, 239, 0.2);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.7);
+  color: #155eef;
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.refresh-button:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.refresh-message {
+  margin-top: -10px;
+  border: 1px solid rgba(21, 94, 239, 0.16);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 10px 12px;
+  color: #155eef;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.refresh-message.error {
+  border-color: rgba(190, 18, 60, 0.24);
+  color: #be123c;
+}
+
 .hero-panel {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 276px;

@@ -1,11 +1,12 @@
 import { trackedCompanyConfigs } from "@/lib/sources/company-config";
 
-const implementedProfiles = new Set(["netease-q1-2026", "baidu-q1-2026"]);
+const implementedProfiles = new Set(["netease-q1-2026", "baidu-q1-2026", "aeromexico-20f-2025"]);
 
 function parserFamily(profile: string | undefined) {
   if (profile === "sec-companyfacts-us-tech") return "SEC CompanyFacts / 10-Q XBRL";
   if (profile === "sec-6k-standard") return "SEC 6-K Exhibit HTML";
   if (profile === "pdf-text-standard") return "Official PDF text parser";
+  if (profile === "aeromexico-20f-2025") return "SEC 20-F inline XBRL";
   if (profile?.includes("q1-2026")) return "Deterministic company profile";
   return "Source discovery only";
 }
