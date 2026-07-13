@@ -123,7 +123,7 @@ export const trackedCompanyConfigs: CompanySourceConfig[] = [
     sourceProvider: "sec",
     parserProfile: "sec-6k-standard",
     filingKeywords: ["financial results", "announces first quarter", "quarter ended", "advertising"],
-    excludeFilingKeywords: ["annual general meeting", "share repurchase", "circular"],
+    excludeFilingKeywords: ["annual general meeting", "share repurchase", "circular", "date of board meeting", "date of publication"],
   },
   {
     id: "meituan",
@@ -163,8 +163,8 @@ export const trackedCompanyConfigs: CompanySourceConfig[] = [
     hkexCode: "2390",
     sourceProvider: "sec",
     parserProfile: "sec-6k-standard",
-    filingKeywords: ["financial results", "announces first quarter", "quarter ended", "paid membership"],
-    excludeFilingKeywords: ["annual general meeting", "share repurchase", "circular", "proxy"],
+    filingKeywords: ["reports unaudited first quarter", "total revenues were", "paid membership"],
+    excludeFilingKeywords: ["annual general meeting", "share repurchase", "circular", "proxy", "change of non-executive director"],
   },
   {
     id: "trip",

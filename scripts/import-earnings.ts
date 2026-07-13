@@ -7,6 +7,7 @@ import { getCompanyConfig, trackedCompanyConfigs } from "@/lib/sources/company-c
 import { persistDiscoveredSourceOnly, persistParsedEarningsReport } from "@/lib/sources/persist";
 import { parseEarningsReport } from "@/lib/sources/parser";
 import { discoverLatestSecEarningsFiling, fetchSecText, htmlToText, sha256 } from "@/lib/sources/sec";
+import { hasSec6kCompanyProfile } from "@/lib/sources/sec-6k-standard-profile";
 import type { CompanySourceConfig, ParsedEarningsReport } from "@/lib/sources/types";
 
 type Args = {
@@ -84,8 +85,14 @@ function getReportTarget(config: CompanySourceConfig, period?: string) {
   return knownReports.sort((first, second) => second.releaseDate.localeCompare(first.releaseDate))[0] ?? null;
 }
 
-function isImplementedParser(profile: CompanySourceConfig["parserProfile"]) {
-  return profile === "netease-q1-2026" || profile === "baidu-q1-2026" || profile === "aeromexico-20f-2025";
+function isImplementedParser(config: CompanySourceConfig) {
+  return (
+    config.parserProfile === "netease-q1-2026" ||
+    config.parserProfile === "baidu-q1-2026" ||
+    config.parserProfile === "aeromexico-20f-2025" ||
+    config.parserProfile === "sec-companyfacts-us-tech" ||
+    (config.parserProfile === "sec-6k-standard" && hasSec6kCompanyProfile(config.id))
+  );
 }
 
 async function fetchPdfText(url: string) {
@@ -171,7 +178,7 @@ async function fetchCompanyEarnings(
   console.log(`fetching ${config.name}: ${sourceUrl}`);
   const html = await fetchSecText(sourceUrl);
 
-  if (!config.parserProfile || !isImplementedParser(config.parserProfile)) {
+  if (!config.parserProfile || !isImplementedParser(config)) {
     const text = htmlToText(html);
     return {
       kind: "source-only",
@@ -190,7 +197,7 @@ async function fetchCompanyEarnings(
     kind: "parsed",
     config,
     html,
-    parsed: parseEarningsReport({
+    parsed: await parseEarningsReport({
       config,
       html,
       sourceUrl,
@@ -273,7 +280,7 @@ async function main() {
 
   let configs: CompanySourceConfig[];
   if (args.implemented) {
-    configs = trackedCompanyConfigs.filter((config) => isImplementedParser(config.parserProfile));
+    configs = trackedCompanyConfigs.filter((config) => isImplementedParser(config));
   } else if (args.all) {
     configs = trackedCompanyConfigs;
   } else {

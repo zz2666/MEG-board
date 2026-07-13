@@ -390,7 +390,7 @@ export function buildStandardQuickNote(params: {
       `毛利率 ${round(params.grossMargin)}%，归母净利润 YoY ${netIncomeYoy}%。`,
       topSegment
         ? `${topSegment.name} 收入 ${context.currencyUnit.replace(" bn", "")}${round(topSegment.revenue ?? 0, 2)}bn，占比 ${topSegment.share}%。`
-        : `${context.companyName} 分部收入已按官方披露抽取。`,
+        : `${context.companyName} 公司级指标已抽取，业务分部等待官方公告 parser。`,
     ],
     weaknesses: [
       weakSegment

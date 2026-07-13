@@ -5,6 +5,7 @@ import { getCompanyConfig } from "@/lib/sources/company-config";
 import { persistDiscoveredSourceOnly, persistParsedEarningsReport } from "@/lib/sources/persist";
 import { parseEarningsReport } from "@/lib/sources/parser";
 import { discoverLatestSecEarningsFiling, fetchSecText, htmlToText, sha256 } from "@/lib/sources/sec";
+import { hasSec6kCompanyProfile } from "@/lib/sources/sec-6k-standard-profile";
 import type { Company } from "@/lib/mock-data";
 import type { CompanySourceConfig } from "@/lib/sources/types";
 
@@ -19,8 +20,14 @@ function shouldUseDatabase() {
   return Boolean(databaseUrl && !databaseUrl.includes("localhost:5432"));
 }
 
-function isImplementedParser(profile: CompanySourceConfig["parserProfile"]) {
-  return profile === "netease-q1-2026" || profile === "baidu-q1-2026" || profile === "aeromexico-20f-2025";
+function isImplementedParser(config: CompanySourceConfig) {
+  return (
+    config.parserProfile === "netease-q1-2026" ||
+    config.parserProfile === "baidu-q1-2026" ||
+    config.parserProfile === "aeromexico-20f-2025" ||
+    config.parserProfile === "sec-companyfacts-us-tech" ||
+    (config.parserProfile === "sec-6k-standard" && hasSec6kCompanyProfile(config.id))
+  );
 }
 
 async function mergeSnapshot(company: Company, sourceUrl: string) {
@@ -88,7 +95,7 @@ export async function refreshCompanyEarnings(companyId: string, options: Refresh
   }
 
   const html = await fetchSecText(source.sourceUrl);
-  if (!config.parserProfile || !isImplementedParser(config.parserProfile)) {
+  if (!config.parserProfile || !isImplementedParser(config)) {
     if (options.persist && shouldUseDatabase()) {
       await persistDiscoveredSourceOnly({
         prisma,
@@ -109,7 +116,7 @@ export async function refreshCompanyEarnings(companyId: string, options: Refresh
     };
   }
 
-  const parsed = parseEarningsReport({
+  const parsed = await parseEarningsReport({
     config,
     html,
     sourceUrl: source.sourceUrl,

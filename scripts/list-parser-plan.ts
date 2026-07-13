@@ -1,6 +1,12 @@
 import { trackedCompanyConfigs } from "@/lib/sources/company-config";
+import { hasSec6kCompanyProfile } from "@/lib/sources/sec-6k-standard-profile";
 
-const implementedProfiles = new Set(["netease-q1-2026", "baidu-q1-2026", "aeromexico-20f-2025"]);
+const implementedProfiles = new Set([
+  "netease-q1-2026",
+  "baidu-q1-2026",
+  "aeromexico-20f-2025",
+  "sec-companyfacts-us-tech",
+]);
 
 function parserFamily(profile: string | undefined) {
   if (profile === "sec-companyfacts-us-tech") return "SEC CompanyFacts / 10-Q XBRL";
@@ -19,7 +25,11 @@ console.table(
     provider: company.sourceProvider,
     profile: company.parserProfile ?? "none",
     family: parserFamily(company.parserProfile),
-    status: implementedProfiles.has(company.parserProfile ?? "") ? "implemented" : "scaffolded",
+    status:
+      implementedProfiles.has(company.parserProfile ?? "") ||
+      (company.parserProfile === "sec-6k-standard" && hasSec6kCompanyProfile(company.id))
+        ? "implemented"
+        : "scaffolded",
     secCik: company.secCik ?? "",
     hkexCode: company.hkexCode ?? "",
   })),

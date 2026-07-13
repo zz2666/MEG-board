@@ -31,6 +31,7 @@ export type SecCompanyFacts = {
         units?: Record<
           string,
           Array<{
+            start?: string;
             end?: string;
             filed?: string;
             form?: string;
@@ -156,6 +157,17 @@ function normalizeSecHref(baseUrl: string, href: string) {
   return `${urlDirname(baseUrl)}${href}`;
 }
 
+function hasStrongEarningsSignal(text: string) {
+  return (
+    /(?:announces|reports).{0,120}(?:quarter|annual|year).{0,120}(?:financial )?results/i.test(text) ||
+    /unaudited financial results/i.test(text) ||
+    /financial results/i.test(text) ||
+    /total revenues? were/i.test(text) ||
+    /net revenues? were/i.test(text) ||
+    /revenue was/i.test(text)
+  );
+}
+
 export async function resolveSecExhibitDocumentUrl(params: {
   cik: string;
   accessionNumber: string;
@@ -163,29 +175,75 @@ export async function resolveSecExhibitDocumentUrl(params: {
   keywords?: string[];
   excludeKeywords?: string[];
 }) {
-  const indexUrl = `${buildSecFilingUrl(params.cik, params.accessionNumber)}${params.accessionNumber}-index.html`;
-
   try {
-    const indexHtml = await fetchSecText(indexUrl);
-    const links = [...indexHtml.matchAll(/<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi)]
-      .map((match) => ({
-        href: normalizeSecHref(indexUrl, match[1]),
-        text: htmlToText(match[2]),
-      }))
+    const baseFilingUrl = buildSecFilingUrl(params.cik, params.accessionNumber);
+    const indexUrls = [
+      `${baseFilingUrl}${params.accessionNumber}-index.html`,
+      `${baseFilingUrl}${params.accessionNumber}-index.htm`,
+    ];
+    let indexHtml = "";
+    let indexUrl = indexUrls[0];
+
+    for (const candidateIndexUrl of indexUrls) {
+      try {
+        indexHtml = await fetchSecText(candidateIndexUrl);
+        indexUrl = candidateIndexUrl;
+        break;
+      } catch {
+        indexHtml = "";
+      }
+    }
+
+    if (!indexHtml) {
+      indexHtml = await fetchSecText(params.primaryDocumentUrl);
+      indexUrl = params.primaryDocumentUrl;
+    }
+
+    const rowLinks = [...indexHtml.matchAll(/<tr[^>]*>[\s\S]*?<\/tr>/gi)].flatMap((rowMatch) => {
+      const rowHtml = rowMatch[0];
+      const link = rowHtml.match(/<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/i);
+      if (!link) return [];
+
+      return [
+        {
+          href: normalizeSecHref(indexUrl, link[1]),
+          text: `${htmlToText(rowHtml)} ${htmlToText(link[2])}`,
+        },
+      ];
+    });
+    const looseLinks = [...indexHtml.matchAll(/<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi)].map((match) => ({
+      href: normalizeSecHref(indexUrl, match[1]),
+      text: htmlToText(match[2]),
+    }));
+    const links = [...rowLinks, ...looseLinks]
       .filter((link) => /\.(htm|html)$/i.test(link.href));
     const keywords = params.keywords?.map((keyword) => keyword.toLowerCase()) ?? [];
     const excludeKeywords = params.excludeKeywords?.map((keyword) => keyword.toLowerCase()) ?? [];
-    const preferred = links.find((link) => {
+    const scoreLink = (link: { href: string; text: string }) => {
       const lower = `${link.href} ${link.text}`.toLowerCase();
-      return lower.includes("ex99") || lower.includes("ex-99") || lower.includes("press release");
-    });
-    const candidates = preferred ? [preferred, ...links.filter((link) => link.href !== preferred.href)] : links;
+      let score = 0;
+      if (lower.includes("ex-99.1") || lower.includes("exhibit 99.1") || lower.includes("dex991") || lower.includes("_ex99-1")) {
+        score += 80;
+      } else if (lower.includes("ex99") || lower.includes("ex-99") || lower.includes("exhibit 99")) {
+        score += 30;
+      }
+      if (lower.includes("press release") || lower.includes("financial results") || lower.includes("results")) score += 25;
+      if (excludeKeywords.some((keyword) => lower.includes(keyword))) score -= 60;
+      return score;
+    };
+    const candidates = [...links].sort((first, second) => scoreLink(second) - scoreLink(first));
 
     for (const candidate of candidates) {
       if (candidate.href === params.primaryDocumentUrl) continue;
-      const text = htmlToText(await fetchSecText(candidate.href)).toLowerCase();
+      let text = "";
+      try {
+        text = htmlToText(await fetchSecText(candidate.href)).toLowerCase();
+      } catch {
+        continue;
+      }
       const excluded = excludeKeywords.some((keyword) => text.includes(keyword));
-      if (!excluded && (!keywords.length || keywords.some((keyword) => text.includes(keyword)))) {
+      const matched = !keywords.length || keywords.some((keyword) => text.includes(keyword));
+      if (matched && (!excluded || hasStrongEarningsSignal(text))) {
         return candidate.href;
       }
     }
@@ -258,7 +316,8 @@ export async function discoverLatestSecEarningsFiling(
       candidate.documentUrl = resolvedDocumentUrl;
       const documentText = htmlToText(await fetchSecText(candidate.documentUrl)).toLowerCase();
       const excluded = excludeKeywords.some((keyword) => documentText.includes(keyword));
-      if (!excluded && keywords.some((keyword) => documentText.includes(keyword))) {
+      const matched = keywords.some((keyword) => documentText.includes(keyword));
+      if (matched && (!excluded || hasStrongEarningsSignal(documentText))) {
         return candidate;
       }
     } catch {
