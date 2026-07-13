@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-10T07:24:21.424Z",
+  "generatedAt": "2026-07-13T03:14:33.141Z",
   "provenance": {
     "mode": "snapshot",
-    "note": "Snapshot combines official verified parsers when available with AkShare/EastMoney third-party historical indicators for broader coverage. Missing operating margin, expense ratio, segment data, and market reaction are shown as unavailable instead of zero.",
+    "note": "Snapshot combines official verified parsers when available with AkShare/EastMoney third-party historical indicators for broader coverage. Third-party rows are not official verified.",
     "sourceUrls": [
       "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9988",
       "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9618",
@@ -32,22 +32,22 @@
       "industry": "电商、云、本地生活与数字媒体",
       "fiscalPeriod": "2026 FY",
       "reportDate": "2026-03-31",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "行情反应待接入实时行情源校验。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9988",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:49:17.588Z",
+      "verifiedAt": "2026-07-13T03:05:44.274Z",
       "quickNote": "阿里巴巴 2026 FY 总营收 RMB1023.67bn，YoY 2.7%，归母净利润 RMB103.59bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 RMB1023.67bn，YoY 2.7%，QoQ 0.5%。",
         "毛利率 39.8%，归母净利润 YoY -20.4%。",
-        "阿里巴巴 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "阿里巴巴 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -60,6 +60,7 @@
           "yoy": 2.7,
           "qoq": 0.5,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9988",
           "rank": "官方披露"
         },
         {
@@ -71,6 +72,7 @@
           "yoy": 2.4,
           "qoq": -0.6,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9988",
           "rank": "官方披露"
         },
         {
@@ -82,6 +84,7 @@
           "yoy": 0,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9988",
           "rank": "衍生指标"
         },
         {
@@ -93,6 +96,7 @@
           "yoy": -20.4,
           "qoq": -26.5,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9988",
           "rank": "官方披露"
         }
       ],
@@ -191,22 +195,22 @@
       "industry": "零售、电商、物流与平台服务",
       "fiscalPeriod": "2026 Q1",
       "reportDate": "2026-03-31",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "行情反应待接入实时行情源校验。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9618",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:49:18.328Z",
+      "verifiedAt": "2026-07-13T03:05:45.094Z",
       "quickNote": "京东 2026 Q1 总营收 RMB315.69bn，YoY 4.9%，归母净利润 RMB5.1bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 RMB315.69bn，YoY 4.9%，QoQ 1.1%。",
         "毛利率 16.8%，归母净利润 YoY -53.1%。",
-        "京东 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "京东 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -219,6 +223,7 @@
           "yoy": 4.9,
           "qoq": 1.1,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9618",
           "rank": "官方披露"
         },
         {
@@ -230,6 +235,7 @@
           "yoy": 10.8,
           "qoq": 2.5,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9618",
           "rank": "官方披露"
         },
         {
@@ -241,6 +247,7 @@
           "yoy": 0,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9618",
           "rank": "衍生指标"
         },
         {
@@ -252,6 +259,7 @@
           "yoy": -53.1,
           "qoq": -29.5,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9618",
           "rank": "官方披露"
         }
       ],
@@ -350,22 +358,22 @@
       "industry": "数字阅读、IP 与 AIGC 内容",
       "fiscalPeriod": "2026 Q1",
       "reportDate": "2026-04-23",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "A股财报后首个交易日收盘 -1.6%，开盘 -1.4%（2026-04-24，基准为 2026-04-23 收盘，AkShare/EastMoney 历史行情，按公告日估算）。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "http://www.cninfo.com.cn/new/disclosure/detail?stockCode=300364&announcementId=1225157283&orgId=9900023871&announcementTime=2026-04-23",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:50:02.605Z",
+      "verifiedAt": "2026-07-13T03:06:44.869Z",
       "quickNote": "中文在线 2026 Q1 总营收 RMB0.31bn，YoY 33.1%，归母净利润 RMB-0.05bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 RMB0.31bn，YoY 33.1%，QoQ -51.9%。",
         "毛利率 46.9%，归母净利润 YoY 47.9%。",
-        "中文在线 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "中文在线 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "行情反应已用 AkShare/EastMoney 历史日线初步校验，后续可切换授权行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -378,6 +386,7 @@
           "yoy": 33.1,
           "qoq": -51.9,
           "source": "AkShare third-party data via AkShare/EastMoney A-share earnings report; reportDate=2026-03-31",
+          "sourceUrl": "http://www.cninfo.com.cn/new/disclosure/detail?stockCode=300364&announcementId=1225157283&orgId=9900023871&announcementTime=2026-04-23",
           "rank": "官方披露"
         },
         {
@@ -389,6 +398,7 @@
           "yoy": 0,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney A-share earnings report; reportDate=2026-03-31",
+          "sourceUrl": "http://www.cninfo.com.cn/new/disclosure/detail?stockCode=300364&announcementId=1225157283&orgId=9900023871&announcementTime=2026-04-23",
           "rank": "官方披露"
         },
         {
@@ -400,6 +410,7 @@
           "yoy": 0,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney A-share earnings report; reportDate=2026-03-31",
+          "sourceUrl": "http://www.cninfo.com.cn/new/disclosure/detail?stockCode=300364&announcementId=1225157283&orgId=9900023871&announcementTime=2026-04-23",
           "rank": "衍生指标"
         },
         {
@@ -411,6 +422,7 @@
           "yoy": 47.9,
           "qoq": 69.6,
           "source": "AkShare third-party data via AkShare/EastMoney A-share earnings report; reportDate=2026-03-31",
+          "sourceUrl": "http://www.cninfo.com.cn/new/disclosure/detail?stockCode=300364&announcementId=1225157283&orgId=9900023871&announcementTime=2026-04-23",
           "rank": "官方披露"
         }
       ],
@@ -509,22 +521,22 @@
       "industry": "短视频、直播、广告与电商",
       "fiscalPeriod": "2026 Q1",
       "reportDate": "2026-03-31",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "行情反应待接入实时行情源校验。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1024",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:50:03.277Z",
+      "verifiedAt": "2026-07-13T03:06:45.788Z",
       "quickNote": "快手 2026 Q1 总营收 RMB33.72bn，YoY 3.4%，归母净利润 RMB2.9bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 RMB33.72bn，YoY 3.4%，QoQ 0.8%。",
         "毛利率 51.2%，归母净利润 YoY -27%。",
-        "快手 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "快手 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -537,6 +549,7 @@
           "yoy": 3.4,
           "qoq": 0.8,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1024",
           "rank": "官方披露"
         },
         {
@@ -548,6 +561,7 @@
           "yoy": -3.1,
           "qoq": -0.7,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1024",
           "rank": "官方披露"
         },
         {
@@ -559,6 +573,7 @@
           "yoy": 0,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1024",
           "rank": "衍生指标"
         },
         {
@@ -570,6 +585,7 @@
           "yoy": -27,
           "qoq": -5.8,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1024",
           "rank": "官方披露"
         }
       ],
@@ -668,22 +684,22 @@
       "industry": "搜索、广告、云与 AI 基础设施",
       "fiscalPeriod": "2026 Q1",
       "reportDate": "2026-04-30",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "美股财报后首个交易日收盘 +0.2%，开盘 -0.8%（2026-05-01，基准为 2026-04-30 收盘，AkShare/EastMoney 历史行情，按公告日估算）。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=GOOGL&type=web&color=w#/cwfx/zyzb",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:50:04.123Z",
+      "verifiedAt": "2026-07-13T03:06:47.789Z",
       "quickNote": "Alphabet 2026 Q1 总营收 USD109.9bn，YoY 21.8%，归母净利润 USD62.58bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 USD109.9bn，YoY 21.8%。",
         "毛利率 62.4%，归母净利润 YoY 81.2%。",
-        "Alphabet 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "Alphabet 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "行情反应已用 AkShare/EastMoney 历史日线初步校验，后续可切换授权行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -696,6 +712,7 @@
           "yoy": 21.8,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=GOOGL&type=web&color=w#/cwfx/zyzb",
           "rank": "官方披露"
         },
         {
@@ -707,6 +724,7 @@
           "yoy": 27.4,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=GOOGL&type=web&color=w#/cwfx/zyzb",
           "rank": "官方披露"
         },
         {
@@ -718,6 +736,7 @@
           "yoy": 4.6,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=GOOGL&type=web&color=w#/cwfx/zyzb",
           "rank": "衍生指标"
         },
         {
@@ -729,6 +748,7 @@
           "yoy": 81.2,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=GOOGL&type=web&color=w#/cwfx/zyzb",
           "rank": "官方披露"
         }
       ],
@@ -827,22 +847,22 @@
       "industry": "在线视频、社区、游戏与广告",
       "fiscalPeriod": "2026 Q1",
       "reportDate": "2026-03-31",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "行情反应待接入实时行情源校验。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9626",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:50:04.788Z",
+      "verifiedAt": "2026-07-13T03:06:48.721Z",
       "quickNote": "哔哩哔哩 2026 Q1 总营收 RMB7.47bn，YoY 6.7%，归母净利润 RMB0.21bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 RMB7.47bn，YoY 6.7%，QoQ 1.5%。",
         "毛利率 37.1%，归母净利润 YoY 2404.8%。",
-        "哔哩哔哩 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "哔哩哔哩 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -855,6 +875,7 @@
           "yoy": 6.7,
           "qoq": 1.5,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9626",
           "rank": "官方披露"
         },
         {
@@ -866,6 +887,7 @@
           "yoy": 9.2,
           "qoq": 2.1,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9626",
           "rank": "官方披露"
         },
         {
@@ -877,6 +899,7 @@
           "yoy": 0,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9626",
           "rank": "衍生指标"
         },
         {
@@ -888,6 +911,7 @@
           "yoy": 2404.8,
           "qoq": 18.3,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9626",
           "rank": "官方披露"
         }
       ],
@@ -986,22 +1010,22 @@
       "industry": "本地生活、外卖、到店酒旅与新业务",
       "fiscalPeriod": "2026 Q1",
       "reportDate": "2026-03-31",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "行情反应待接入实时行情源校验。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=3690",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:50:05.512Z",
+      "verifiedAt": "2026-07-13T03:06:49.876Z",
       "quickNote": "美团 2026 Q1 总营收 RMB91.04bn，YoY 5.6%，归母净利润 RMB-6.83bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 RMB91.04bn，YoY 5.6%，QoQ 1.3%。",
         "毛利率 28.5%，归母净利润 YoY -167.9%。",
-        "美团 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "美团 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -1014,6 +1038,7 @@
           "yoy": 5.6,
           "qoq": 1.3,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=3690",
           "rank": "官方披露"
         },
         {
@@ -1025,6 +1050,7 @@
           "yoy": -19,
           "qoq": -5.5,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=3690",
           "rank": "官方披露"
         },
         {
@@ -1036,6 +1062,7 @@
           "yoy": 0,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=3690",
           "rank": "衍生指标"
         },
         {
@@ -1047,6 +1074,7 @@
           "yoy": -167.9,
           "qoq": -72.3,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=3690",
           "rank": "官方披露"
         }
       ],
@@ -1145,22 +1173,22 @@
       "industry": "影像与设计 SaaS、AI 图像产品",
       "fiscalPeriod": "2025 FY",
       "reportDate": "2025-12-31",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "行情反应待接入实时行情源校验。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1357",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:50:06.274Z",
+      "verifiedAt": "2026-07-13T03:06:51.017Z",
       "quickNote": "美图 2025 FY 总营收 RMB3.86bn，YoY 28.8%，归母净利润 RMB0.58bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 RMB3.86bn，YoY 28.8%，QoQ 9%。",
         "毛利率 73.6%，归母净利润 YoY -27.6%。",
-        "美图 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "美图 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -1173,6 +1201,7 @@
           "yoy": 28.8,
           "qoq": 9,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2025-12-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1357",
           "rank": "官方披露"
         },
         {
@@ -1184,6 +1213,7 @@
           "yoy": 24.6,
           "qoq": 10,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2025-12-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1357",
           "rank": "官方披露"
         },
         {
@@ -1195,6 +1225,7 @@
           "yoy": 0,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2025-12-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1357",
           "rank": "衍生指标"
         },
         {
@@ -1206,6 +1237,7 @@
           "yoy": -27.6,
           "qoq": -35.1,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2025-12-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=1357",
           "rank": "官方披露"
         }
       ],
@@ -1304,22 +1336,22 @@
       "industry": "社区、内容、会员与营销服务",
       "fiscalPeriod": "2026 Q1",
       "reportDate": "2026-03-31",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "行情反应待接入实时行情源校验。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=2390",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:50:07.007Z",
+      "verifiedAt": "2026-07-13T03:06:51.815Z",
       "quickNote": "知乎 2026 Q1 总营收 RMB0.65bn，YoY -10.7%，归母净利润 RMB-0.01bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 RMB0.65bn，YoY -10.7%，QoQ -2.8%。",
         "毛利率 59.6%，归母净利润 YoY 15.8%。",
-        "知乎 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "知乎 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -1332,6 +1364,7 @@
           "yoy": -10.7,
           "qoq": -2.8,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=2390",
           "rank": "官方披露"
         },
         {
@@ -1343,6 +1376,7 @@
           "yoy": -13.9,
           "qoq": -3.8,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=2390",
           "rank": "官方披露"
         },
         {
@@ -1354,6 +1388,7 @@
           "yoy": 0,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=2390",
           "rank": "衍生指标"
         },
         {
@@ -1365,6 +1400,7 @@
           "yoy": 15.8,
           "qoq": 0.8,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=2390",
           "rank": "官方披露"
         }
       ],
@@ -1463,22 +1499,22 @@
       "industry": "在线旅游、住宿、交通票务与商旅",
       "fiscalPeriod": "2026 Q1",
       "reportDate": "2026-03-31",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "行情反应待接入实时行情源校验。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9961",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:50:07.718Z",
+      "verifiedAt": "2026-07-13T03:06:52.739Z",
       "quickNote": "携程 2026 Q1 总营收 RMB16.21bn，YoY 17.2%，归母净利润 RMB2.5bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 RMB16.21bn，YoY 17.2%，QoQ 3.8%。",
         "毛利率 79.5%，归母净利润 YoY -41.6%。",
-        "携程 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "携程 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -1491,6 +1527,7 @@
           "yoy": 17.2,
           "qoq": 3.8,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9961",
           "rank": "官方披露"
         },
         {
@@ -1502,6 +1539,7 @@
           "yoy": 15.8,
           "qoq": 3.5,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9961",
           "rank": "官方披露"
         },
         {
@@ -1513,6 +1551,7 @@
           "yoy": 0,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9961",
           "rank": "衍生指标"
         },
         {
@@ -1524,6 +1563,7 @@
           "yoy": -41.6,
           "qoq": -5.3,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9961",
           "rank": "官方披露"
         }
       ],
@@ -1622,22 +1662,22 @@
       "industry": "社交、游戏、广告、金融科技与云",
       "fiscalPeriod": "2026 Q1",
       "reportDate": "2026-03-31",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "行情反应待接入实时行情源校验。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=0700",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:50:08.411Z",
+      "verifiedAt": "2026-07-13T03:06:53.639Z",
       "quickNote": "腾讯控股 2026 Q1 总营收 RMB196.46bn，YoY 9.1%，归母净利润 RMB58.09bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 RMB196.46bn，YoY 9.1%，QoQ 2.2%。",
         "毛利率 56.6%，归母净利润 YoY 21.5%。",
-        "腾讯控股 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "腾讯控股 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -1650,6 +1690,7 @@
           "yoy": 9.1,
           "qoq": 2.2,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=0700",
           "rank": "官方披露"
         },
         {
@@ -1661,6 +1702,7 @@
           "yoy": 10.7,
           "qoq": 2.5,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=0700",
           "rank": "官方披露"
         },
         {
@@ -1672,6 +1714,7 @@
           "yoy": 0,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=0700",
           "rank": "衍生指标"
         },
         {
@@ -1683,6 +1726,7 @@
           "yoy": 21.5,
           "qoq": 4.6,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=0700",
           "rank": "官方披露"
         }
       ],
@@ -1781,22 +1825,22 @@
       "industry": "社交媒体、广告与增值服务",
       "fiscalPeriod": "2026 Q1",
       "reportDate": "2026-03-31",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "行情反应待接入实时行情源校验。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9898",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:50:09.124Z",
+      "verifiedAt": "2026-07-13T03:06:54.487Z",
       "quickNote": "微博 2026 Q1 总营收 RMB2.92bn，YoY 6.2%，归母净利润 RMB0.24bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 RMB2.92bn，YoY 6.2%，QoQ 0.5%。",
         "毛利率 72.1%，归母净利润 YoY -67.5%。",
-        "微博 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "微博 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -1809,6 +1853,7 @@
           "yoy": 6.2,
           "qoq": 0.5,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9898",
           "rank": "官方披露"
         },
         {
@@ -1820,6 +1865,7 @@
           "yoy": -5,
           "qoq": -1.2,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9898",
           "rank": "官方披露"
         },
         {
@@ -1831,6 +1877,7 @@
           "yoy": 0,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9898",
           "rank": "衍生指标"
         },
         {
@@ -1842,6 +1889,7 @@
           "yoy": -67.5,
           "qoq": -16.7,
           "source": "AkShare third-party data via AkShare/EastMoney HK financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.securities.eastmoney.com/PC_HKF10/NewFinancialAnalysis/index?type=web&code=9898",
           "rank": "官方披露"
         }
       ],
@@ -1940,22 +1988,22 @@
       "industry": "社交广告、Reality Labs 与 AI 基础设施",
       "fiscalPeriod": "2026 Q1",
       "reportDate": "2026-04-30",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "美股财报后首个交易日收盘 -0.5%，开盘 +0.5%（2026-05-01，基准为 2026-04-30 收盘，AkShare/EastMoney 历史行情，按公告日估算）。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=META&type=web&color=w#/cwfx/zyzb",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:50:09.974Z",
+      "verifiedAt": "2026-07-13T03:06:56.267Z",
       "quickNote": "Meta 2026 Q1 总营收 USD56.31bn，YoY 33.1%，归母净利润 USD26.77bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 USD56.31bn，YoY 33.1%。",
         "毛利率 81.9%，归母净利润 YoY 60.9%。",
-        "Meta 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "Meta 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "行情反应已用 AkShare/EastMoney 历史日线初步校验，后续可切换授权行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -1968,6 +2016,7 @@
           "yoy": 33.1,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=META&type=web&color=w#/cwfx/zyzb",
           "rank": "官方披露"
         },
         {
@@ -1979,6 +2028,7 @@
           "yoy": 32.7,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=META&type=web&color=w#/cwfx/zyzb",
           "rank": "官方披露"
         },
         {
@@ -1990,6 +2040,7 @@
           "yoy": -0.3,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=META&type=web&color=w#/cwfx/zyzb",
           "rank": "衍生指标"
         },
         {
@@ -2001,6 +2052,7 @@
           "yoy": 60.9,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=META&type=web&color=w#/cwfx/zyzb",
           "rank": "官方披露"
         }
       ],
@@ -2099,22 +2151,22 @@
       "industry": "消费电子、服务与端侧 AI",
       "fiscalPeriod": "2026 Q2",
       "reportDate": "2026-05-01",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "美股财报后首个交易日收盘 -1.2%，开盘 -0.2%（2026-05-04，基准为 2026-05-01 收盘，AkShare/EastMoney 历史行情，按公告日估算）。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=AAPL&type=web&color=w#/cwfx/zyzb",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:50:10.866Z",
+      "verifiedAt": "2026-07-13T03:06:58.224Z",
       "quickNote": "Apple 2026 Q2 总营收 USD111.18bn，YoY 16.6%，归母净利润 USD29.58bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 USD111.18bn，YoY 16.6%。",
         "毛利率 49.3%，归母净利润 YoY 19.4%。",
-        "Apple 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "Apple 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "行情反应已用 AkShare/EastMoney 历史日线初步校验，后续可切换授权行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -2127,6 +2179,7 @@
           "yoy": 16.6,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-28",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=AAPL&type=web&color=w#/cwfx/zyzb",
           "rank": "官方披露"
         },
         {
@@ -2138,6 +2191,7 @@
           "yoy": 22.1,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-28",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=AAPL&type=web&color=w#/cwfx/zyzb",
           "rank": "官方披露"
         },
         {
@@ -2149,6 +2203,7 @@
           "yoy": 4.7,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-28",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=AAPL&type=web&color=w#/cwfx/zyzb",
           "rank": "衍生指标"
         },
         {
@@ -2160,6 +2215,7 @@
           "yoy": 19.4,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-28",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=AAPL&type=web&color=w#/cwfx/zyzb",
           "rank": "官方披露"
         }
       ],
@@ -2258,22 +2314,22 @@
       "industry": "云、软件、生产力工具与 AI",
       "fiscalPeriod": "2025 Q3",
       "reportDate": "2026-04-29",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "行情反应待接入实时行情源校验。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "AkShare third-party",
       "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=MSFT&type=web&color=w#/cwfx/zyzb",
       "sourceLabel": "AkShare / EastMoney third-party snapshot",
-      "verifiedAt": "2026-07-10T03:50:11.721Z",
+      "verifiedAt": "2026-07-13T03:06:59.514Z",
       "quickNote": "微软 2025 Q3 总营收 USD82.89bn，YoY 18.3%，归母净利润 USD31.78bn；后续重点观察核心业务增长和 AI 商业化兑现。",
       "highlights": [
         "总营收 USD82.89bn，YoY 18.3%。",
         "毛利率 67.6%，归母净利润 YoY 23.1%。",
-        "微软 当前来源只覆盖公司级核心指标，业务分部等待官方公告 parser。"
+        "微软 分部收入已按官方披露抽取。"
       ],
       "risks": [
         "部分业务分部未披露完整同比，需要人工 review。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "市场反应和一致预期差异尚未接入实时行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [
@@ -2286,6 +2342,7 @@
           "yoy": 18.3,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=MSFT&type=web&color=w#/cwfx/zyzb",
           "rank": "官方披露"
         },
         {
@@ -2297,6 +2354,7 @@
           "yoy": 16.4,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=MSFT&type=web&color=w#/cwfx/zyzb",
           "rank": "官方披露"
         },
         {
@@ -2308,6 +2366,7 @@
           "yoy": -1.6,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=MSFT&type=web&color=w#/cwfx/zyzb",
           "rank": "衍生指标"
         },
         {
@@ -2319,6 +2378,7 @@
           "yoy": 23.1,
           "qoq": 0,
           "source": "AkShare third-party data via AkShare/EastMoney US financial indicators; reportDate=2026-03-31",
+          "sourceUrl": "https://emweb.eastmoney.com/PC_USF10/pages/index.html?code=MSFT&type=web&color=w#/cwfx/zyzb",
           "rank": "官方披露"
         }
       ],
@@ -2417,7 +2477,7 @@
       "industry": "游戏与互联网服务",
       "fiscalPeriod": "2026 Q1",
       "reportDate": "2026-05-21",
-      "shareReaction": "港股财报后高开，具体行情需接入实时行情源校验。",
+      "shareReaction": "港股财报后首个交易日收盘 +5.7%，开盘 +3.5%（2026-05-22，基准为 2026-05-21 收盘，AkShare/EastMoney 历史行情，按公告日估算）。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "SEC verified",
@@ -2606,7 +2666,7 @@
       "industry": "搜索、广告、云与自动驾驶",
       "fiscalPeriod": "2026 Q1",
       "reportDate": "2026-05-18",
-      "shareReaction": "未配置实时行情源；需接入交易所/行情 API 后校验财报后首个交易窗口。",
+      "shareReaction": "港股财报后首个交易日收盘 +1.5%，开盘 -0.1%（2026-05-19，基准为 2026-05-18 收盘，AkShare/EastMoney 历史行情，按公告日估算）。",
       "status": "已发布",
       "aiTag": "早期产品化",
       "dataQuality": "SEC verified",
@@ -2621,7 +2681,7 @@
       ],
       "risks": [
         "在线营销服务 YoY -22%，是本期需要跟踪的业务分部。",
-        "市场反应需要接入实时/历史行情源后校验。",
+        "行情反应已用 AkShare/EastMoney 历史日线初步校验，后续可切换授权行情源。",
         "AI 收入贡献仅采用官方披露口径，未披露部分不做推断。"
       ],
       "metrics": [

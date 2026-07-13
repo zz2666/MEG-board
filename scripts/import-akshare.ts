@@ -43,6 +43,15 @@ function akshareCurrency(config: CompanySourceConfig) {
   return "RMB";
 }
 
+function latestKnownReleaseDate(config: CompanySourceConfig) {
+  return Object.values(config.knownReports ?? {})
+    .sort((first, second) => second.releaseDate.localeCompare(first.releaseDate))[0]?.releaseDate;
+}
+
+function hasComputedMarketReaction(value?: string) {
+  return Boolean(value && !["待接入", "未配置", "需接入"].some((keyword) => value.includes(keyword)));
+}
+
 function parsePythonJson(stdout: string) {
   const jsonLine = stdout
     .trim()
@@ -76,6 +85,8 @@ function runAkshareProvider(config: CompanySourceConfig) {
       akshareCurrency(config),
       "--limit",
       "8",
+      "--known-release-date",
+      latestKnownReleaseDate(config) ?? "",
     ],
     {
       cwd: process.cwd(),
@@ -117,7 +128,31 @@ async function buildAkshareCompanies(configs: CompanySourceConfig[]) {
 function mergeOfficialSnapshot(akshareCompanies: Company[], officialCompanies: Company[]) {
   const merged = new Map<string, Company>();
   for (const company of akshareCompanies) merged.set(company.id, company);
-  for (const company of officialCompanies) merged.set(company.id, company);
+  for (const company of officialCompanies) {
+    const akshareCompany = merged.get(company.id);
+    const computedReaction = hasComputedMarketReaction(akshareCompany?.shareReaction)
+      ? akshareCompany?.shareReaction
+      : undefined;
+    merged.set(company.id, {
+      ...company,
+      shareReaction: computedReaction ?? company.shareReaction,
+      risks: computedReaction
+        ? company.risks.map((item) =>
+            item.includes("市场反应") ? "行情反应已用 AkShare/EastMoney 历史日线初步校验，后续可切换授权行情源。" : item,
+          )
+        : company.risks,
+    });
+  }
+  return trackedCompanyConfigs.flatMap((config) => {
+    const company = merged.get(config.id);
+    return company ? [company] : [];
+  });
+}
+
+function mergeExistingSnapshot(akshareCompanies: Company[], existingCompanies: Company[]) {
+  const merged = new Map<string, Company>();
+  for (const company of existingCompanies) merged.set(company.id, company);
+  for (const company of akshareCompanies) merged.set(company.id, company);
   return trackedCompanyConfigs.flatMap((config) => {
     const company = merged.get(config.id);
     return company ? [company] : [];
@@ -155,7 +190,9 @@ async function main() {
   if (args.snapshot) {
     const existing = await readEarningsSnapshot();
     const officialCompanies = existing?.companies.filter((company) => company.dataQuality === "SEC verified") ?? [];
-    const companies = mergeOfficialSnapshot(akshareCompanies, officialCompanies);
+    const companies = args.all
+      ? mergeOfficialSnapshot(akshareCompanies, officialCompanies)
+      : mergeOfficialSnapshot(mergeExistingSnapshot(akshareCompanies, existing?.companies ?? []), officialCompanies);
     await writeEarningsSnapshot({
       generatedAt: new Date().toISOString(),
       provenance: {

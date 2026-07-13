@@ -2,10 +2,20 @@
 import argparse
 import json
 import math
+import time
 from datetime import datetime, timedelta
 
 import akshare as ak
 import pandas as pd
+
+
+US_EASTMONEY_PREFIXES = {
+    "AAPL": ["105"],
+    "GOOG": ["105"],
+    "GOOGL": ["105"],
+    "META": ["105"],
+    "MSFT": ["105"],
+}
 
 
 def clean(value):
@@ -167,6 +177,135 @@ def source_url(args):
     return "https://data.eastmoney.com/bbsj/"
 
 
+def market_label(market):
+    if market == "US":
+        return "美股"
+    if market == "CN":
+        return "A股"
+    return "港股"
+
+
+def signed_pct(value):
+    sign = "+" if value > 0 else ""
+    return f"{sign}{value:.1f}%"
+
+
+def normalize_price_date(value):
+    parsed = parse_date(value)
+    return parsed.date() if parsed else None
+
+
+def price_row(row):
+    trade_date = normalize_price_date(row.get("日期"))
+    open_price = number(row.get("开盘"))
+    close_price = number(row.get("收盘"))
+    if not trade_date or open_price is None or close_price is None:
+        return None
+    return {
+        "date": trade_date,
+        "open": open_price,
+        "close": close_price,
+    }
+
+
+def us_hist_symbols(ticker):
+    symbol = ticker.split(".")[0].upper()
+    prefixes = US_EASTMONEY_PREFIXES.get(symbol, ["105", "106", "107"])
+    return [f"{prefix}.{symbol}" for prefix in prefixes]
+
+
+def call_with_retry(operation, attempts=3):
+    last_error = None
+    for attempt in range(attempts):
+        try:
+            return operation()
+        except Exception as error:
+            last_error = error
+            if attempt < attempts - 1:
+                time.sleep(1 + attempt)
+    raise last_error
+
+
+def fetch_price_rows(args, start_date, end_date):
+    if args.market == "HK":
+        symbol = (args.hkex_code or args.ticker.split(".")[0]).zfill(5)
+        df = call_with_retry(
+            lambda: ak.stock_hk_hist(symbol=symbol, period="daily", start_date=start_date, end_date=end_date, adjust="")
+        )
+    elif args.market == "CN":
+        symbol = args.ticker.split(".")[0].zfill(6)
+        df = call_with_retry(
+            lambda: ak.stock_zh_a_hist(symbol=symbol, period="daily", start_date=start_date, end_date=end_date, adjust="")
+        )
+    else:
+        df = pd.DataFrame()
+        for symbol in us_hist_symbols(args.ticker):
+            df = call_with_retry(
+                lambda: ak.stock_us_hist(symbol=symbol, period="daily", start_date=start_date, end_date=end_date, adjust="")
+            )
+            if not df.empty:
+                break
+
+    if df.empty:
+        return []
+
+    rows = []
+    for raw in df.to_dict(orient="records"):
+        item = price_row(raw)
+        if item:
+            rows.append(item)
+    return sorted(rows, key=lambda item: item["date"])
+
+
+def build_market_reaction(args, report):
+    event_text = report.get("releaseDate")
+    event_dt = parse_date(event_text)
+    if not event_dt:
+        return None
+
+    start = (event_dt - timedelta(days=10)).strftime("%Y%m%d")
+    end = (event_dt + timedelta(days=14)).strftime("%Y%m%d")
+    rows = fetch_price_rows(args, start, end)
+    if len(rows) < 2:
+        return None
+
+    event_date = event_dt.date()
+    baseline = next((row for row in reversed(rows) if row["date"] <= event_date), None)
+    reaction = next((row for row in rows if row["date"] > event_date), None)
+    if not baseline or not reaction or baseline["close"] == 0:
+        return None
+
+    close_change = (reaction["close"] / baseline["close"] - 1) * 100
+    open_change = (reaction["open"] / baseline["close"] - 1) * 100
+
+    return {
+        "summary": (
+            f"{market_label(args.market)}财报后首个交易日收盘 {signed_pct(close_change)}，"
+            f"开盘 {signed_pct(open_change)}（{reaction['date'].isoformat()}，"
+            f"基准为 {baseline['date'].isoformat()} 收盘，AkShare/EastMoney 历史行情，按公告日估算）。"
+        ),
+        "source": (
+            f"AkShare/EastMoney daily bars; baselineClose={baseline['close']}; "
+            f"reactionOpen={reaction['open']}; reactionClose={reaction['close']}"
+        ),
+    }
+
+
+def attach_market_reaction(args, reports):
+    if not reports:
+        return reports
+    try:
+        reaction = build_market_reaction(args, reports[0])
+    except Exception as error:
+        reports[0]["marketReactionError"] = str(error)
+        return reports
+
+    if reaction:
+        reports[0]["marketReaction"] = reaction["summary"]
+        reports[0]["marketReactionSource"] = reaction["source"]
+    return reports
+
+
 def fetch_hk(args):
     symbol = args.hkex_code.zfill(5)
     df = ak.stock_financial_hk_analysis_indicator_em(symbol=symbol, indicator="报告期")
@@ -237,6 +376,7 @@ def main():
     parser.add_argument("--hkex-code", default="")
     parser.add_argument("--currency", default="RMB", choices=["RMB", "USD", "HKD"])
     parser.add_argument("--limit", type=int, default=8)
+    parser.add_argument("--known-release-date", default="")
     args = parser.parse_args()
 
     if args.market == "HK":
@@ -245,6 +385,9 @@ def main():
         reports = fetch_us(args)
     else:
         reports = fetch_cn(args)
+    if reports and args.known_release_date:
+        reports[0]["releaseDate"] = parse_date(args.known_release_date).strftime("%Y-%m-%d")
+    reports = attach_market_reaction(args, reports)
 
     payload = {
         "ok": True,

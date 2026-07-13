@@ -79,6 +79,10 @@ function getTopMetric(company: Company, label: string) {
   return company.metrics.find((metric) => metric.label === label) ?? company.metrics[0];
 }
 
+function isMarketReactionUnavailable(value: string) {
+  return ["待接入", "未配置", "需接入", "实时行情源校验"].some((keyword) => value.includes(keyword));
+}
+
 function getCompanyCurrency(company: Company): DisplayCurrency {
   const unit = company.metrics.find((metric) => metric.unit !== "%")?.unit;
   return unit === "USD" || unit === "HKD" ? unit : "RMB";
@@ -529,10 +533,10 @@ export default function Home() {
           <div className="market-card">
             <p className="eyebrow">Market Reaction</p>
             <strong>
-              {activeCompany.shareReaction.includes("待接入") ? "未接入行情源" : activeCompany.shareReaction}
+              {isMarketReactionUnavailable(activeCompany.shareReaction) ? "未接入行情源" : activeCompany.shareReaction}
             </strong>
             <span>
-              {activeCompany.shareReaction.includes("待接入")
+              {isMarketReactionUnavailable(activeCompany.shareReaction)
                 ? "需要接入实时/历史行情 API，并用财报发布时间后的首个交易窗口校验。"
                 : "财报后首个交易窗口"}
             </span>

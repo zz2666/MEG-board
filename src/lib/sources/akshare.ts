@@ -13,6 +13,9 @@ export type AkshareReportPayload = {
   periodLabel: string;
   reportDate?: string | null;
   releaseDate?: string | null;
+  marketReaction?: string | null;
+  marketReactionSource?: string | null;
+  marketReactionError?: string | null;
   currencyUnit: "RMB bn" | "USD bn" | "HKD bn";
   metrics: AkshareMetricPayload[];
 };
@@ -71,7 +74,7 @@ export function aksharePayloadToParsedReport(
   const grossProfitValue = grossProfit?.value ?? (grossMargin === null ? 0 : revenue.value * grossMargin / 100);
   const effectiveGrossMargin = grossMargin ?? (revenue.value ? (grossProfitValue / revenue.value) * 100 : 0);
 
-  return {
+  const parsed: ParsedEarningsReport = {
     companyId: config.id,
     fiscalYear: latest.fiscalYear,
     fiscalQuarter: latest.fiscalQuarter,
@@ -135,8 +138,19 @@ export function aksharePayloadToParsedReport(
         revenue: revenue.sourceAnchor,
         netIncome: netIncome.sourceAnchor,
         source: payload.sourceUrl,
+        ...(latest.marketReactionSource ? { marketReaction: latest.marketReactionSource } : {}),
       },
     }),
     comparativeReports: comparativeReports(payload),
   };
+
+  parsed.quickNote.marketReaction = latest.marketReaction ?? parsed.quickNote.marketReaction;
+
+  if (latest.marketReaction) {
+    parsed.quickNote.weaknesses = parsed.quickNote.weaknesses.map((item) =>
+      item.includes("市场反应") ? "行情反应已用 AkShare/EastMoney 历史日线初步校验，后续可切换授权行情源。" : item,
+    );
+  }
+
+  return parsed;
 }
