@@ -222,7 +222,13 @@ export async function resolveSecExhibitDocumentUrl(params: {
     const scoreLink = (link: { href: string; text: string }) => {
       const lower = `${link.href} ${link.text}`.toLowerCase();
       let score = 0;
-      if (lower.includes("ex-99.1") || lower.includes("exhibit 99.1") || lower.includes("dex991") || lower.includes("_ex99-1")) {
+      if (
+        lower.includes("ex-99.1") ||
+        lower.includes("exhibit 99.1") ||
+        lower.includes("dex991") ||
+        lower.includes("ex991") ||
+        lower.includes("_ex99-1")
+      ) {
         score += 80;
       } else if (lower.includes("ex99") || lower.includes("ex-99") || lower.includes("exhibit 99")) {
         score += 30;
