@@ -1,9 +1,11 @@
+import { PDFParse } from "pdf-parse";
 import { parsedReportToDashboardCompany } from "@/lib/parsed-to-dashboard";
 import { prisma } from "@/lib/db";
 import { readEarningsSnapshot, writeEarningsSnapshot } from "@/lib/snapshot";
 import { getCompanyConfig } from "@/lib/sources/company-config";
 import { persistDiscoveredSourceOnly, persistParsedEarningsReport } from "@/lib/sources/persist";
 import { parseEarningsReport } from "@/lib/sources/parser";
+import { hasPdfTextCompanyProfile } from "@/lib/sources/pdf-text-profile";
 import { discoverLatestSecEarningsFiling, fetchSecText, htmlToText, sha256 } from "@/lib/sources/sec";
 import { hasSec6kCompanyProfile } from "@/lib/sources/sec-6k-standard-profile";
 import type { Company } from "@/lib/mock-data";
@@ -26,7 +28,8 @@ function isImplementedParser(config: CompanySourceConfig) {
     config.parserProfile === "baidu-q1-2026" ||
     config.parserProfile === "aeromexico-20f-2025" ||
     config.parserProfile === "sec-companyfacts-us-tech" ||
-    (config.parserProfile === "sec-6k-standard" && hasSec6kCompanyProfile(config.id))
+    (config.parserProfile === "sec-6k-standard" && hasSec6kCompanyProfile(config.id)) ||
+    (config.parserProfile === "pdf-text-standard" && hasPdfTextCompanyProfile(config.id))
   );
 }
 
@@ -78,23 +81,51 @@ async function resolveSource(config: CompanySourceConfig, options: Pick<RefreshO
   return null;
 }
 
+async function fetchGenericSourceText(url: string) {
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent": process.env.SEC_USER_AGENT ?? "earnings-dashboard/0.1 contact: zhouziyi@example.com",
+      Accept: "application/pdf,text/html,application/xhtml+xml",
+    },
+  });
+  if (!response.ok) throw new Error(`source fetch failed ${response.status}: ${url}`);
+
+  const contentType = response.headers.get("content-type") ?? "";
+  const bytes = Buffer.from(await response.arrayBuffer());
+  if (!contentType.includes("pdf") && !url.toLowerCase().endsWith(".pdf")) {
+    return htmlToText(bytes.toString("utf8"));
+  }
+
+  const parser = new PDFParse({ data: bytes });
+  try {
+    const text = await parser.getText();
+    return text.text
+      .replace(/\r/g, "\n")
+      .replace(/[ \t]+/g, " ")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  } finally {
+    await parser.destroy();
+  }
+}
+
 export async function refreshCompanyEarnings(companyId: string, options: RefreshOptions = {}) {
   const config = getCompanyConfig(companyId);
   if (!config) throw new Error(`Unknown company: ${companyId}`);
-  if (config.sourceProvider !== "sec") {
-    throw new Error(`${config.name} uses ${config.sourceProvider}; manual refresh currently supports SEC companies first.`);
-  }
 
   const source = await resolveSource(config, { checkLatest: options.checkLatest ?? false });
   if (!source) {
     return {
       status: "skipped" as const,
       companyId: config.id,
-      message: "No official SEC earnings source was discovered.",
+      message: "No official earnings source was discovered.",
     };
   }
 
-  const html = await fetchSecText(source.sourceUrl);
+  const html =
+    config.sourceProvider === "sec"
+      ? await fetchSecText(source.sourceUrl)
+      : await fetchGenericSourceText(source.sourceUrl);
   if (!config.parserProfile || !isImplementedParser(config)) {
     if (options.persist && shouldUseDatabase()) {
       await persistDiscoveredSourceOnly({

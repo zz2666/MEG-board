@@ -1,6 +1,7 @@
 import { parseAeromexico2025Form20F } from "./aeromexico-profile";
 import { parseBaiduQ12026SecReport } from "./baidu-profile";
 import { parseNetEaseQ12026SecReport } from "./netease-profile";
+import { parsePdfTextStandardReport } from "./pdf-text-profile";
 import { parseSec6kStandardReport } from "./sec-6k-standard-profile";
 import { parseSecCompanyFactsUsTechReport } from "./sec-companyfacts-profile";
 import { fetchSecCompanyFacts } from "./sec";
@@ -58,6 +59,17 @@ export async function parseEarningsReport(params: {
 
   if (params.config.parserProfile === "sec-6k-standard") {
     return parseSec6kStandardReport({
+      companyId: params.config.id,
+      companyName: params.config.name,
+      html: params.html,
+      sourceUrl: params.sourceUrl,
+      sourceTitle: params.sourceTitle,
+      releaseDate: params.releaseDate,
+    });
+  }
+
+  if (params.config.parserProfile === "pdf-text-standard") {
+    return parsePdfTextStandardReport({
       companyId: params.config.id,
       companyName: params.config.name,
       html: params.html,

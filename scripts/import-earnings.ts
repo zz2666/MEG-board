@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { readFile } from "node:fs/promises";
 import { PDFParse } from "pdf-parse";
 import { prisma } from "@/lib/db";
 import { parsedReportToDashboardCompany } from "@/lib/parsed-to-dashboard";
@@ -6,6 +7,7 @@ import { writeEarningsSnapshot } from "@/lib/snapshot";
 import { getCompanyConfig, trackedCompanyConfigs } from "@/lib/sources/company-config";
 import { persistDiscoveredSourceOnly, persistParsedEarningsReport } from "@/lib/sources/persist";
 import { parseEarningsReport } from "@/lib/sources/parser";
+import { hasPdfTextCompanyProfile } from "@/lib/sources/pdf-text-profile";
 import { discoverLatestSecEarningsFiling, fetchSecText, htmlToText, sha256 } from "@/lib/sources/sec";
 import { hasSec6kCompanyProfile } from "@/lib/sources/sec-6k-standard-profile";
 import type { CompanySourceConfig, ParsedEarningsReport } from "@/lib/sources/types";
@@ -91,29 +93,44 @@ function isImplementedParser(config: CompanySourceConfig) {
     config.parserProfile === "baidu-q1-2026" ||
     config.parserProfile === "aeromexico-20f-2025" ||
     config.parserProfile === "sec-companyfacts-us-tech" ||
-    (config.parserProfile === "sec-6k-standard" && hasSec6kCompanyProfile(config.id))
+    (config.parserProfile === "sec-6k-standard" && hasSec6kCompanyProfile(config.id)) ||
+    (config.parserProfile === "pdf-text-standard" && hasPdfTextCompanyProfile(config.id))
   );
 }
 
 async function fetchPdfText(url: string) {
-  const response = await fetch(url, {
-    headers: {
-      "User-Agent": process.env.SEC_USER_AGENT ?? "earnings-dashboard/0.1 contact: zhouziyi@example.com",
-      Accept: "application/pdf,text/html,application/xhtml+xml",
-    },
-  });
-  if (!response.ok) throw new Error(`source fetch failed ${response.status}: ${url}`);
-  const contentType = response.headers.get("content-type") ?? "";
-  const bytes = Buffer.from(await response.arrayBuffer());
+  const isLocalFile =
+    url.startsWith("file://") ||
+    (!url.startsWith("http://") && !url.startsWith("https://") && url.includes("/"));
+  if (!isLocalFile) {
+    const response = await fetch(url, {
+      headers: {
+        "User-Agent": process.env.SEC_USER_AGENT ?? "earnings-dashboard/0.1 contact: zhouziyi@example.com",
+        Accept: "application/pdf,text/html,application/xhtml+xml",
+      },
+    });
+    if (!response.ok) throw new Error(`source fetch failed ${response.status}: ${url}`);
 
-  if (!contentType.includes("pdf") && !url.toLowerCase().endsWith(".pdf")) {
-    return htmlToText(bytes.toString("utf8"));
+    const contentType = response.headers.get("content-type") ?? "";
+    const bytes = Buffer.from(await response.arrayBuffer());
+    return contentType.includes("pdf") || url.toLowerCase().endsWith(".pdf")
+      ? await parsePdfBytes(bytes)
+      : htmlToText(bytes.toString("utf8"));
   }
 
+  const bytes = await readFile(url.startsWith("file://") ? new URL(url) : url);
+  return url.toLowerCase().endsWith(".pdf") ? parsePdfBytes(bytes) : htmlToText(bytes.toString("utf8"));
+}
+
+async function parsePdfBytes(bytes: Buffer) {
   const parser = new PDFParse({ data: bytes });
   try {
     const text = await parser.getText();
-    return text.text.replace(/\s+/g, " ").trim();
+    return text.text
+      .replace(/\r/g, "\n")
+      .replace(/[ \t]+/g, " ")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
   } finally {
     await parser.destroy();
   }
@@ -137,24 +154,55 @@ async function fetchDirectSourceOnly(
   };
 }
 
+async function fetchDirectParsedSource(
+  config: CompanySourceConfig,
+  sourceUrl: string,
+  sourceTitle: string,
+  releaseDate: string,
+): Promise<FetchResult> {
+  console.log(`fetching ${config.name}: ${sourceUrl}`);
+  const html = await fetchPdfText(sourceUrl);
+  return {
+    kind: "parsed",
+    config,
+    html,
+    parsed: await parseEarningsReport({
+      config,
+      html,
+      sourceUrl,
+      sourceTitle,
+      releaseDate,
+    }),
+  };
+}
+
 async function fetchCompanyEarnings(
   config: CompanySourceConfig,
   period?: string,
   sourceUrlOverride?: string,
 ): Promise<FetchResult> {
   if (config.sourceProvider !== "sec") {
+    const knownReport = getReportTarget(config, period);
+    const sourceUrl = sourceUrlOverride ?? knownReport?.sourceUrl;
+    const sourceTitle = knownReport?.title ?? `${config.name} official source`;
+    const releaseDate = knownReport?.releaseDate ?? new Date().toISOString();
+
+    if (sourceUrl && config.parserProfile && isImplementedParser(config)) {
+      return fetchDirectParsedSource(config, sourceUrl, sourceTitle, releaseDate);
+    }
+
     if (sourceUrlOverride) {
       return fetchDirectSourceOnly(
         config,
         sourceUrlOverride,
-        `${config.sourceProvider} source fetched and text extracted; deterministic PDF parser profile is scaffolded but not yet implemented.`,
+        `${config.sourceProvider} source fetched and text extracted; deterministic parser profile is scaffolded but not yet implemented.`,
       );
     }
 
     return {
       kind: "skipped",
       config,
-      reason: `${config.sourceProvider} provider is scaffolded. Pass --source-url with the official PDF/HTML announcement to extract source text; deterministic parser is not implemented yet.`,
+      reason: `${config.sourceProvider} provider is scaffolded. Configure a known report or pass --source-url with the official PDF/HTML announcement to extract source text.`,
     };
   }
 

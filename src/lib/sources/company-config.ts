@@ -82,6 +82,16 @@ export const trackedCompanyConfigs: CompanySourceConfig[] = [
     sourceProvider: "cninfo",
     parserProfile: "pdf-text-standard",
     filingKeywords: ["季度报告", "年度报告", "营业收入", "归属于上市公司股东的净利润"],
+    knownReports: {
+      "2026Q1": {
+        fiscalYear: 2026,
+        fiscalQuarter: "Q1",
+        periodLabel: "2026 Q1",
+        releaseDate: "2026-04-23T00:00:00.000+08:00",
+        title: "中文在线 2026年一季度报告",
+        sourceUrl: "http://static.cninfo.com.cn/finalpage/2026-04-23/1225157283.PDF",
+      },
+    },
   },
   {
     id: "kuaishou",
@@ -95,6 +105,16 @@ export const trackedCompanyConfigs: CompanySourceConfig[] = [
     sourceProvider: "hkex-ir",
     parserProfile: "pdf-text-standard",
     filingKeywords: ["results announcement", "quarterly results", "revenue"],
+    knownReports: {
+      "2026Q1": {
+        fiscalYear: 2026,
+        fiscalQuarter: "Q1",
+        periodLabel: "2026 Q1",
+        releaseDate: "2026-05-27T00:00:00.000+08:00",
+        title: "Kuaishou Technology 2026 First Quarter Results Announcement",
+        sourceUrl: "https://ir.kuaishou.com/static-files/51eda7e7-a9e8-43c1-b688-43f131104d98",
+      },
+    },
   },
   {
     id: "alphabet",
@@ -193,6 +213,16 @@ export const trackedCompanyConfigs: CompanySourceConfig[] = [
     sourceProvider: "hkex-ir",
     parserProfile: "pdf-text-standard",
     filingKeywords: ["results announcement", "quarterly results"],
+    knownReports: {
+      "2026Q1": {
+        fiscalYear: 2026,
+        fiscalQuarter: "Q1",
+        periodLabel: "2026 Q1",
+        releaseDate: "2026-05-13T00:00:00.000+08:00",
+        title: "Tencent 2026 First Quarter Results Announcement",
+        sourceUrl: "https://static.www.tencent.com/uploads/2026/05/13/47382ae415a209fd161bc19a1f9b3704.pdf",
+      },
+    },
   },
   {
     id: "weibo",

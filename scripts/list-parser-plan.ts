@@ -1,4 +1,5 @@
 import { trackedCompanyConfigs } from "@/lib/sources/company-config";
+import { hasPdfTextCompanyProfile } from "@/lib/sources/pdf-text-profile";
 import { hasSec6kCompanyProfile } from "@/lib/sources/sec-6k-standard-profile";
 
 const implementedProfiles = new Set([
@@ -27,6 +28,7 @@ console.table(
     family: parserFamily(company.parserProfile),
     status:
       implementedProfiles.has(company.parserProfile ?? "") ||
+      (company.parserProfile === "pdf-text-standard" && hasPdfTextCompanyProfile(company.id)) ||
       (company.parserProfile === "sec-6k-standard" && hasSec6kCompanyProfile(company.id))
         ? "implemented"
         : "scaffolded",
