@@ -484,6 +484,8 @@ select:focus-visible,
 }
 
 .refresh-message {
+  display: grid;
+  gap: 8px;
   margin-top: -10px;
   border: 1px solid rgba(21, 94, 239, 0.16);
   border-radius: 12px;
@@ -494,9 +496,34 @@ select:focus-visible,
   font-weight: 800;
 }
 
+.refresh-message a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.refresh-message.pending {
+  border-color: rgba(202, 138, 4, 0.28);
+  color: #92400e;
+}
+
 .refresh-message.error {
   border-color: rgba(190, 18, 60, 0.24);
   color: #be123c;
+}
+
+.refresh-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.refresh-steps span {
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 4px 8px;
+  opacity: 0.78;
+  font-size: 11px;
 }
 
 .hero-panel {

@@ -57,8 +57,16 @@ type AiNewsState = {
 type RefreshState = {
   companyId: string;
   loading: boolean;
+  status?: "published" | "source-only" | "needs-review" | "skipped" | "failed";
   message?: string;
   error?: string;
+  sourceUrl?: string;
+  sourceTitle?: string;
+  jobEvents?: Array<{
+    step: string;
+    label: string;
+    at: string;
+  }>;
 };
 
 const statusStyles = {
@@ -422,9 +430,13 @@ export default function Home() {
         body: JSON.stringify({ persist: true }),
       });
       const payload = (await response.json()) as {
+        status?: RefreshState["status"];
         company?: Company;
         message?: string;
         error?: string;
+        sourceUrl?: string;
+        sourceTitle?: string;
+        jobEvents?: RefreshState["jobEvents"];
       };
       if (!response.ok) throw new Error(payload.error ?? `Refresh API ${response.status}`);
 
@@ -439,7 +451,11 @@ export default function Home() {
       setRefreshState({
         companyId,
         loading: false,
+        status: payload.status,
         message: payload.message ?? "财报源已检查。",
+        sourceUrl: payload.sourceUrl,
+        sourceTitle: payload.sourceTitle,
+        jobEvents: payload.jobEvents,
       });
     } catch (error) {
       setRefreshState({
@@ -577,9 +593,29 @@ export default function Home() {
             </button>
           </div>
         </header>
-        {refreshForActive?.message || refreshForActive?.error ? (
-          <div className={refreshForActive.error ? "refresh-message error" : "refresh-message"}>
-            {refreshForActive.error ?? refreshForActive.message}
+        {refreshForActive?.message || refreshForActive?.error || refreshForActive?.jobEvents?.length ? (
+          <div
+            className={[
+              "refresh-message",
+              refreshForActive.error ? "error" : "",
+              refreshForActive.status === "needs-review" || refreshForActive.status === "source-only" ? "pending" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <div>{refreshForActive.error ?? refreshForActive.message}</div>
+            {refreshForActive.sourceUrl ? (
+              <a href={refreshForActive.sourceUrl} target="_blank" rel="noreferrer">
+                {refreshForActive.sourceTitle ?? "查看官方源文件"}
+              </a>
+            ) : null}
+            {refreshForActive.jobEvents?.length ? (
+              <div className="refresh-steps">
+                {refreshForActive.jobEvents.map((event) => (
+                  <span key={`${event.step}-${event.at}`}>{event.label}</span>
+                ))}
+              </div>
+            ) : null}
           </div>
         ) : null}
 

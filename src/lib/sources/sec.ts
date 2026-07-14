@@ -265,6 +265,7 @@ export async function discoverLatestSecEarningsFiling(
   options: {
     afterFilingDate?: string;
     maxCandidates?: number;
+    fallbackToLatestCandidate?: boolean;
   } = {},
 ): Promise<SecDiscoveredFiling | null> {
   if (!config.secCik) return null;
@@ -277,6 +278,7 @@ export async function discoverLatestSecEarningsFiling(
   const excludeKeywords = config.excludeFilingKeywords?.map((keyword) => keyword.toLowerCase()) ?? [];
   const forms = (config.filingForms?.length ? config.filingForms : ["6-K"]).map((form) => form.toUpperCase());
   let checkedCandidates = 0;
+  let fallbackCandidate: SecDiscoveredFiling | null = null;
 
   for (let index = 0; index < recent.accessionNumber.length; index += 1) {
     const filingDate = recent.filingDate?.[index] ?? "";
@@ -322,6 +324,9 @@ export async function discoverLatestSecEarningsFiling(
       candidate.documentUrl = resolvedDocumentUrl;
       const documentText = htmlToText(await fetchSecText(candidate.documentUrl)).toLowerCase();
       const excluded = excludeKeywords.some((keyword) => documentText.includes(keyword));
+      if (!fallbackCandidate && !excluded) {
+        fallbackCandidate = { ...candidate };
+      }
       const matched = keywords.some((keyword) => documentText.includes(keyword));
       if (matched && (!excluded || hasStrongEarningsSignal(documentText))) {
         return candidate;
@@ -331,5 +336,5 @@ export async function discoverLatestSecEarningsFiling(
     }
   }
 
-  return null;
+  return options.fallbackToLatestCandidate ? fallbackCandidate : null;
 }
