@@ -139,7 +139,7 @@ async function fetchGenericSourceResponse(url: string, attempts = 1) {
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), Number(process.env.SOURCE_FETCH_TIMEOUT_MS ?? 8_000));
+    const timeout = setTimeout(() => controller.abort(), Number(process.env.SOURCE_FETCH_TIMEOUT_MS ?? 6_000));
     try {
       return await fetch(url, {
         signal: controller.signal,
@@ -168,15 +168,23 @@ async function fetchGenericSourceResponse(url: string, attempts = 1) {
 }
 
 function fetchWithCurl(url: string) {
-  const timeoutSeconds = String(Math.ceil(Number(process.env.SOURCE_FETCH_CURL_TIMEOUT_MS ?? 18_000) / 1000));
+  const timeoutSeconds = String(Math.ceil(Number(process.env.SOURCE_FETCH_CURL_TIMEOUT_MS ?? 8_000) / 1000));
+  const connectTimeoutSeconds = String(
+    Math.ceil(Number(process.env.SOURCE_FETCH_CURL_CONNECT_TIMEOUT_MS ?? 4_000) / 1000),
+  );
+  const userAgent = process.env.SEC_USER_AGENT ?? "earnings-dashboard/0.1 contact: zhouziyi@example.com";
   const args = [
     "-L",
     "--fail",
     "--silent",
     "--show-error",
     "--http1.1",
+    "--connect-timeout",
+    connectTimeoutSeconds,
     "--max-time",
     timeoutSeconds,
+    "-A",
+    userAgent,
     url,
   ];
 

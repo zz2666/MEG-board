@@ -598,7 +598,12 @@ export default function Home() {
             className={[
               "refresh-message",
               refreshForActive.error ? "error" : "",
-              refreshForActive.status === "needs-review" || refreshForActive.status === "source-only" ? "pending" : "",
+              refreshForActive.status === "needs-review" ||
+              refreshForActive.status === "source-only" ||
+              refreshForActive.status === "failed" ||
+              refreshForActive.status === "skipped"
+                ? "pending"
+                : "",
             ]
               .filter(Boolean)
               .join(" ")}
