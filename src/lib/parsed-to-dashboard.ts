@@ -128,6 +128,17 @@ function marketReaction(note: ParsedQuickNote) {
   return note.marketReaction ?? "行情反应待接入实时行情源";
 }
 
+function officialDataQuality(config: CompanySourceConfig): Company["dataQuality"] {
+  return config.sourceProvider === "sec" ? "SEC verified" : "Official verified";
+}
+
+function officialSourceLabel(config: CompanySourceConfig) {
+  if (config.sourceProvider === "sec") return "SEC filing snapshot";
+  if (config.sourceProvider === "hkex-ir") return "HKEX / company IR official PDF snapshot";
+  if (config.sourceProvider === "cninfo") return "CNINFO official PDF snapshot";
+  return "Company IR official source snapshot";
+}
+
 export function parsedReportToDashboardCompany(
   config: CompanySourceConfig,
   parsed: ParsedEarningsReport,
@@ -166,9 +177,9 @@ export function parsedReportToDashboardCompany(
     shareReaction: marketReaction(parsed.quickNote),
     status: "已发布",
     aiTag: "早期产品化",
-    dataQuality: options.dataQuality ?? "SEC verified",
+    dataQuality: options.dataQuality ?? officialDataQuality(config),
     sourceUrl: parsed.sourceUrl,
-    sourceLabel: options.sourceLabel ?? "SEC filing snapshot",
+    sourceLabel: options.sourceLabel ?? officialSourceLabel(config),
     verifiedAt: new Date().toISOString(),
     quickNote: parsed.quickNote.headline,
     highlights: quickNoteArray(parsed.quickNote.highlights, [`${config.name} ${parsed.periodLabel} 财报已由官方来源解析。`]),

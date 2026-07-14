@@ -200,7 +200,7 @@ export function mapDbCompanyToDashboard(company: CompanyWithReports): Company | 
     shareReaction: latest.marketReaction ?? "行情反应待接入实时行情源",
     status: latest.status === "PUBLISHED" ? "已发布" : latest.status === "FAILED" ? "待校验" : "抓取中",
     aiTag: "暂无明确披露",
-    dataQuality: "SEC verified",
+    dataQuality: latest.sourceUrl?.includes("sec.gov") ? "SEC verified" : "Official verified",
     sourceUrl: latest.sourceUrl ?? undefined,
     sourceLabel: latest.sourceUrl?.includes("sec.gov") ? "SEC filing parsed into SQL" : "Official source parsed into SQL",
     verifiedAt: new Date().toISOString(),

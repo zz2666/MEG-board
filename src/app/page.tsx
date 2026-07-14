@@ -120,13 +120,17 @@ function metricLabelForKey(metric: MetricKey) {
   return "费用率";
 }
 
+function isOfficialVerified(company: Company) {
+  return company.dataQuality === "SEC verified" || company.dataQuality === "Official verified";
+}
+
 function hasMetricSeries(company: Company, metric: MetricKey) {
   const matchingCard = company.metrics.find((item) => item.label === metricLabelForKey(metric));
   if (matchingCard) return true;
 
   if (metric === "operatingMargin" || metric === "expenseRatio") {
     return (
-      company.dataQuality === "SEC verified" &&
+      isOfficialVerified(company) &&
       company.quarters.some((point) => typeof point[metric] === "number" && point[metric] !== 0)
     );
   }
@@ -143,7 +147,7 @@ function getPeriodDescription(range: string, company: Company) {
 }
 
 function qualityBadgeClass(dataQuality: Company["dataQuality"]) {
-  if (dataQuality === "SEC verified") return "quality-badge verified";
+  if (dataQuality === "SEC verified" || dataQuality === "Official verified") return "quality-badge verified";
   if (dataQuality === "AkShare third-party") return "quality-badge third-party";
   return "quality-badge demo";
 }
@@ -797,10 +801,10 @@ export default function Home() {
               <button
                 className="secondary-button"
                 onClick={generateWithLlm}
-                disabled={Boolean(llmLoading) || activeCompany.dataQuality !== "SEC verified"}
+                disabled={Boolean(llmLoading) || !isOfficialVerified(activeCompany)}
               >
                 <Sparkles size={16} />
-                {activeCompany.dataQuality !== "SEC verified"
+                {!isOfficialVerified(activeCompany)
                   ? "仅官方数据可生成"
                   : llmLoadingForActive
                     ? "AI 生成中"
