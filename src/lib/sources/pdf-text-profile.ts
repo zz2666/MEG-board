@@ -16,7 +16,7 @@ import { sha256 } from "./sec";
 
 type RowValueIndexes = {
   current: number;
-  priorYear: number;
+  priorYear?: number;
   previousQuarter?: number;
 };
 
@@ -27,6 +27,8 @@ type PdfTextRowProfile = {
   before?: string;
   valueIndexes?: RowValueIndexes;
   sourceLabel?: string;
+  disclosedYoy?: number | null;
+  disclosedQoq?: number | null;
 };
 
 type PdfTextSegmentProfile = PdfTextRowProfile & {
@@ -47,7 +49,7 @@ type PdfTextCompanyProfile = {
   revenue: PdfTextRowProfile;
   grossProfit?: PdfTextRowProfile;
   costOfRevenue?: PdfTextRowProfile;
-  operatingProfit: PdfTextRowProfile;
+  operatingProfit?: PdfTextRowProfile;
   netIncome: PdfTextRowProfile;
   segments: PdfTextSegmentProfile[];
   priorYearPeriod: {
@@ -66,6 +68,148 @@ type PdfTextCompanyProfile = {
 };
 
 const pdfTextCompanyProfiles: Record<string, PdfTextCompanyProfile> = {
+  meituan: {
+    fiscalYear: 2026,
+    fiscalQuarter: "Q1",
+    periodLabel: "2026 Q1",
+    reportDate: "2026-03-31",
+    currencyUnit: "RMB bn",
+    scale: 0.000001,
+    defaultValueIndexes: { current: 0, priorYear: 1 },
+    revenue: {
+      label: "Revenues",
+      after: "The following table sets forth the comparative figures for the first quarter of 2026 and 2025",
+    },
+    grossProfit: {
+      label: "Gross profit",
+      after: "The following table sets forth the comparative figures for the first quarter of 2026 and 2025",
+    },
+    operatingProfit: {
+      label: "Operating (loss)/profit",
+      after: "The following table sets forth the comparative figures for the first quarter of 2026 and 2025",
+      sourceLabel: "Operating loss/profit",
+    },
+    netIncome: {
+      label: "(Loss)/profit for the period",
+      after: "The following table sets forth the comparative figures for the first quarter of 2026 and 2025",
+      sourceLabel: "Loss/profit for the period",
+    },
+    segments: [
+      {
+        name: "Core Local Commerce",
+        label: "Total",
+        after: "Three Months Ended March 31, 2026",
+        driver: "核心本地商业收入，包含即时配送、到店酒旅和相关商户服务。",
+        valueIndexes: { current: 0 },
+        disclosedYoy: 0.1,
+      },
+      {
+        name: "New Initiatives",
+        label: "Total",
+        after: "Three Months Ended March 31, 2026",
+        driver: "新业务收入，包含零售、海外业务及其他创新业务。",
+        valueIndexes: { current: 1 },
+        disclosedYoy: 21.3,
+      },
+      {
+        name: "Delivery services",
+        label: "Delivery services",
+        after: "Three Months Ended March 31, 2026",
+        driver: "配送服务收入，是美团即时零售和外卖履约能力的核心货币化来源。",
+        valueIndexes: { current: 2 },
+        disclosedYoy: -2.9,
+      },
+      {
+        name: "Merchant services",
+        label: "Merchant services",
+        after: "Three Months Ended March 31, 2026",
+        driver: "商户服务收入，合并佣金和在线营销服务收入。",
+        valueIndexes: { current: 2 },
+        disclosedYoy: 3.5,
+      },
+      {
+        name: "Product sales",
+        label: "Product sales",
+        after: "Three Months Ended March 31, 2026",
+        driver: "商品销售收入，主要体现零售供给和即时零售业务扩张。",
+        valueIndexes: { current: 2 },
+        disclosedYoy: 46.6,
+      },
+      {
+        name: "Others",
+        label: "Others (including interest revenue)",
+        after: "Three Months Ended March 31, 2026",
+        driver: "其他收入，包含利息收入及其他业务收入。",
+        valueIndexes: { current: 2 },
+        disclosedYoy: -25.3,
+      },
+    ],
+    priorYearPeriod: {
+      fiscalYear: 2025,
+      fiscalQuarter: "Q1",
+      periodLabel: "2025 Q1",
+      reportDate: "2025-03-31",
+    },
+    previousQuarterPeriod: {
+      fiscalYear: 2025,
+      fiscalQuarter: "Q4",
+      periodLabel: "2025 Q4",
+      reportDate: "2025-12-31",
+    },
+    aiSummary:
+      "公告披露美团继续将 AI 用于商户运营工具、酒店商户 AI 解决方案和物理/数字世界融合，但未单独披露 AI 收入。",
+  },
+  meitu: {
+    fiscalYear: 2025,
+    fiscalQuarter: "FY",
+    periodLabel: "2025 FY",
+    reportDate: "2025-12-31",
+    currencyUnit: "RMB bn",
+    scale: 0.000001,
+    defaultValueIndexes: { current: 0, priorYear: 1 },
+    revenue: { label: "Revenue(1)", after: "KEY FINANCIAL DATA", valueIndexes: { current: 1, priorYear: 2 } },
+    grossProfit: { label: "Gross Profit(1)", after: "KEY FINANCIAL DATA", valueIndexes: { current: 1, priorYear: 2 } },
+    netIncome: {
+      label: "Net Profit Attributable to Owners of the Company(1)",
+      after: "KEY FINANCIAL DATA",
+      valueIndexes: { current: 1, priorYear: 2 },
+      sourceLabel: "Net profit attributable to owners of the Company from continuing operations",
+    },
+    segments: [
+      {
+        name: "Photo, video and design products",
+        label: "Photo, video and design products",
+        after: "KEY FINANCIAL DATA",
+        driver: "影像、视频与设计产品收入，主要来自订阅、应用内购买、功能和 token。",
+        valueIndexes: { current: 0, priorYear: 1 },
+        disclosedYoy: 41.6,
+      },
+      {
+        name: "Advertising",
+        label: "Advertising",
+        after: "KEY FINANCIAL DATA",
+        driver: "广告收入，来自应用内广告和营销服务。",
+        valueIndexes: { current: 0, priorYear: 1 },
+        disclosedYoy: -1.3,
+      },
+      {
+        name: "Others",
+        label: "Others(2)",
+        after: "KEY FINANCIAL DATA",
+        driver: "其他收入，包含重新分类后的 AI skin analysis 业务。",
+        valueIndexes: { current: 1, priorYear: 2 },
+        disclosedYoy: 8.8,
+      },
+    ],
+    priorYearPeriod: {
+      fiscalYear: 2024,
+      fiscalQuarter: "FY",
+      periodLabel: "2024 FY",
+      reportDate: "2024-12-31",
+    },
+    aiSummary:
+      "公告披露美图已将 AI agent 能力整合进多数产品组合，DesignKit 的 Agent 功能自 2025 年 12 月以来成为 billings 增长的首要驱动。",
+  },
   tencent: {
     fiscalYear: 2026,
     fiscalQuarter: "Q1",
@@ -323,10 +467,20 @@ function valueFromRow(rawText: string, rowProfile: PdfTextRowProfile, profile: P
   const { row, values } = rowToValues(rawText, rowProfile, profile);
   const indexes = rowProfile.valueIndexes ?? profile.defaultValueIndexes;
   const current = values[indexes.current];
-  const sameQuarterPriorYear = values[indexes.priorYear];
+  const sameQuarterPriorYear =
+    indexes.priorYear === undefined
+      ? current === undefined || rowProfile.disclosedYoy === null || rowProfile.disclosedYoy === undefined
+        ? undefined
+        : current / (1 + rowProfile.disclosedYoy / 100)
+      : values[indexes.priorYear];
   const previousQuarter = indexes.previousQuarter === undefined ? null : values[indexes.previousQuarter] ?? null;
 
-  if (current === undefined || sameQuarterPriorYear === undefined) {
+  if (
+    current === undefined ||
+    sameQuarterPriorYear === undefined ||
+    !Number.isFinite(current) ||
+    !Number.isFinite(sameQuarterPriorYear)
+  ) {
     throw new Error(`Unable to parse comparable PDF row values: ${rowProfile.label}`);
   }
 
@@ -334,6 +488,8 @@ function valueFromRow(rawText: string, rowProfile: PdfTextRowProfile, profile: P
     current,
     sameQuarterPriorYear,
     previousQuarter,
+    disclosedYoy: rowProfile.disclosedYoy,
+    disclosedQoq: rowProfile.disclosedQoq,
     snippet: `${rowProfile.sourceLabel ?? rowProfile.label} PDF text row: ${row}`,
   };
 }
@@ -363,8 +519,6 @@ function buildSegment(
   totalRevenue: number,
 ) {
   const values = valueFromRow(rawText, item, profile);
-  values.disclosedYoy = item.disclosedYoy ?? undefined;
-  values.disclosedQoq = item.disclosedQoq ?? undefined;
   return segment(item.name, values, totalRevenue, profile.currencyUnit, item.driver);
 }
 
@@ -418,10 +572,10 @@ export function parsePdfTextStandardReport(params: {
   const rawText = preparePdfText(params.html);
   const revenue = valueFromRow(rawText, profile.revenue, profile);
   const grossProfit = buildGrossProfit(rawText, profile, revenue);
-  const operatingProfit = valueFromRow(rawText, profile.operatingProfit, profile);
+  const operatingProfit = profile.operatingProfit ? valueFromRow(rawText, profile.operatingProfit, profile) : undefined;
   const netIncome = valueFromRow(rawText, profile.netIncome, profile);
   const grossMargin = (grossProfit.current / revenue.current) * 100;
-  const operatingMargin = (operatingProfit.current / revenue.current) * 100;
+  const operatingMargin = operatingProfit ? (operatingProfit.current / revenue.current) * 100 : undefined;
   const segments = profile.segments.map((item) => buildSegment(rawText, item, profile, revenue.current));
 
   const metrics: ParsedFinancialMetric[] = [
@@ -439,15 +593,19 @@ export function parsePdfTextStandardReport(params: {
           : round(grossMargin - (grossProfit.previousQuarter / revenue.previousQuarter) * 100),
       confidence: profile.grossProfit ? 0.86 : 0.76,
     }),
-    metricFromTriple("营业利润", "operating_profit", operatingProfit, profile.currencyUnit),
-    metric("营业利润率", "operating_margin", operatingMargin, "%", "Derived from operating profit divided by revenue.", {
-      yoy: round(operatingMargin - (operatingProfit.sameQuarterPriorYear / revenue.sameQuarterPriorYear) * 100),
-      qoq:
-        operatingProfit.previousQuarter === null || revenue.previousQuarter === null
-          ? null
-          : round(operatingMargin - (operatingProfit.previousQuarter / revenue.previousQuarter) * 100),
-      confidence: 0.86,
-    }),
+    ...(operatingProfit && operatingMargin !== undefined
+      ? [
+          metricFromTriple("营业利润", "operating_profit", operatingProfit, profile.currencyUnit),
+          metric("营业利润率", "operating_margin", operatingMargin, "%", "Derived from operating profit divided by revenue.", {
+            yoy: round(operatingMargin - (operatingProfit.sameQuarterPriorYear / revenue.sameQuarterPriorYear) * 100),
+            qoq:
+              operatingProfit.previousQuarter === null || revenue.previousQuarter === null
+                ? null
+                : round(operatingMargin - (operatingProfit.previousQuarter / revenue.previousQuarter) * 100),
+            confidence: 0.86,
+          }),
+        ]
+      : []),
     metricFromTriple("归母净利润", "net_income_attributable", netIncome, profile.currencyUnit),
   ];
 

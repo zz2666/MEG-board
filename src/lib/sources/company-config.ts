@@ -157,6 +157,16 @@ export const trackedCompanyConfigs: CompanySourceConfig[] = [
     sourceProvider: "hkex-ir",
     parserProfile: "pdf-text-standard",
     filingKeywords: ["results announcement", "quarterly results", "revenue"],
+    knownReports: {
+      "2026Q1": {
+        fiscalYear: 2026,
+        fiscalQuarter: "Q1",
+        periodLabel: "2026 Q1",
+        releaseDate: "2026-06-01T16:30:00.000+08:00",
+        title: "Meituan 2026 First Quarter Results Announcement",
+        sourceUrl: "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0601/2026060101346.pdf",
+      },
+    },
   },
   {
     id: "meitu",
@@ -170,6 +180,16 @@ export const trackedCompanyConfigs: CompanySourceConfig[] = [
     sourceProvider: "hkex-ir",
     parserProfile: "pdf-text-standard",
     filingKeywords: ["results announcement", "interim results", "annual results"],
+    knownReports: {
+      "2025FY": {
+        fiscalYear: 2025,
+        fiscalQuarter: "FY",
+        periodLabel: "2025 FY",
+        releaseDate: "2026-03-27T16:42:00.000+08:00",
+        title: "Meitu 2025 Annual Results Announcement",
+        sourceUrl: "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0327/2026032700842.pdf",
+      },
+    },
   },
   {
     id: "zhihu",
